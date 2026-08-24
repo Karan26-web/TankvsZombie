@@ -1,0 +1,32 @@
+# macOS Finder metadata
+.DS_Store
+assets/.DS_Store
+
+# Editor and local workspace files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and debug output
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency and build folders, if tooling is added later
+node_modules/
+dist/
+build/
+coverage/
+
+# Temporary generated files
+tmp/
+temp/
+*.tmp
