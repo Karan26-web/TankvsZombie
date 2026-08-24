@@ -524,10 +524,19 @@ const SP = {
 
 /* ---------- Builds.png regions — target building parts [sx,sy,sw,sh] ---------- */
 const BLD = {
-  // the tall apartment tower, sliced into a roof cap + one repeatable floor +
+  // the tall glass tower, sliced into a roof cap + one repeatable floor +
   // a ground-floor base, so the SAME stack technique as the old brick tower
   // builds any height the level needs — the zombie's perch is just a building.
-  towerCap:[376,19,212,92], towerFloor:[376,111,212,64], towerBase:[376,303,212,90]
+  towerCap:[376,19,212,92], towerFloor:[376,111,212,64], towerBase:[376,303,212,90],
+  // the low brick apartment block — same cap/floor/base recipe, second skin
+  // on the SAME sheet, so consecutive levels don't wear the identical shell.
+  aptCap:[42,42,286,174], aptFloor:[42,216,286,86], aptBase:[42,302,286,39]
+};
+// building "skins" — a level just names one; drawTower stacks it to whatever
+// height that level's opposite side needs, same technique either way.
+const BLD_SKINS = {
+  tower:{cap:BLD.towerCap, floor:BLD.towerFloor, base:BLD.towerBase, nativeW:212},
+  apartment:{cap:BLD.aptCap, floor:BLD.aptFloor, base:BLD.aptBase, nativeW:286}
 };
 
 /* ============================================================
@@ -535,11 +544,11 @@ const BLD = {
    right-triangle ratio; hypotenuse and answer are computed once.
    ============================================================ */
 const LEVELS = [
-  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof'},
-  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof'},
-  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof'},
-  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof'},
-  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof'}
+  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof',     skin:'apartment'},
+  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof',  skin:'tower'},
+  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof', skin:'apartment'},
+  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof',    skin:'tower'},
+  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof',   skin:'apartment'}
 ].map(level=>({
   ...level,
   h:level.opposite,
@@ -806,7 +815,7 @@ function makeLevelNode(level, targetWorldX){
     frame:0, animT:0, mode:'idle', burstF:0, dead:false
   };
   const feetY = zombie.y + 36;
-  const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:feetY, w:tw, h:GROUND_Y-feetY};
+  const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:feetY, w:tw, h:GROUND_Y-feetY, skin:L.skin||'tower'};
   return {
     level, targetWorldX, worldX:buildingWorldX, tower, zombie,
     targetHeight:tower.h, zombieOffsetX:zombie.offsetX, zombieOffsetY:zombie.offsetY,
@@ -1591,8 +1600,9 @@ function visibleLevelNodes(){
    needs — same technique the old brick tower used, new town-building skin --- */
 function drawTower(tower=G.tower){
   const b=tower; if(!b) return;
-  const sc = b.w/212;                                    // uniform scale from the sheet's native width
-  const capH=92*sc, baseH=90*sc;
+  const skin = BLD_SKINS[b.skin] || BLD_SKINS.tower;     // which Builds.png building this level wears
+  const sc = b.w/skin.nativeW;                           // uniform scale from that skin's native width
+  const capH=skin.cap[3]*sc, baseH=skin.base[3]*sc;
   // contact shadow at the base
   const cs=ctx.createRadialGradient(b.x+b.w/2, GROUND_Y, 0, b.x+b.w/2, GROUND_Y, b.w*.8);
   cs.addColorStop(0,'rgba(20,35,20,.4)'); cs.addColorStop(1,'rgba(20,35,20,0)');
@@ -1600,16 +1610,16 @@ function drawTower(tower=G.tower){
   ctx.beginPath(); ctx.ellipse(b.x+b.w/2, GROUND_Y, b.w*.8, 14, 0,0,7); ctx.fill();
   // repeat floors fill the gap between roof and ground-floor entrance,
   // rescaled slightly so N whole floors always meet the required height exactly
-  const nFloors = Math.max(1, Math.round((b.h-capH-baseH)/(64*sc)));
+  const nFloors = Math.max(1, Math.round((b.h-capH-baseH)/(skin.floor[3]*sc)));
   const floorH = (b.h-capH-baseH)/nFloors;
-  ctx.drawImage(IMGS.bld, BLD.towerBase[0],BLD.towerBase[1],BLD.towerBase[2],BLD.towerBase[3],
+  ctx.drawImage(IMGS.bld, skin.base[0],skin.base[1],skin.base[2],skin.base[3],
     b.x, GROUND_Y-baseH, b.w, baseH);
   for(let i=0,y=GROUND_Y-baseH; i<nFloors; i++){
     y -= floorH;
-    ctx.drawImage(IMGS.bld, BLD.towerFloor[0],BLD.towerFloor[1],BLD.towerFloor[2],BLD.towerFloor[3],
+    ctx.drawImage(IMGS.bld, skin.floor[0],skin.floor[1],skin.floor[2],skin.floor[3],
       b.x, y, b.w, floorH);
   }
-  ctx.drawImage(IMGS.bld, BLD.towerCap[0],BLD.towerCap[1],BLD.towerCap[2],BLD.towerCap[3],
+  ctx.drawImage(IMGS.bld, skin.cap[0],skin.cap[1],skin.cap[2],skin.cap[3],
     b.x, b.y, b.w, capH);
   // fire-escape ladder down the side, matching the building's steel trim
   const lx=b.x+b.w+6;
@@ -1713,7 +1723,6 @@ function drawGuides(){
   // value chips — only the sides the student is given, small and out of the way
   pill((p.x+tw.x)/2, gy-18, 'Adjacent:', meters(L.adjacent));
   pill(tw.x - 58, (z.y+gy)/2-6, 'Opposite:', meters(L.opposite));
-  pill((aim.startX+zx)/2-18, (aim.startY+z.y)/2-38, 'Hypotenuse:', meters(L.hyp));
   // θ near the cannon — deliberately quiet: the editable value lives in the
   // bottom dock, so this is just a small arc + number, not a second HUD.
   const a=G.angleShown*Math.PI/180;
