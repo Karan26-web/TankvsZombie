@@ -1522,6 +1522,36 @@ function drawBG(){
   ctx.drawImage(BGL.world, cam,0,W,H, 0,0,W,H);
 }
 
+/* ---------- in-flight sky clouds — the background plates are painted
+   clean of clouds; every cloud on screen is this code-drawn, drifting
+   layer instead, tiled seamlessly so a handful of clouds cover a world
+   of any length. Parallax (<1) makes them glide slower than the ground,
+   reading as the farthest layer; the wind drift keeps them alive even
+   while the camera holds still (aiming). ---------- */
+const SKY_CLOUD_SPAN = 1400, SKY_CLOUD_PARALLAX = .45;
+const SKY_CLOUDS = Array.from({length:9}, (_,i)=>({
+  baseX: (i+.5)/9*SKY_CLOUD_SPAN + (Math.random()-.5)*110,
+  y: 55 + Math.random()*185,
+  s: .32 + Math.random()*.34,
+  a: .22 + Math.random()*.24,
+  phase: Math.random()*Math.PI*2,
+  bobAmp: 3 + Math.random()*4,
+  bobSpeed: .3 + Math.random()*.3,
+  wind: 5 + Math.random()*9
+}));
+function drawSkyClouds(){
+  SKY_CLOUDS.forEach(c=>{
+    const driftedX = c.baseX + G.time*c.wind;
+    let sx = (driftedX - G.cameraX*SKY_CLOUD_PARALLAX) % SKY_CLOUD_SPAN;
+    if(sx<0) sx += SKY_CLOUD_SPAN;
+    const y = c.y + Math.sin(G.time*c.bobSpeed + c.phase)*c.bobAmp;
+    for(const off of [-SKY_CLOUD_SPAN,0,SKY_CLOUD_SPAN]){
+      const x = sx+off;
+      if(x>-90 && x<W+90) drawCodeCloud(x,y,c.s,c.a);
+    }
+  });
+}
+
 const TITLE_CLOUDS = [
   {x:58,y:108,s:.45,a:.42,phase:0,drift:.42,amp:22,bob:4},
   {x:260,y:92,s:.36,a:.35,phase:1.4,drift:.36,amp:18,bob:3},
@@ -1863,6 +1893,7 @@ function render(){
   ctx.save();
   if(G.shake>0) ctx.translate((Math.random()-.5)*G.shake,(Math.random()-.5)*G.shake);
   drawBG();
+  drawSkyClouds();
   nodes.forEach(node=>drawTower(node.tower));
   nodes.forEach(node=>drawZombie(node.zombie));
   drawTank();
