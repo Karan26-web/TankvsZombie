@@ -522,32 +522,36 @@ const SP = {
   blast:  [350,450,350,275]
 };
 
-/* ---------- Builds.png regions — target building parts [sx,sy,sw,sh] ---------- */
+/* ---------- Builds.png regions — target building parts [sx,sy,sw,sh] ----------
+   four buildings on the sheet, each hand-sliced into a roof cap + one
+   repeatable mid-section + a ground-level base, so the same stack technique
+   builds any of them to whatever height a level's opposite side needs. ---- */
 const BLD = {
-  // the tall glass tower, sliced into a roof cap + one repeatable floor +
-  // a ground-floor base, so the SAME stack technique as the old brick tower
-  // builds any height the level needs — the zombie's perch is just a building.
-  towerCap:[376,19,212,92], towerFloor:[376,111,212,64], towerBase:[376,303,212,90],
-  // the low brick apartment block — same cap/floor/base recipe, second skin
-  // on the SAME sheet, so consecutive levels don't wear the identical shell.
-  aptCap:[42,42,286,174], aptFloor:[42,216,286,86], aptBase:[42,302,286,39]
+  towerCap:[376,19,212,92],  towerFloor:[376,111,212,64], towerBase:[376,303,212,90],
+  aptCap:[42,42,220,174],    aptFloor:[42,216,220,86],    aptBase:[42,302,220,90],
+  facCap:[683,63,324,154],   facFloor:[683,217,324,54],   facBase:[683,271,324,121],
+  wtCap:[45,400,193,135],    wtFloor:[45,535,193,73],     wtBase:[45,608,193,35]
 };
 // building "skins" — a level just names one; drawTower stacks it to whatever
-// height that level's opposite side needs, same technique either way.
+// height that level's opposite side needs, same technique for all four.
 const BLD_SKINS = {
-  tower:{cap:BLD.towerCap, floor:BLD.towerFloor, base:BLD.towerBase, nativeW:212},
-  apartment:{cap:BLD.aptCap, floor:BLD.aptFloor, base:BLD.aptBase, nativeW:286}
+  tower:     {cap:BLD.towerCap, floor:BLD.towerFloor, base:BLD.towerBase, nativeW:212},
+  apartment: {cap:BLD.aptCap,   floor:BLD.aptFloor,   base:BLD.aptBase,   nativeW:220},
+  factory:   {cap:BLD.facCap,   floor:BLD.facFloor,   base:BLD.facBase,   nativeW:324},
+  watertower:{cap:BLD.wtCap,    floor:BLD.wtFloor,    base:BLD.wtBase,    nativeW:193}
 };
 
 /* ============================================================
    LEVELS — five target nodes. Adjacent/opposite define the real
    right-triangle ratio; hypotenuse and answer are computed once.
+   Each level wears a different Builds.png skin so the town looks
+   freshly built as you advance, not the same tower five times over.
    ============================================================ */
 const LEVELS = [
   {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof',     skin:'apartment'},
   {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof',  skin:'tower'},
-  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof', skin:'apartment'},
-  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof',    skin:'tower'},
+  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof', skin:'factory'},
+  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof',    skin:'watertower'},
   {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof',   skin:'apartment'}
 ].map(level=>({
   ...level,
