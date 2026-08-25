@@ -25,6 +25,23 @@
   --panel-radius:16px;
   --panel-radius-sm:10px;
   --hud-shadow:0 6px 16px rgba(0,0,0,.35);
+
+  /* --- UI palette, sampled from the button art itself -----------------
+     btnPlate/btnPlus/btnMinus give the tan ring + rust casing + gem green,
+     btnFire gives the orange and the cream. Every panel is built from these,
+     so the chrome and the buttons read as one set of physical parts. */
+  --btn-rim:#f2ab4f;          /* the plates' tan ring        */
+  --btn-rim-dark:#8a3a18;     /* their rust outer casing     */
+  --btn-stud:#4b1c0b;         /* the block a key presses on  */
+  --btn-ink:#fef8dc;          /* the FIRE cream              */
+  --frame-a:#a44d24;          /* console body, lit           */
+  --frame-b:#6c2a13;
+  --frame-c:#43170a;          /* console body, shadow        */
+  --gem-green:#93ce5d;
+  --gem-green-mid:#56a21e;
+  --gem-green-deep:#2b6b10;
+  --fire-orange:#fd8b06;
+  --fire-deep:#88200a;
 }
 
 /* ============================================================
@@ -39,8 +56,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050d12;
 button{font-family:inherit}
 button:focus-visible,#angleInput:focus-visible{
   outline:3px solid #ffd23f;
-  outline-offset:3px;
-  box-shadow:0 0 0 5px rgba(5,17,25,.78),0 0 18px rgba(255,210,63,.5);
+  outline-offset:4px;
+  filter:brightness(1.1);
 }
 #angleInput:focus-visible{border-radius:6px}
 .valBox:focus-within{border-color:var(--hud-border-bright)}
@@ -52,100 +69,181 @@ button:focus-visible,#angleInput:focus-visible{
 canvas{position:absolute;inset:0;display:block}
 
 /* ============================================================
-   TOP HUD — three zones: level+lives / objective / score+menu
+   TOP HUD — the objective banner, the status line and the control dock.
    ============================================================ */
 #hud{position:absolute;inset:0;pointer-events:none;color:var(--text-primary)}
-.hudPanel{background:var(--hud-bg);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-  border:1px solid var(--hud-border);border-radius:var(--panel-radius);
-  box-shadow:var(--hud-shadow);color:var(--text-primary)}
-
-#lvlChip{position:absolute;left:16px;top:14px;padding:9px 16px 8px;display:flex;
-  flex-direction:column;align-items:flex-start;gap:5px}
-#lvlChip .lvlRow{font-size:16px;font-weight:700;letter-spacing:.5px}
-#lvlChip .lvlRow span{color:var(--accent-green)}
-#lvlChip .livesRow{display:flex;gap:5px}
-#lvlChip .heart{font-size:14px;line-height:1;color:var(--heart);transition:opacity .15s,transform .15s}
-#lvlChip .heart.lost{color:var(--text-secondary);opacity:.3;transform:scale(.85)}
+.hudPanel{border:3px solid var(--btn-rim);border-radius:var(--panel-radius);
+  background:linear-gradient(180deg,rgba(164,77,36,.94) 0%,rgba(108,42,19,.95) 52%,rgba(67,23,10,.96) 100%);
+  box-shadow:inset 0 2px 0 rgba(255,232,190,.3),inset 0 -6px 0 rgba(24,7,2,.45),
+    0 0 0 3px var(--btn-rim-dark),0 6px 0 #3a1207,0 13px 20px rgba(0,0,0,.4);
+  color:var(--btn-ink)}
 
 #objBanner{position:absolute;left:50%;top:14px;transform:translateX(-50%);
-  padding:8px 18px;font-size:14px;font-weight:600;gap:8px;white-space:nowrap;
-  display:flex;align-items:center;color:var(--text-secondary)}
+  padding:9px 20px;font-size:14px;font-weight:700;gap:9px;white-space:nowrap;
+  display:flex;align-items:center;color:var(--btn-ink);letter-spacing:.3px;
+  text-shadow:0 2px 0 rgba(48,16,6,.65)}
 #objBanner svg{flex:none;width:16px;height:16px}
 
-#topRight{position:absolute;right:16px;top:14px;display:flex;gap:10px;pointer-events:auto}
-#scoreChip{padding:9px 16px;font-size:16px;font-weight:700;gap:8px;display:flex;align-items:center}
-#scoreChip .star{color:var(--accent-orange);font-size:17px;line-height:1}
-#scoreChip.pop{animation:scorePop .36s ease-out}
-#menuBtn{width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;
-  font-size:17px;cursor:pointer;transition:border-color .12s}
-#menuBtn:hover{border-color:var(--hud-border-bright)}
-#menuPop{position:absolute;right:16px;top:60px;pointer-events:auto;
-  background:var(--hud-bg-strong);border:1px solid var(--hud-border);
-  border-radius:var(--panel-radius-sm);padding:8px;display:flex;flex-direction:column;gap:4px;
-  box-shadow:0 12px 30px rgba(0,0,0,.55)}
-#menuPop.hidden{display:none}
-#menuPop button{background:none;border:none;color:var(--text-primary);cursor:pointer;
-  font-size:15px;font-weight:600;padding:8px 16px;border-radius:8px;text-align:left}
-#menuPop button:hover{background:rgba(79,211,245,.12)}
-
-#msg{position:absolute;left:50%;top:64px;transform:translateX(-50%);
-  font-size:15px;font-weight:600;color:var(--text-primary);
-  background:var(--hud-bg-strong);border:1px solid var(--hud-border);
-  border-radius:var(--panel-radius-sm);padding:7px 18px;opacity:0;
-  transition:opacity .25s;white-space:nowrap;box-shadow:var(--hud-shadow)}
+#msg{position:absolute;left:50%;top:70px;transform:translateX(-50%);
+  font-size:15px;font-weight:800;color:var(--btn-ink);letter-spacing:.4px;
+  background:linear-gradient(180deg,var(--frame-b),var(--frame-c));border:3px solid var(--btn-rim);
+  border-radius:14px;padding:7px 18px;opacity:0;text-shadow:0 2px 0 rgba(0,0,0,.55);
+  transition:opacity .25s;white-space:nowrap;
+  box-shadow:0 0 0 3px var(--btn-rim-dark),0 5px 0 #3a1207,0 12px 20px rgba(0,0,0,.4)}
 
 /* ============================================================
-   BOTTOM CONTROLS — one compact dock: angle stepper + fire, ~74px tall
+   GAMIFIED BUTTON KIT
+   One toy-console language for every pressable thing:
+   candy shell (bright rim + dark casing) → gem face → stud depth.
+   Per-button custom props tune the recipe:
+     --face-a / --face-b : gem gradient (top → bottom)
+     --rim               : bright outer casing colour
+     --stud              : the 3D block the button sits on
+     --depth             : how tall that block is (px)
    ============================================================ */
-#controlDock{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);
-  pointer-events:auto;display:flex;align-items:center;gap:12px;
-  padding:8px 10px;height:64px}
-.stepperGroup{display:flex;align-items:center;gap:8px}
-.dockDivider{width:1px;height:32px;background:var(--hud-border)}
+.bigBtn,.playTitleBtn,.titleSecondary,.titleIconBtn{
+  --face-a:#b8571f; --face-b:#5d2210;
+  --rim:var(--btn-rim); --stud:var(--btn-stud); --depth:6px;
+  position:relative;cursor:pointer;color:var(--btn-ink);font-family:inherit;
+  border:3px solid var(--rim);
+  background:linear-gradient(180deg,var(--face-a) 0%,var(--face-b) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,.3),
+    inset 0 -7px 0 rgba(0,0,0,.32),
+    0 0 0 3px var(--btn-rim-dark),
+    0 var(--depth) 0 var(--stud),
+    0 calc(var(--depth) + 7px) 16px rgba(0,0,0,.42);
+  text-shadow:0 3px 0 rgba(58,12,28,.62);
+  transition:transform .09s ease,filter .12s ease,box-shadow .09s ease;
+  -webkit-tap-highlight-color:transparent}
 
-.stepBtn{width:40px;height:40px;border-radius:var(--panel-radius-sm);cursor:pointer;
-  border:1px solid var(--hud-border);color:var(--accent-cyan);font-size:20px;font-weight:700;
-  background:linear-gradient(180deg,#123543,#0a1e27);
-  box-shadow:0 3px 0 rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;
-  transition:transform .08s,border-color .12s}
-.stepBtn:hover{border-color:var(--hud-border-bright)}
-.stepBtn:active{transform:translateY(2px) scale(.94);box-shadow:0 1px 0 rgba(0,0,0,.45)}
-.stepBtn:disabled,#hintBtn:disabled{opacity:.58;cursor:default}
-.stepBtn:disabled:hover,#hintBtn:disabled:hover{border-color:var(--hud-border);color:inherit}
+/* glossy dome highlight — the thing that makes a button look moulded */
+.bigBtn::before,.playTitleBtn::before,.titleSecondary::before,.titleIconBtn::before{
+  content:"";position:absolute;left:7%;right:7%;top:2px;height:34%;pointer-events:none;
+  border-radius:inherit;
+  border-bottom-left-radius:70% 100%;border-bottom-right-radius:70% 100%;
+  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.05) 60%,rgba(255,255,255,0))}
 
-.valBox{display:flex;align-items:center;justify-content:center;gap:1px;
-  width:88px;height:48px;border-radius:var(--panel-radius-sm);border:1px solid var(--hud-border);
-  background:#040e13;box-shadow:inset 0 3px 10px rgba(0,0,0,.6)}
-#angleInput{width:52px;font-size:26px;font-weight:700;text-align:right;
-  border:none;background:transparent;color:var(--text-primary);outline:none;font-family:inherit}
-.valBox .deg{font-size:20px;font-weight:700;color:var(--accent-cyan)}
+/* press physics: shell squashes onto its stud */
+.bigBtn:hover,.playTitleBtn:hover,.titleSecondary:hover,.titleIconBtn:hover{
+  filter:brightness(1.09) saturate(1.05);transform:translateY(-2px)}
+.bigBtn:active,.playTitleBtn:active,.titleSecondary:active,.titleIconBtn:active,
+.bigBtn.is-pressed,.playTitleBtn.is-pressed,.titleSecondary.is-pressed,.titleIconBtn.is-pressed{
+  transition:transform .045s ease-out,box-shadow .045s ease-out,filter .07s ease;
+  transform:translateY(calc(var(--depth) - 1px)) scale(.985);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -3px 0 rgba(0,0,0,.34),
+    0 0 0 3px var(--btn-rim-dark),
+    0 1px 0 var(--stud),
+    0 3px 9px rgba(0,0,0,.36)}
+.bigBtn:disabled,.playTitleBtn:disabled{
+  filter:grayscale(.7) brightness(.72);cursor:default;transform:none;animation:none}
+.playTitleBtn:disabled:hover{filter:grayscale(.7) brightness(.72);transform:none}
 
 /* ============================================================
-   BUTTONS
+   ART BUTTONS — painted plates instead of CSS shells.
+   The art already carries the bevel, ring and lighting, so all the CSS
+   owes it is honest press physics: lift on hover, sink into a shorter
+   ground shadow on press, and no rectangle drawn anywhere near it.
    ============================================================ */
-#fireBtn{display:flex;align-items:center;gap:9px;
-  height:48px;padding:0 26px;border-radius:var(--panel-radius-sm);cursor:pointer;
-  font-size:19px;font-weight:700;letter-spacing:2.5px;color:#fff;
-  border:2px solid #ffcf8a;
-  background:linear-gradient(180deg,#ffb03a,var(--accent-orange) 55%,var(--accent-orange-deep));
-  box-shadow:0 4px 0 #a34a06,0 4px 16px rgba(255,140,26,.4);
-  text-shadow:0 2px 0 rgba(0,0,0,.3);transition:transform .06s,filter .12s,box-shadow .12s;
+.artBtn{
+  --sink:7px;
+  position:relative;cursor:pointer;border:none;padding:0;background:none;
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  filter:drop-shadow(0 6px 5px rgba(38,10,2,.5));
+  transition:transform .17s cubic-bezier(.22,.9,.3,1.35),filter .12s ease;   /* release springs back */
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent}
+.artBtn:hover{transform:translateY(-2px);filter:drop-shadow(0 8px 7px rgba(38,10,2,.45)) brightness(1.06)}
+/* The press rides a CLASS, not :active alone — see armPress() for why.
+   Down is near-instant, up is the springy base transition above. */
+.artBtn:active,.artBtn.is-pressed{transform:translateY(var(--sink)) scale(.955);
+  transition:transform .045s ease-out,filter .07s ease;
+  filter:drop-shadow(0 1px 2px rgba(38,10,2,.6)) brightness(.95)}
+.artBtn:disabled{cursor:default;animation:none;
+  filter:grayscale(.72) brightness(.72) drop-shadow(0 4px 4px rgba(38,10,2,.4))}
+/* a key that disables itself on its own click still gets to finish the press */
+.artBtn:disabled:not(.is-pressed),
+.artBtn:disabled:hover:not(.is-pressed){transform:none}
+.artBtn:disabled:hover{filter:grayscale(.72) brightness(.72) drop-shadow(0 4px 4px rgba(38,10,2,.4))}
+
+/* ============================================================
+   BOTTOM CONTROLS — tank-console dock
+   ============================================================ */
+/* The dock is furniture, not scenery: it sits entirely inside the dirt band
+   BELOW the play surface (PLAY_SURFACE_Y = 600 of the 720-tall stage), so it
+   never covers ground the tank, the target or the triangle can occupy.
+   That invariant fixes the two numbers below —
+       visual top = 720 - bottom - 104*dockScale
+   which must stay clear of 600. At .86/18px that lands on 612.6, about 12px
+   of dirt above the frame. Retune the scale and the offset together, and
+   keep the narrow-screen override below on the same rule. */
+#controlDock{position:absolute;left:50%;bottom:18px;--dockScale:.86;
+  transform:translateX(-50%) translateY(var(--dockY,0)) scale(var(--dockScale,1));
+  transform-origin:center bottom;
+  transition:transform .46s cubic-bezier(.18,.86,.24,1),opacity .3s ease,filter .2s ease;
+  pointer-events:auto;display:flex;align-items:center;gap:13px;height:104px;
+  padding:11px 21px;border:4px solid var(--btn-rim);border-radius:32px;
+  background:
+    radial-gradient(circle at 17px 17px,rgba(255,222,172,.6) 0 2.5px,rgba(0,0,0,.34) 3px 4.5px,transparent 5px),
+    radial-gradient(circle at calc(100% - 17px) 17px,rgba(255,222,172,.6) 0 2.5px,rgba(0,0,0,.34) 3px 4.5px,transparent 5px),
+    radial-gradient(circle at 17px calc(100% - 17px),rgba(255,222,172,.55) 0 2.5px,rgba(0,0,0,.32) 3px 4.5px,transparent 5px),
+    radial-gradient(circle at calc(100% - 17px) calc(100% - 17px),rgba(255,222,172,.55) 0 2.5px,rgba(0,0,0,.32) 3px 4.5px,transparent 5px),
+    linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,0) 20%),
+    linear-gradient(180deg,var(--frame-a) 0%,var(--frame-b) 52%,var(--frame-c) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255,232,190,.38),
+    inset 0 -9px 0 rgba(24,7,2,.6),
+    0 9px 0 #3a1207,
+    0 20px 36px rgba(0,0,0,.46);
+  overflow:visible}
+/* stowed = below the deck (during the roll-in and the briefing);
+   busy = present but not yours yet (a shot is in the air) */
+#controlDock.is-stowed{--dockY:165%;opacity:0;pointer-events:none}
+#controlDock.is-busy{filter:saturate(.82) brightness(.9)}
+#controlDock::before{content:"";position:absolute;inset:5px;border-radius:28px;
+  border:1px solid rgba(255,236,200,.26);pointer-events:none}
+#controlDock::after{content:"";position:absolute;left:30px;right:30px;bottom:-11px;height:13px;
+  border-radius:0 0 26px 26px;background:rgba(6,2,8,.4);filter:blur(2px);pointer-events:none}
+.stepperGroup{position:relative;display:flex;align-items:center;gap:12px;z-index:1}
+.dockDivider{position:relative;z-index:1;width:4px;height:70px;border-radius:999px;
+  background:linear-gradient(180deg,rgba(24,7,2,.85),rgba(255,226,178,.42) 50%,rgba(24,7,2,.85));
+  box-shadow:1.5px 0 0 rgba(255,214,158,.24),-1.5px 0 0 rgba(0,0,0,.55)}
+
+/* the three keys: two painted plates and the painted FIRE pill */
+.stepBtn{width:74px;height:74px;z-index:1}
+#downBtn{background-image:url(assets/btnMinus.webp)}
+#upBtn{background-image:url(assets/btnPlus.webp)}
+
+/* angle read-out: recessed slot, not a button */
+.valBox{position:relative;display:flex;align-items:center;justify-content:center;gap:1px;
+  width:138px;height:76px;border-radius:22px;border:4px solid var(--btn-rim);z-index:1;
+  background:linear-gradient(180deg,#3a1a0c 0%,#261006 58%,#160903 100%);
+  box-shadow:
+    inset 0 5px 10px rgba(0,0,0,.7),
+    inset 0 0 0 2px rgba(255,216,136,.22),
+    0 0 0 3px var(--btn-rim-dark),
+    0 4px 0 #3a1207,
+    0 8px 14px rgba(0,0,0,.4)}
+.thetaMark{position:absolute;top:7px;left:13px;
+  color:#ffc978;font-size:19px;font-weight:800;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+#angleInput{width:78px;margin-top:11px;font-size:42px;font-weight:800;text-align:right;
+  border:none;background:transparent;color:var(--btn-ink);outline:none;font-family:inherit;
+  text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 14px rgba(255,226,178,.35)}
+.valBox .deg{align-self:center;margin-top:9px;font-size:33px;font-weight:800;color:var(--btn-ink);
+  text-shadow:0 3px 0 rgba(0,0,0,.6)}
+
+/* FIRE: the painted pill itself, glowing on its own */
+#fireBtn{width:200px;height:92px;z-index:1;--sink:9px;
+  background-image:url(assets/btnFire.webp);
+  filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 16px rgba(253,139,6,.42));
   animation:firePulse 2.6s ease-in-out infinite}
-#fireBtn:hover{filter:brightness(1.07)}
-#fireBtn:active{transform:translateY(2px) scale(.98);
-  box-shadow:0 2px 0 #a34a06,0 2px 10px rgba(255,140,26,.35);animation-play-state:paused}
-#fireBtn:disabled{filter:grayscale(.8) brightness(.75);cursor:default;
-  transform:none;box-shadow:0 4px 0 #333;animation:none}
-#fireBtn svg{display:block;width:19px;height:19px}
-
-/* lives inside #controlDock, right of FIRE — part of the same component,
-   kept visually secondary (outline only, muted text, no glow) */
-#hintBtn{margin-left:4px;pointer-events:auto;
-  background:transparent;color:var(--text-secondary);
-  border:1px solid var(--hud-border);border-radius:var(--panel-radius-sm);
-  padding:8px 14px;font-size:13px;font-weight:600;gap:6px;cursor:pointer;
-  display:flex;align-items:center;transition:border-color .12s,color .12s}
-#hintBtn:hover{border-color:var(--hud-border-bright);color:var(--text-primary)}
+#fireBtn:hover{filter:drop-shadow(0 9px 8px rgba(38,10,2,.45)) drop-shadow(0 0 22px rgba(253,139,6,.6)) brightness(1.05)}
+#fireBtn:active{animation-play-state:paused;
+  filter:drop-shadow(0 2px 3px rgba(38,10,2,.55)) drop-shadow(0 0 10px rgba(253,139,6,.4))}
+#fireBtn:disabled{animation:none;
+  filter:grayscale(.72) brightness(.7) drop-shadow(0 4px 4px rgba(38,10,2,.4))}
 
 .shakeX{animation:shakeX .35s}
 @keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
@@ -155,20 +253,19 @@ canvas{position:absolute;inset:0;display:block}
    ANIMATIONS
    ============================================================ */
 @keyframes firePulse{
-  0%,100%{box-shadow:0 4px 0 #a34a06,0 4px 16px rgba(255,140,26,.4)}
-  50%{box-shadow:0 4px 0 #a34a06,0 4px 24px rgba(255,140,26,.7)}
+  0%,100%{filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 14px rgba(253,139,6,.36))}
+  50%{filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 30px rgba(255,176,58,.72))}
 }
-@keyframes scorePop{
-  0%{transform:scale(1)}
-  40%{transform:scale(1.08)}
-  100%{transform:scale(1)}
+@keyframes fireSheen{
+  0%,72%{background-position:200% 0}
+  100%{background-position:-80% 0}
 }
-
 /* ============================================================
    OVERLAYS (title screen / pause / game-over / win cards)
    ============================================================ */
 #hud{transition:opacity .35s ease}
-#stage.is-pregame #hud{opacity:0;pointer-events:none}
+#stage.is-pregame #hud,
+#stage.is-transition #hud{opacity:0;pointer-events:none}
 #overlay{position:absolute;inset:0;background:rgba(3,10,14,.72);display:flex;
   align-items:center;justify-content:center;pointer-events:auto;overflow:hidden;
   -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
@@ -177,30 +274,38 @@ canvas{position:absolute;inset:0;display:block}
   -webkit-backdrop-filter:none;backdrop-filter:none}
 #overlay.titleScreen::before{content:"";position:absolute;inset:0;pointer-events:none;
   display:none}
-.card{background:linear-gradient(180deg,#0f3140,#081b24);
-  border:1px solid var(--hud-border-bright);border-radius:20px;
-  padding:38px 56px;text-align:center;color:var(--text-primary);
-  box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);max-width:760px}
-.card h1{font-size:52px;font-weight:700;letter-spacing:2px;color:#fff;line-height:1.08;
-  text-shadow:0 0 24px rgba(79,211,245,.35)}
-.card h2{font-size:38px;font-weight:700;letter-spacing:1px;color:#fff}
-.card .sub{font-size:20px;color:var(--accent-cyan);font-weight:700;letter-spacing:5px;
+.card{background:linear-gradient(180deg,var(--frame-a),var(--frame-b) 55%,var(--frame-c));
+  border:4px solid var(--btn-rim);border-radius:24px;
+  padding:38px 56px;text-align:center;color:var(--btn-ink);
+  box-shadow:0 0 0 3px var(--btn-rim-dark),inset 0 2px 0 rgba(255,232,190,.3),
+    inset 0 -8px 0 rgba(24,7,2,.4),0 12px 0 #3a1207,0 26px 60px rgba(0,0,0,.6);max-width:760px}
+.card h1{font-size:52px;font-weight:800;letter-spacing:2px;color:var(--btn-ink);line-height:1.08;
+  text-shadow:0 4px 0 rgba(48,16,6,.6),0 0 26px rgba(255,176,58,.3)}
+.card h2{font-size:38px;font-weight:800;letter-spacing:1px;color:var(--btn-ink);
+  text-shadow:0 3px 0 rgba(48,16,6,.6)}
+.card .sub{font-size:20px;color:#ffcb57;font-weight:800;letter-spacing:5px;
   text-transform:uppercase;margin-top:6px}
-.card p{font-size:19px;margin:16px 0;color:#c4dde8;line-height:1.5}
-.card .hint{font-size:15px;color:var(--text-secondary)}
-.card b{color:var(--text-primary)}
-.bigBtn{margin-top:16px;height:60px;padding:0 54px;font-size:24px;font-weight:700;
-  letter-spacing:3px;border-radius:30px;cursor:pointer;color:#fff;
-  border:2px solid #ffd9a3;
-  background:linear-gradient(180deg,#ffb03a,var(--accent-orange) 55%,var(--accent-orange-deep));
-  box-shadow:0 5px 0 #a34a06,0 10px 26px rgba(255,140,26,.35);
-  text-shadow:0 2px 0 rgba(0,0,0,.3)}
-.bigBtn:hover{filter:brightness(1.07)}
-.bigBtn:active{transform:translateY(3px);box-shadow:0 2px 0 #a34a06}
-#loadBar{display:none;width:340px;height:12px;border-radius:6px;background:#04121a;margin:18px auto 0;
-  border:1px solid var(--hud-border);overflow:hidden}
-#loadFill{height:100%;width:0%;background:linear-gradient(90deg,#2bb3d4,var(--accent-cyan));
-  transition:width .2s;box-shadow:0 0 12px rgba(79,211,245,.8)}
+.card p{font-size:19px;margin:16px 0;color:#ffe6bd;line-height:1.5}
+.card .hint{font-size:15px;color:#e8bd88}
+.card b{color:#fff3c4}
+.bigBtn{--depth:7px;margin-top:18px;height:64px;padding:0 54px;font-size:25px;font-weight:800;
+  letter-spacing:3px;white-space:nowrap;border-radius:32px;border-width:4px;color:#fffce4;
+  background:
+    linear-gradient(180deg,rgba(238,255,214,.5) 0%,rgba(238,255,214,0) 32%),
+    linear-gradient(180deg,var(--gem-green) 0%,var(--gem-green-mid) 44%,var(--gem-green-deep) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(238,255,214,.52),
+    inset 0 -8px 0 rgba(16,58,6,.55),
+    0 0 0 3px var(--btn-rim-dark),
+    0 7px 0 #1d4a08,
+    0 15px 22px rgba(0,0,0,.42),
+    0 0 26px rgba(147,206,93,.34);
+  text-shadow:0 3px 0 rgba(20,58,8,.6)}
+#loadBar{display:none;width:340px;height:12px;border-radius:6px;background:#2c0f05;margin:18px auto 0;
+  border:2px solid var(--btn-rim);overflow:hidden}
+#loadFill{height:100%;width:0%;
+  background:linear-gradient(90deg,var(--gem-green-mid),var(--gem-green));
+  transition:width .2s;box-shadow:0 0 12px rgba(147,206,93,.8)}
 #loadBar.ready{opacity:0;transform:scaleX(.86);transition:opacity .35s ease,transform .35s ease}
 .stars{font-size:50px;letter-spacing:10px;margin-top:8px}
 
@@ -216,14 +321,9 @@ canvas{position:absolute;inset:0;display:block}
 .bestBadge .scoreLine{display:flex;align-items:center;gap:7px;margin-top:3px;
   font-size:24px;font-weight:800;color:#ffd23f;text-shadow:0 2px 0 rgba(0,0,0,.35)}
 .titleActions{display:flex;gap:10px}
-.titleIconBtn{width:48px;height:48px;border-radius:var(--panel-radius-sm);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;color:#fff;
-  border:1px solid var(--hud-border-bright);
-  background:linear-gradient(180deg,rgba(19,53,66,.9),rgba(8,24,33,.92));
-  box-shadow:0 4px 0 rgba(0,0,0,.42),0 10px 22px rgba(0,0,0,.35);
-  transition:transform .08s,filter .12s,border-color .12s;-webkit-tap-highlight-color:transparent}
-.titleIconBtn:hover{filter:brightness(1.08);border-color:rgba(120,197,224,.82);transform:translateY(-2px)}
-.titleIconBtn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.45),0 5px 14px rgba(0,0,0,.3)}
+.titleIconBtn{--face-a:#e08a3e;--face-b:#8d2c2b;--depth:5px;
+  width:50px;height:50px;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;color:#fff4dd}
 .titleIconBtn svg{width:26px;height:26px}
 .titleIconBtn .muteSlash{opacity:0;transition:opacity .15s}
 .titleIconBtn.is-muted .muteSlash{opacity:1}
@@ -260,25 +360,27 @@ canvas{position:absolute;inset:0;display:block}
 .tagline .blast{color:#ffd23f}
 .titleCtas{position:absolute;left:50%;top:492px;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:13px;z-index:3}
-.playTitleBtn{height:74px;min-width:300px;border-radius:28px;padding:0 58px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:17px;color:#fff;
-  font-size:34px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
-  border:3px solid #ffe0a8;background:linear-gradient(180deg,#ffbd3e,#ff941e 58%,#df640a);
-  box-shadow:0 7px 0 #9b4304,0 0 26px rgba(255,140,26,.52),0 15px 34px rgba(0,0,0,.34);
-  text-shadow:0 3px 0 rgba(0,0,0,.32);transition:transform .08s,filter .12s,box-shadow .12s;
-  animation:playGlow 2.6s ease-in-out infinite;-webkit-tap-highlight-color:transparent}
-.playTitleBtn:hover{filter:brightness(1.08);transform:translateY(-2px)}
-.playTitleBtn:active{transform:translateY(3px);box-shadow:0 3px 0 #9b4304,0 0 16px rgba(255,140,26,.42)}
-.playTitleBtn:disabled{filter:grayscale(.7) brightness(.75);cursor:default;animation:none}
+.playTitleBtn{--depth:8px;height:78px;min-width:306px;border-radius:30px;padding:0 58px;
+  border-width:4px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:17px;color:var(--btn-ink);
+  font-size:35px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  background:
+    linear-gradient(180deg,rgba(255,205,120,.92) 0%,rgba(255,205,120,0) 36%),
+    linear-gradient(180deg,#fea50c 0%,var(--fire-orange) 45%,#d34a03 78%,var(--fire-deep) 100%);
+  text-shadow:0 4px 0 rgba(96,26,4,.66),0 0 14px rgba(255,232,180,.45);
+  animation:playGlow 2.6s ease-in-out infinite}
+.playTitleBtn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(100deg,transparent 44%,rgba(255,255,255,.34) 50%,transparent 56%);
+  background-size:300% 100%;background-position:200% 0;
+  animation:fireSheen 3.6s ease-in-out infinite}
+.playTitleBtn:disabled::after{animation-play-state:paused}
+.playTitleBtn>*{position:relative}
 .playIcon{width:0;height:0;border-top:17px solid transparent;border-bottom:17px solid transparent;
-  border-left:25px solid #fff;filter:drop-shadow(0 3px 0 rgba(0,0,0,.28))}
+  border-left:25px solid var(--btn-ink);filter:drop-shadow(0 3px 0 rgba(96,26,4,.55))}
 .titleSecondaryRow{display:none;align-items:center;gap:11px}
-.titleSecondary{height:44px;padding:0 21px;border-radius:var(--panel-radius-sm);cursor:pointer;
-  border:1px solid var(--hud-border-bright);color:#f1fbff;font-size:14px;font-weight:800;
-  letter-spacing:1px;text-transform:uppercase;background:linear-gradient(180deg,#16627b,#0b3446);
-  box-shadow:0 4px 0 #05202b,0 9px 18px rgba(0,0,0,.28);transition:transform .08s,filter .12s}
-.titleSecondary:hover{filter:brightness(1.08);transform:translateY(-2px)}
-.titleSecondary:active{transform:translateY(2px);box-shadow:0 2px 0 #05202b}
+.titleSecondary{--face-a:#e08a3e;--face-b:#8d2c2b;--depth:5px;
+  height:46px;padding:0 22px;border-radius:14px;color:#fff4dd;font-size:14px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
 .pressEnter{font-size:12px;font-weight:700;color:#b7d5e2;text-shadow:0 2px 0 rgba(0,0,0,.5)}
 .titleGuide{display:none;position:absolute;left:50%;bottom:17px;transform:translateX(-50%);
   width:560px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;z-index:2;
@@ -291,7 +393,8 @@ canvas{position:absolute;inset:0;display:block}
   column-gap:9px;align-items:start;text-align:left;position:relative}
 .guideStep+.guideStep{border-left:1px solid rgba(120,197,224,.28)}
 .guideNum{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,#2bb3d4,#0a5b80);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 4px 10px rgba(0,0,0,.35);
+  background:linear-gradient(180deg,var(--gem-green),var(--gem-green-deep));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px rgba(0,0,0,.35);
   color:#fff;font-weight:800}
 .guideText strong{display:block;color:#ffe05a;font-size:13px;font-weight:800;text-transform:uppercase}
 .guideText span{display:block;margin-top:4px;color:#e0eff5;font-size:12px;font-weight:600;line-height:1.25}
@@ -316,14 +419,25 @@ canvas{position:absolute;inset:0;display:block}
 @keyframes subtitleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes thetaDrift{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(4deg) translateY(-5px)}}
 @keyframes playGlow{
-  0%,100%{box-shadow:0 7px 0 #9b4304,0 0 24px rgba(255,140,26,.45),0 15px 34px rgba(0,0,0,.34)}
-  50%{box-shadow:0 7px 0 #9b4304,0 0 38px rgba(255,180,45,.72),0 15px 34px rgba(0,0,0,.34)}
+  0%,100%{box-shadow:
+    inset 0 3px 0 rgba(255,232,190,.52),inset 0 -9px 0 rgba(96,26,4,.7),
+    0 0 0 3px var(--btn-rim-dark),0 8px 0 #5c2005,
+    0 18px 30px rgba(0,0,0,.4),0 0 26px rgba(253,139,6,.42)}
+  50%{box-shadow:
+    inset 0 3px 0 rgba(255,244,215,.62),inset 0 -9px 0 rgba(96,26,4,.7),
+    0 0 0 3px var(--btn-rim-dark),0 8px 0 #5c2005,
+    0 18px 30px rgba(0,0,0,.4),0 0 48px rgba(255,176,58,.78)}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .titleScreenInner,.titleSub,.thetaBadge,.playTitleBtn,#fireBtn,#scoreChip.pop,.shakeX{animation:none!important}
-  .titleIconBtn:hover,.titleSecondary:hover,.playTitleBtn:hover,.stepBtn:hover,#fireBtn:hover{transform:none}
+  .titleScreenInner,.titleSub,.thetaBadge,.playTitleBtn,.playTitleBtn::after,
+  #fireBtn,.shakeX{animation:none!important}
+  .titleIconBtn:hover,.titleSecondary:hover,.playTitleBtn:hover,.artBtn:hover{transform:none}
   #hud,#msg,#loadFill,#loadBar.ready{transition:none}
+  #controlDock{transition:opacity .2s ease}
+}
+@media (max-width:700px){
+  #controlDock{--dockScale:.8}      /* same invariant: top = 720-18-104*.8 = 619 */
 }
 
 /* ============================================================
@@ -338,54 +452,29 @@ canvas{position:absolute;inset:0;display:block}
   <canvas id="game" width="1280" height="720" aria-hidden="true"></canvas>
 
   <div id="hud">
-    <div class="hudPanel" id="lvlChip">
-      <div class="lvlRow">LEVEL <span id="lvlNum">1 / 5</span></div>
-      <div class="livesRow" id="livesRow">
-        <span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span>
-      </div>
-    </div>
-
     <div class="hudPanel" id="objBanner">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="8" stroke="#ff9f1c" stroke-width="2"/>
-        <circle cx="12" cy="12" r="2.4" fill="#ff9f1c"/>
-        <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#ff9f1c" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="8" stroke="#ffcb57" stroke-width="2"/>
+        <circle cx="12" cy="12" r="2.4" fill="#ffcb57"/>
+        <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#ffcb57" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <span id="objText">Hit the zombie using trigonometry</span>
-    </div>
-
-    <div id="topRight">
-      <div class="hudPanel" id="scoreChip"><span class="star">★</span><span id="scoreTxt">0</span></div>
-      <button type="button" class="hudPanel" id="menuBtn" title="Menu" aria-label="Open menu">☰</button>
-    </div>
-    <div id="menuPop" class="hidden">
-      <button type="button" id="homeBtn">⌂&ensp;Home</button>
-      <button type="button" id="soundBtn">🔊&ensp;Sound</button>
-      <button type="button" id="resetBtn">⟳&ensp;Restart level</button>
-      <button type="button" id="pauseBtn">⏸&ensp;Pause</button>
     </div>
 
     <div id="msg" role="status" aria-live="polite"></div>
 
     <div class="hudPanel" id="controlDock">
       <div class="stepperGroup">
-        <button type="button" class="stepBtn" id="downBtn" aria-label="Decrease angle">−</button>
+        <button type="button" class="stepBtn artBtn" id="downBtn" aria-label="Decrease angle"></button>
         <div class="valBox">
+          <span class="thetaMark" aria-hidden="true">θ</span>
           <input id="angleInput" inputmode="numeric" maxlength="2" value="45" autocomplete="off" title="Angle in degrees" aria-label="Angle in degrees">
           <span class="deg">°</span>
         </div>
-        <button type="button" class="stepBtn" id="upBtn" aria-label="Increase angle">+</button>
+        <button type="button" class="stepBtn artBtn" id="upBtn" aria-label="Increase angle"></button>
       </div>
       <div class="dockDivider"></div>
-      <button type="button" id="fireBtn">
-        <svg width="27" height="27" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="8" stroke="#fff" stroke-width="2"/>
-          <circle cx="12" cy="12" r="2.4" fill="#fff"/>
-          <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        FIRE
-      </button>
-      <button type="button" id="hintBtn">💡 Hint</button>
+      <button type="button" class="artBtn" id="fireBtn" aria-label="Fire"></button>
     </div>
   </div>
 
@@ -459,18 +548,45 @@ canvas{position:absolute;inset:0;display:block}
    objects are layered over it in world space.
    ============================================================ */
 const W = 1280, H = 720;
-const PLAY_SURFACE_Y = 558;                // visible field contact line on the current background
+const PLAY_SURFACE_Y = 600;                // measured: tan field meets the grass lip at y≈602 on every plate
 const GROUND_Y = PLAY_SURFACE_Y;           // compatibility alias for shell/building collision
 const TOTAL_LEVELS = 5;
-const TANK_START_X = 108, CAMERA_FOLLOW_X = 190, TARGET_SCREEN_X = W - 269;
+const CAMERA_FOLLOW_X = 190, TARGET_SCREEN_X = W - 269;
 const TANK_BOTTOM_PADDING = 6;             // lets visible wheels/tracks meet the surface, not the PNG box
-const FIRST_TARGET_WORLD_X = TARGET_SCREEN_X;
+/* Every round is framed identically — target at TARGET_SCREEN_X, tank at
+   CAMERA_FOLLOW_X — so the triangle is the only thing that changes between
+   levels. Round 1's world sits INTRO_PAN to the right of the camera's home
+   position, which gives the opening roll-in real ground to cover: the world
+   scrolls with the tank instead of the level snapping into place. */
+const INTRO_PAN = 300;
+const FIRST_TARGET_WORLD_X = TARGET_SCREEN_X + INTRO_PAN;
+const INTRO_ROLL_IN = 820;                 // tank starts this far back — fully off-screen left
 const TARGET_SPACING = 1150;
 const CULL_MARGIN = 320, DESPAWN_MARGIN = 120;
 const TANK_ACCEL = 650, TANK_MAX_SPEED = 470, TANK_DECEL = 700;
 const CAMERA_FOLLOW_STRENGTH = 8.5, CAMERA_LOOKAHEAD_MAX = 40;
 const FINAL_ROLL_DISTANCE = 520;
 const DEFAULT_START_ANGLE = 15, PROJECTILE_SPEED = 850, HIT_PADDING = 18;
+/* ---------- CHOREOGRAPHY ----------
+   The gun rests level while the student works. The barrel only swings once
+   FIRE commits an answer, so the angle has to come from the triangle instead
+   of from nudging the barrel until it looks about right. */
+const BARREL_REST_ANGLE = 0;
+const LAY_BASE = .30, LAY_PER_DEG = .013, LAY_MAX = .95;   // time to lay the gun over
+const LAY_HOLD = .16;                                      // beat of stillness before the shot
+/* The briefing score: one cue per element, in the order it earns attention.
+   Tuning the whole rhythm means editing this table and nothing else. */
+const CUES = [
+  {key:'adj',   at:.18, dur:.50, note:588},   // horizontal, gun → under the target
+  {key:'opp',   at:.62, dur:.42, note:699},   // vertical, up to the target
+  {key:'hyp',   at:1.06,dur:.56, note:831},   // the line of fire
+  {key:'theta', at:1.68,dur:.52, note:988},   // θ sweeps open at the gun
+  {key:'chipA', at:2.10,dur:.30, note:1175},  // the two given lengths
+  {key:'chipO', at:2.26,dur:.30, note:1319}
+];
+const BRIEF_END = 2.70;
+const REVEAL_KEYS = CUES.map(c=>c.key);
+const clamp01 = v => v<0 ? 0 : v>1 ? 1 : v;
 const cv = document.getElementById('game'), ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
 const FONT = '"Chakra Petch","Trebuchet MS",sans-serif';
@@ -488,13 +604,27 @@ addEventListener('resize', fitStage); fitStage();
    ASSETS
    ============================================================ */
 const IMGS = {}, MANIFEST = {
-  zombie:'assets/ZombieSprite.png', tank:'assets/tankSheet.png',
-  shot:'assets/TankShot.png',
-  pre:'assets/preLBD.png',
-  scene:'assets/bgm4.png',         // complete 16:9 illustrated background plate
-  scene2:'assets/bgm2.png', scene3:'assets/bgm1.png',
-  scene4:'assets/bgm3.png', scene5:'assets/bgm.png',
-  bld:'assets/Builds.png'          // cartoon town props: buildings, water tower, gantry
+  zombie:'assets/Zombie2.webp',     // walk/idle poses, one row of 8
+  titleZombie:'assets/ZombieSprite.webp',
+  zkill:'assets/killZombie2.webp',  // 8-frame knockdown: hit → stagger → fall → crawl → poof
+  tank:'assets/tankSheet.webp',
+  shot:'assets/TankShot.webp',
+  pre:'assets/preLBD1.webp',
+  scene:'assets/bgm4.webp',         // complete 16:9 illustrated background plate
+  scene2:'assets/bgm2.webp', scene3:'assets/bgm1.webp',
+  scene4:'assets/bgm3.webp', scene5:'assets/bgm.webp',
+  cloud:'assets/cloud.webp',        // the one painted cloud every sky cloud is cut from
+  // UI plates. btnPlus/btnMinus are both derived from the one painted plate
+  // (its glyph inpainted out, then + / − drawn back on with the asset's own
+  // stroke weight and shadow) and btnFire is the fire pill lifted off its
+  // mockup background — so every button is the same artwork.
+  btnPlus:'assets/btnPlus.webp', btnMinus:'assets/btnMinus.webp',
+  btnFire:'assets/btnFire.webp',
+  // one complete structure per file — each round wears a different one
+  b1:'assets/building.webp',  b2:'assets/building2.webp',
+  b3:'assets/building3.webp', b4:'assets/building4.webp',
+  b5:'assets/building5.webp', b6:'assets/building6.webp',
+  b7:'assets/building7.webp', b8:'assets/building8.webp'
 };
 function loadAll(cb){
   const keys = Object.keys(MANIFEST); let done = 0;
@@ -513,46 +643,71 @@ const SP = {
   dome:   [42, 336, 200, 162],
   cannon: [258,336, 745, 160],   cannonPivot:[74, 86], cannonTip:[730, 78],
   wheels: [[0,512,256,256],[256,512,256,256],[512,512,256,256],[768,512,256,256]],
-  // zombie: 4 cols x 3 rows of 256px cells
-  zWalk:  [[0,0],[256,0],[512,0],[768,0]],
-  zAlert: [768,256],
-  zBurst: [[0,512],[256,512],[512,512],[768,512]],
+  // each wheel is packed at a different spot inside its 256 box, so the hub —
+  // the only point a wheel may spin about — is stored per cell (measured off
+  // the sheet). Spinning about the box centre instead made them orbit.
+  wheelPivot: [[143,116.5],[130.5,116.5],[119,116.5],[106,116.5]],
   // TankShot.png
   shellFlame:[95,275,830,155],
   blast:  [350,450,350,275]
 };
 
-/* ---------- Builds.png regions — target building parts [sx,sy,sw,sh] ----------
-   four buildings on the sheet, each hand-sliced into a roof cap + one
-   repeatable mid-section + a ground-level base, so the same stack technique
-   builds any of them to whatever height a level's opposite side needs. ---- */
-const BLD = {
-  towerCap:[376,19,212,92],  towerFloor:[376,111,212,64], towerBase:[376,303,212,90],
-  aptCap:[42,42,220,174],    aptFloor:[42,216,220,86],    aptBase:[42,302,220,90],
-  facCap:[683,63,324,154],   facFloor:[683,217,324,54],   facBase:[683,271,324,121],
-  wtCap:[45,400,193,135],    wtFloor:[45,535,193,73],     wtBase:[45,608,193,35]
+/* ---------- zombie frames, measured content boxes [sx,sy,sw,sh] ----------
+   Zombie2.png: 8 poses in one row — 0 is the planted idle stance, 4 is the
+   arms-up alarm. killZombie2.png: the 8-frame knockdown played on a hit.
+   Both sheets face LEFT natively (toward the tank), so no mirroring. ---- */
+const Z2 = {
+  idle: [16,106,67,167],
+  alert:[359,103,82,170],
+  die:[[17,342,163,311],[186,332,194,321],[380,359,222,295],[602,428,204,223],
+       [824,500,210,168],[1047,551,243,116],[1290,517,229,152],[1519,514,140,147]]
 };
-// building "skins" — a level just names one; drawTower stacks it to whatever
-// height that level's opposite side needs, same technique for all four.
-const BLD_SKINS = {
-  tower:     {cap:BLD.towerCap, floor:BLD.towerFloor, base:BLD.towerBase, nativeW:212},
-  apartment: {cap:BLD.aptCap,   floor:BLD.aptFloor,   base:BLD.aptBase,   nativeW:220},
-  factory:   {cap:BLD.facCap,   floor:BLD.facFloor,   base:BLD.facBase,   nativeW:324},
-  watertower:{cap:BLD.wtCap,    floor:BLD.wtFloor,    base:BLD.wtBase,    nativeW:193}
-};
+const Z_H = 165;                       // on-screen zombie height (idle)
+const Z_DIE_SC = Z_H/311;              // knockdown sheet is drawn at the same body scale (frame 0 = standing)
+
+/* ---------- buildings: one complete structure per file ----------
+   box    = content bounds [sx,sy,sw,sh] inside the 1122x1402 file
+   deck   = y (image px) of the flat stand-surface on top
+   deckCx = x (image px) at the centre of that flat spot — the whole
+            building is positioned so this point sits under the zombie ---- */
+const BUILDINGS = [
+  // deck = first solid row at the stand column, measured off each file
+  {img:'b1', box:[23,276,1079,792],  deck:277, deckCx:557},   // garage — vent cap
+  {img:'b2', box:[56,140,998,1122],  deck:143, deckCx:550},   // house — flat slab roof
+  {img:'b3', box:[64,89,1042,1216],  deck:98,  deckCx:505},   // silo — yellow cap
+  {img:'b4', box:[67,15,988,1368],   deck:26,  deckCx:555},   // water tank — top cap
+  {img:'b5', box:[27,51,1034,1282],  deck:56,  deckCx:666},   // crane rig — drum top
+  {img:'b6', box:[19,135,1082,1095], deck:409, deckCx:695},   // substation — centre drum cap
+  {img:'b7', box:[175,38,851,1320],  deck:42,  deckCx:555},   // radio tower — top cap
+  {img:'b8', box:[77,69,1009,1300],  deck:71,  deckCx:475}    // boiler — crown rim
+];
+// Each building scales as one piece, so it keeps its native aspect — which
+// makes WIDTH the real constraint: the squat shapes (b1 garage, b6 substation)
+// balloon past 500px once a late round's deck gets tall, so they're kept to
+// the early rounds, and the very slender b7 mast to the late ones. Everything
+// else reads fine at any height. One pick per round, no repeats in a run.
+const LEVEL_BUILDING_POOL = [
+  [0,5,1,7],      // short deck — the wide shapes are still compact here
+  [0,5,1,7,2],
+  [1,7,2,4,3],
+  [2,4,3,6,7],
+  [2,4,3,6,1]     // tall deck — slender shapes only
+];
+
+// zombie sprite: soles sit Z_FEET px below the trig anchor (z.y); sink them
+// Z_SINK px into the deck so the shoes visibly grip the roof, never graze it
+const Z_FEET = 82, Z_SINK = 3;
 
 /* ============================================================
    LEVELS — five target nodes. Adjacent/opposite define the real
    right-triangle ratio; hypotenuse and answer are computed once.
-   Each level wears a different Builds.png skin so the town looks
-   freshly built as you advance, not the same tower five times over.
    ============================================================ */
 const LEVELS = [
-  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof',     skin:'apartment'},
-  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof',  skin:'tower'},
-  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof', skin:'factory'},
-  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof',    skin:'watertower'},
-  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof',   skin:'apartment'}
+  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof'},
+  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof'},
+  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof'},
+  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof'},
+  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof'}
 ].map(level=>({
   ...level,
   h:level.opposite,
@@ -609,6 +764,16 @@ const AU = {
 
   click(){ if(!this.ctx)return; this.tone(720,this.now(),.06,'square',.12); },
   tick(){ if(!this.ctx)return; this.tone(980,this.now(),.045,'square',.09); },
+  /* one soft mallet note per briefing beat — the reveal has a melody */
+  blip(freq){ if(!this.ctx)return; const t=this.now();
+    this.tone(freq,t,.16,'triangle',.15); this.tone(freq*2,t,.07,'sine',.045); },
+  /* the turret motor, held for exactly as long as the barrel is moving */
+  servo(dur=.5){ if(!this.ctx)return; const t=this.now();
+    this.tone(190,t,dur,'sawtooth',.05,null,270);
+    this.noise(t,dur,.045,320,1100); },
+  /* gun laid, target set */
+  lockOn(){ if(!this.ctx)return; const t=this.now();
+    this.tone(880,t,.07,'square',.09); this.tone(1320,t+.07,.1,'square',.09); },
   fire(){
     if(!this.ctx)return; const t=this.now();
     this.noise(t,.28,.5,80,1500);
@@ -620,6 +785,13 @@ const AU = {
     const {bp}=this.noise(t,dur,.16,900,2400);
     bp.frequency.setValueAtTime(2200,t);
     bp.frequency.exponentialRampToValueAtTime(500,t+dur);
+  },
+  /* the fuse: a hiss that tightens as it burns down to the casing */
+  fuse(dur){
+    if(!this.ctx)return; const t=this.now();
+    const {bp}=this.noise(t,dur,.10,1400,6000);
+    bp.frequency.setValueAtTime(1700,t);
+    bp.frequency.exponentialRampToValueAtTime(5400,t+dur);
   },
   explode(big){
     if(!this.ctx)return; const t=this.now();
@@ -704,21 +876,29 @@ const AU = {
    ============================================================ */
 const GameState = {
   PREGAME:'PREGAME',
+  INTRO:'INTRO',        // tank rolls into firing position, camera in tow
+  BRIEFING:'BRIEF',     // the triangle draws itself in, one side at a time
   AIMING:'AIM',
+  LAYING:'LAYING',      // barrel swings to the angle the player committed to
   PROJECTILE_FLYING:'FIRING',
   HIT_REACTION:'BURST',
+  TRANSITION:'BOOM',    // the comic panel that hides the hand-off to the next round
   TRAVELLING:'DRIVE',
   GAME_OVER:'GAMEOVER',
   GAME_COMPLETE:'WIN',
   PAUSED:'PAUSED'
 };
 const G = {
-  state:GameState.PREGAME,
+  state:GameState.PREGAME, 
   level:0, score:0, hearts:3, tries:0,
-  angleTarget:45, angleShown:45,   // barrel eases toward target
+  angleTarget:DEFAULT_START_ANGLE,      // the number in the dock — the player's answer
+  angleShown:BARREL_REST_ANGLE,         // where the barrel actually points
+  barrelTarget:BARREL_REST_ANGLE,
+  lay:null, brief:null, trans:null,     // active choreography, if any
+  reveal:{adj:0,opp:0,hyp:0,theta:0,chipA:0,chipO:0},
   aimPath:null, shell:null, particles:[], floaters:[],
   shake:0, recoil:0, flash:0, guideAlpha:1,
-  cameraX:0, tankWorldX:TANK_START_X, tankVel:0,
+  cameraX:0, tankWorldX:0, tankVel:0,
   zombie:{worldX:0,x:0,y:0,frame:0,animT:0,mode:'idle',burstF:0,dead:false},
   tower:null, activeNode:null, levelNodes:[],
   drive:null, wheelRot:0, dustT:0, hitDelay:0,
@@ -737,6 +917,13 @@ function drawCover(g,img,x,y,w,h){
   const sw = w/sc, sh = h/sc;
   const sx = (img.width-sw)/2, sy = (img.height-sh)/2;
   g.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+function drawCoverSlice(g,img,sx,sy,sw,sh,x,y,w,h){
+  const sc = Math.max(w/img.width, h/img.height);
+  const coverSw = w/sc, coverSh = h/sc;
+  const coverSx = (img.width-coverSw)/2, coverSy = (img.height-coverSh)/2;
+  g.drawImage(img, sx, sy, sw, sh,
+    x + (sx-coverSx)*sc, y + (sy-coverSy)*sc, sw*sc, sh*sc);
 }
 function buildLayers(){
   const baseScenes = ['scene','scene2','scene3','scene4','scene5'].map(k=>{
@@ -766,6 +953,23 @@ function buildLayers(){
     bg.globalCompositeOperation='source-over';
     wg.drawImage(blend, x, 0);
   }
+  bakeCloud();
+  bakeBoomLayers();
+}
+
+/* cloud.png is a 1254² plate that is ~59% empty padding, and no cloud ever
+   draws wider than ~330px. Bake the tight crop down once into a right-sized
+   offscreen canvas: the per-frame draws then sample a small texture instead
+   of a 6MB one, and the downscale is filtered once instead of every frame. */
+const CLOUD_SRC = [40,352,1174,553];      // measured content box in cloud.png
+function bakeCloud(){
+  const [sx,sy,sw,sh] = CLOUD_SRC;
+  const bw = 512, bh = Math.round(bw*sh/sw);
+  BGL.cloud = makeCv(bw,bh);
+  const g = BGL.cloud.getContext('2d');
+  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+  g.drawImage(IMGS.cloud, sx,sy,sw,sh, 0,0, bw,bh);
+  BGL.cloudAspect = sw/sh;
 }
 
 /* ---------- tank geometry ---------- */
@@ -775,21 +979,25 @@ TANK.baseY = PLAY_SURFACE_Y - TANK.h + TANK_BOTTOM_PADDING;
 Object.defineProperties(TANK, {
   x:{get(){ return G.tankWorldX - G.cameraX; }},
   y:{get(){
-    const roll = G.state===GameState.TRAVELLING ? Math.sin(G.time*22)*1.1*Math.min(1,Math.abs(G.tankVel)/260) : 0;
+    const roll = G.drive ? Math.sin(G.time*22)*1.1*Math.min(1,Math.abs(G.tankVel)/260) : 0;
     return TANK.baseY + roll;
   }}
 });
 // cannon pivot sits on the turret ring (tuned visually)
 TANK.pivot = ()=>({ x:TANK.x + TANK.w*0.44 - G.recoil*.6, y:TANK.y + TANK.h*0.10 });
 const BARREL_LEN = 185, BARREL_SC = BARREL_LEN/(SP.cannonTip[0]-SP.cannonPivot[0]);
-// spinning wheel overlay positions (fraction of hull rect) — tuned visually
-TANK.wheelFr = [[.175,.767],[.32,.767],[.465,.767],[.61,.767]];
-TANK.wheelR  = TANK.h*.21;
+// spinning wheel overlay positions (fraction of hull rect) — measured off the
+// hull art's baked road-wheel discs so the overlays land exactly on them
+TANK.wheelFr = [[.195,.83],[.346,.83],[.499,.83],[.653,.83]];
+TANK.wheelR  = TANK.h*.195;
 
-function muzzleFromTankScreen(tankScreenX, angleDeg){
-  const a = angleDeg*Math.PI/180;
-  const p = {x:tankScreenX + TANK.w*.44, y:TANK.baseY + TANK.h*.10};
-  return { x:p.x + Math.cos(a)*BARREL_LEN, y:p.y - Math.sin(a)*BARREL_LEN };
+/* The gun's rotation centre for a tank parked at this screen x. This is the
+   apex of the level's triangle AND the one point every shot's line passes
+   through — the muzzle at angle θ always sits on the ray leaving here at θ —
+   so placing a target on that ray guarantees the drawn angle and the angle
+   that actually hits are the same number. */
+function pivotFromTankScreen(tankScreenX){
+  return {x:tankScreenX + TANK.w*.44, y:TANK.baseY + TANK.h*.10};
 }
 function muzzlePos(angleDeg=G.angleShown){
   const p=TANK.pivot(), a=angleDeg*Math.PI/180;
@@ -806,20 +1014,26 @@ function calculateAimPath(angleDeg=G.angleShown){
   return {startX:start.x, startY:start.y, endX, endY, angle:a, screenAngle:Math.atan2(dy,dx), angleDeg, length, dirX:dx, dirY:dy};
 }
 
-function makeLevelNode(level, targetWorldX){
+function makeLevelNode(level, targetWorldX, bld){
   const L = LEVELS[level];
-  const restTankX = level===0 ? TANK_START_X : CAMERA_FOLLOW_X;
-  const restMuzzle = muzzleFromTankScreen(restTankX, L.ans);
-  const tw = 188;
-  const buildingWorldX = targetWorldX - tw/2;
-  const targetScreenX = targetWorldX - (level===0 ? 0 : targetWorldX - TARGET_SCREEN_X);
-  const zombieY = restMuzzle.y - (targetScreenX-restMuzzle.x)*Math.tan(L.ans*Math.PI/180);
+  const restPivot = pivotFromTankScreen(CAMERA_FOLLOW_X);
+  const targetScreenX = TARGET_SCREEN_X;
+  const zombieY = restPivot.y - (targetScreenX-restPivot.x)*Math.tan(L.ans*Math.PI/180);
+  // the building scales as one piece so its flat deck passes exactly under
+  // the zombie's soles, and slides sideways so the deck's centre (deckCx)
+  // sits at the zombie's x — he stands ON the flat spot, not the art centre
+  const [bsx,bsy,bsw,bsh] = bld.box;
+  const deckPlaneY = zombieY + Z_FEET - Z_SINK;
+  const s = (GROUND_Y - deckPlaneY) / (bsy + bsh - bld.deck);
+  const towerY = deckPlaneY - (bld.deck - bsy) * s;
+  const tw = bsw * s;
+  const buildingWorldX = targetWorldX - (bld.deckCx - bsx) * s;
   const zombie = {
-    offsetX:tw/2, offsetY:0, worldX:targetWorldX, x:targetWorldX-G.cameraX, y:zombieY,
+    offsetX:(bld.deckCx - bsx) * s, offsetY:0,
+    worldX:targetWorldX, x:targetWorldX-G.cameraX, y:zombieY,
     frame:0, animT:0, mode:'idle', burstF:0, dead:false
   };
-  const feetY = zombie.y + 36;
-  const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:feetY, w:tw, h:GROUND_Y-feetY, skin:L.skin||'tower'};
+  const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:towerY, w:tw, h:GROUND_Y-towerY, bld};
   return {
     level, targetWorldX, worldX:buildingWorldX, tower, zombie,
     targetHeight:tower.h, zombieOffsetX:zombie.offsetX, zombieOffsetY:zombie.offsetY,
@@ -828,8 +1042,20 @@ function makeLevelNode(level, targetWorldX){
   };
 }
 
+// assign a building to each round from its height-suitability pool, never
+// repeating within one run — so every playthrough tours a fresh skyline
+function assignBuildings(){
+  const used = new Set();
+  return LEVEL_BUILDING_POOL.map(pool=>{
+    const free = pool.filter(i=>!used.has(i));
+    const pick = free.length ? free[Math.floor(Math.random()*free.length)] : pool[0];
+    used.add(pick);
+    return BUILDINGS[pick];
+  });
+}
 function buildLevelNodes(){
-  return Array.from({length:TOTAL_LEVELS}, (_,level)=>makeLevelNode(level, FIRST_TARGET_WORLD_X + level*TARGET_SPACING));
+  const picks = assignBuildings();
+  return Array.from({length:TOTAL_LEVELS}, (_,level)=>makeLevelNode(level, FIRST_TARGET_WORLD_X + level*TARGET_SPACING, picks[level]));
 }
 
 function currentNode(){
@@ -871,41 +1097,111 @@ function syncWorldPositions(){
 /* ============================================================
    LEVEL SETUP
    ============================================================ */
-function initializeLevel(levelIndex, {resetHearts=false, revive=true, enterAiming=true}={}){
+function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='brief', fast=false}={}){
   G.level = Math.max(0, Math.min(levelIndex, TOTAL_LEVELS-1));
   G.tries = 0; G.shell=null; G.aimPath=null; G.hitDelay=0;
   G.particles.length=0; G.floaters.length=0;
-  G.drive=null; G.tankVel=0; G.dustT=0; G.guideAlpha=1;
+  G.drive=null; G.tankVel=0; G.dustT=0; G.lay=null; G.brief=null;
+  G.angleShown = G.barrelTarget = BARREL_REST_ANGLE;
   if(resetHearts) G.hearts = 3;
   if(!G.levelNodes.length) G.levelNodes = buildLevelNodes();
   activateLevel(G.level, revive);
 
-  // HUD chips
-  $('lvlNum').textContent = (G.level+1)+' / '+TOTAL_LEVELS;
-  $('scoreTxt').textContent = G.score;
-  renderHearts();
+  if(enter!=='none'){
+    G.cameraX = levelRestCamera(G.level);
+    G.tankWorldX = levelRestTankX(G.level);
+    syncWorldPositions();
+  }
 
   setAngle(DEFAULT_START_ANGLE);
-  setObjective('Hit the zombie using trigonometry');
-  if(enterAiming) setGameState(GameState.AIMING);
-  else updateControlsForState();
+  if(enter==='brief') beginBriefing({fast});
+  else if(enter==='aim') enterAiming({instant:true});
+  else { clearReveal(); G.guideAlpha=0; stowDock(true); updateControlsForState(); }
 }
 
 function setupLevel(opts={}){
-  initializeLevel(G.level, {resetHearts:true, revive:true, enterAiming:true, ...opts});
+  initializeLevel(G.level, {resetHearts:true, revive:true, enter:'brief', ...opts});
 }
 
-/* lives — a small heart row docked under LEVEL, never floating in the world */
-function renderHearts(){
-  $('livesRow').querySelectorAll('.heart').forEach((el,i)=>{
-    el.classList.toggle('lost', i>=G.hearts);
-  });
+/* ============================================================
+   CHOREOGRAPHY — one rhythm, replayed every round:
+
+     roll in ▸ adjacent ▸ opposite ▸ hypotenuse ▸ θ ▸ givens ▸ controls
+
+   Nothing here uses setTimeout: every beat is a position on one clock that
+   the game loop advances, so pausing, restarting and fast-forwarding all
+   behave, and the whole feel is tuned from the CUES table above.
+   ============================================================ */
+function clearReveal(){ REVEAL_KEYS.forEach(k=>G.reveal[k]=0); }
+function revealAll(){ REVEAL_KEYS.forEach(k=>G.reveal[k]=1); }
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
+function stowDock(stowed){ $('controlDock').classList.toggle('is-stowed', !!stowed); }
+
+/* the opening: tank drives in from off-screen left, world scrolling with it */
+function beginIntro(){
+  const restCam = levelRestCamera(0), restTank = levelRestTankX(0);
+  G.cameraX = Math.max(0, restCam - INTRO_PAN);
+  G.tankWorldX = restTank - INTRO_ROLL_IN;
+  G.tankVel = 0; G.dustT = 0; G.wheelRot = 0;
+  G.guideAlpha = 0; clearReveal(); stowDock(true);
+  G.angleShown = G.barrelTarget = BARREL_REST_ANGLE;
+  syncWorldPositions();
+  setObjective('Rolling into position…');
+  setGameState(GameState.INTRO);
+  G.drive = {t:0, nextLevel:null, tankStart:G.tankWorldX, tankEnd:restTank,
+             cameraStart:G.cameraX, cameraEnd:restCam, onArrive:beginBriefing};
+  if(!ambientMotionAllowed()){ poseDriveAt(1); finishDrive(); }
 }
+
+function beginBriefing(opts){
+  const fast = !!(opts && opts.fast);
+  G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
+  clearReveal(); stowDock(true);
+  setObjective('Reading the target…');
+  setGameState(GameState.BRIEFING);
+  G.brief = {t:0, rate:fast ? 2.1 : (G.level===0 ? 1 : 1.32), fired:0};
+  if(!ambientMotionAllowed()) finishBriefing();
+}
+function updateBriefing(dt){
+  const b = G.brief; if(!b) return;
+  b.t += dt*b.rate;
+  CUES.forEach(c=>{ G.reveal[c.key] = easeOutCubic(clamp01((b.t-c.at)/c.dur)); });
+  while(b.fired<CUES.length && b.t>=CUES[b.fired].at){ AU.blip(CUES[b.fired].note); b.fired++; }
+  if(b.t>=BRIEF_END) finishBriefing();
+}
+function finishBriefing(){ G.brief = null; enterAiming(); }
+
+/* hand the round over to the player: triangle complete, controls ride up */
+function enterAiming({instant=false}={}){
+  revealAll(); stowDock(false);
+  G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
+  if(instant){ G.guideAlpha = 1; G.angleShown = BARREL_REST_ANGLE; }
+  setObjective('Solve for θ — then FIRE');
+  setGameState(GameState.AIMING);
+  angleInput.value = G.angleTarget;
+}
+
+/* the cinematics are skippable — a replay shouldn't cost the player 5 seconds */
+function inChoreo(){ return G.state===GameState.INTRO || G.state===GameState.BRIEFING
+  || G.state===GameState.TRANSITION; }
+function skipChoreo(){
+  if(G.trans){ finishVictoryBoom(); return true; }
+  if(G.state===GameState.INTRO){ if(G.drive){ poseDriveAt(1); finishDrive(); } return true; }
+  if(G.state===GameState.BRIEFING){ finishBriefing(); return true; }
+  return false;
+}
+
+/* where the camera and the tank come to rest for a given round */
+function levelRestCamera(level){
+  const node = G.levelNodes[level];
+  return node ? Math.max(0, node.targetWorldX - TARGET_SCREEN_X) : 0;
+}
+function levelRestTankX(level){ return levelRestCamera(level) + CAMERA_FOLLOW_X; }
 
 function resetWorld(){
-  G.cameraX=0; G.tankWorldX=TANK_START_X; G.tankVel=0;
-  G.drive=null; G.dustT=0; G.guideAlpha=1;
   G.levelNodes = buildLevelNodes();
+  G.cameraX=levelRestCamera(0); G.tankWorldX=levelRestTankX(0); G.tankVel=0;
+  G.drive=null; G.dustT=0; G.guideAlpha=1;
   activateLevel(0, true);
 }
 
@@ -913,17 +1209,18 @@ function resetWorld(){
    INPUT / UI
    ============================================================ */
 const angleInput = $('angleInput');
+/* The dock's number is the player's answer and nothing more — the barrel does
+   NOT follow it. It only moves once FIRE commits the answer (see pressFire),
+   which is what stops the level from being solvable by eye. */
 function setAngle(v){
   v = Math.max(1, Math.min(89, Math.round(v)||1));
   G.angleTarget = v; angleInput.value = v;
-  G.angleShown = v;
-  G.aimPath = calculateAimPath(v);
 }
 function setControlsEnabled(enabled){
   $('downBtn').disabled=!enabled; $('upBtn').disabled=!enabled;
-  angleInput.disabled=!enabled; $('hintBtn').disabled=!enabled;
+  angleInput.disabled=!enabled;
   $('fireBtn').disabled=!enabled;
-  $('controlDock').style.opacity = enabled ? 1 : .82;
+  $('controlDock').classList.toggle('is-busy', !enabled);
 }
 function updateControlsForState(){
   setControlsEnabled(G.state===GameState.AIMING);
@@ -936,11 +1233,6 @@ function setGameState(newState){
 }
 function setObjective(txt){
   $('objText').textContent = txt;
-}
-function popScoreChip(){
-  const el = $('scoreChip');
-  el.classList.remove('pop'); void el.offsetWidth;
-  el.classList.add('pop');
 }
 function nudge(d){
   if(G.state!==GameState.AIMING) return;
@@ -968,17 +1260,61 @@ angleInput.addEventListener('blur', ()=>{
 });
 
 addEventListener('keydown', e=>{
+  if(inChoreo() && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); skipChoreo(); return; }
   if(G.state===GameState.AIMING){
-    if(e.key==='ArrowUp'){ nudge(1); e.preventDefault(); }
-    if(e.key==='ArrowDown'){ nudge(-1); e.preventDefault(); }
-    if(e.key==='Enter') fire();
+    if(e.key==='ArrowUp'){ nudge(1); flashPress($('upBtn')); e.preventDefault(); }
+    if(e.key==='ArrowDown'){ nudge(-1); flashPress($('downBtn')); e.preventDefault(); }
+    if(e.key==='Enter'){ flashPress($('fireBtn')); pressFire(); }
   } else if(G.state===GameState.PREGAME && e.key==='Enter'){
     const play = $('playBtn');
     if(!play || !play.disabled){ e.preventDefault(); startGame(); }
   }
 });
 
-$('fireBtn').addEventListener('click', fire);
+/* ---------- press physics ----------
+   :active alone does not survive contact with this UI. Three separate holes:
+     · the stepper's hold-to-repeat calls preventDefault() on pointerdown,
+       which is exactly what tells the browser to drop :active;
+     · FIRE disables itself inside its own click handler, and a disabled
+       button is forced back to transform:none before the press can paint;
+     · a fast tap holds :active for less time than the key takes to travel,
+       and touch browsers withhold it anyway until they have ruled out a
+       scroll gesture.
+   So the press is a class we own: on at pointerdown, held for at least
+   PRESS_MIN so every tap reads as a real push no matter how quick the
+   finger is, then released on pointerup wherever that lands. */
+const PRESS_MIN = 120;
+function armPress(btn){
+  if(!btn) return;
+  const id = btn._pressId = (btn._pressId||0)+1;
+  const t0 = performance.now();
+  btn.classList.add('is-pressed');
+  const release = ()=>{
+    EVENTS.forEach(ev=>removeEventListener(ev, release));
+    setTimeout(()=>{ if(btn._pressId===id) btn.classList.remove('is-pressed'); },
+               Math.max(0, PRESS_MIN-(performance.now()-t0)));
+  };
+  // on window, not the button: the finger may slide off before it lifts, and
+  // blur/visibilitychange catch an app switch mid-hold so no key stays stuck down
+  const EVENTS = ['pointerup','pointercancel','blur','visibilitychange'];
+  EVENTS.forEach(ev=>addEventListener(ev, release));
+}
+/* keyboard has no pointerup to wait for — the key just blinks the button, so
+   the on-screen control still answers when the round is played from the keys */
+function flashPress(btn){
+  if(!btn) return;
+  const id = btn._pressId = (btn._pressId||0)+1;
+  btn.classList.add('is-pressed');
+  setTimeout(()=>{ if(btn._pressId===id) btn.classList.remove('is-pressed'); }, PRESS_MIN);
+}
+addEventListener('pointerdown', e=>{
+  const btn = e.target.closest && e.target.closest('button');
+  if(btn && !btn.disabled) armPress(btn);
+}, true);
+
+$('fireBtn').addEventListener('click', pressFire);
+/* tapping the world fast-forwards the roll-in / briefing */
+cv.addEventListener('pointerdown', ()=>{ if(inChoreo()){ AU.click(); skipChoreo(); } });
 const BEST_SCORE_KEY = 'tankVsZombieAngleAcademyBest';
 let startingMission = false, titleGuideTimer = null;
 function getBestScore(){
@@ -1002,8 +1338,6 @@ function updateSoundUi(){
     titleSound.setAttribute('aria-label', AU.muted ? 'Unmute sound' : 'Mute sound');
     titleSound.title = AU.muted ? 'Unmute sound' : 'Mute sound';
   }
-  const menuSound = $('soundBtn');
-  if(menuSound) menuSound.innerHTML = (AU.muted?'🔇':'🔊')+'&ensp;Sound';
 }
 function toggleSound(){
   AU.setMuted(!AU.muted);
@@ -1101,7 +1435,7 @@ function startGame(){
   if(play && play.disabled) return;
   startingMission = true;
   AU.init(); AU.resume(); AU.click();
-  closeMenu(); hideMsg();
+  hideMsg();
   const overlay = $('overlay');
   overlay.classList.add('leaving');
   setTimeout(()=>{
@@ -1109,52 +1443,13 @@ function startGame(){
     overlay.classList.remove('titleScreen','leaving');
     G.level=0; G.score=0; G.hearts=3;
     resetWorld();
-    initializeLevel(0, {resetHearts:true, revive:true});
-    showMsg('Mission start!', 1400);
+    initializeLevel(0, {resetHearts:true, revive:true, enter:'none'});
+    beginIntro();
+    showMsg('Mission start!', 1200);
     startingMission = false;
   }, 420);
 }
 $('playBtn').addEventListener('click', startGame);
-
-/* --- hamburger menu --- */
-$('menuBtn').addEventListener('click', ()=>{
-  AU.click(); $('menuPop').classList.toggle('hidden');
-});
-const closeMenu = ()=> $('menuPop').classList.add('hidden');
-$('soundBtn').addEventListener('click', ()=>{
-  toggleSound();
-});
-$('resetBtn').addEventListener('click', ()=>{
-  if(G.state===GameState.PREGAME) return;
-  AU.click(); AU.engineStop(); closeMenu();
-  setupLevel(); hideMsg();
-});
-$('homeBtn').addEventListener('click', ()=>{
-  AU.click(); AU.engineStop(); closeMenu(); showTitle();
-});
-$('pauseBtn').addEventListener('click', ()=>{
-  AU.click(); closeMenu();
-  if(G.state===GameState.PAUSED){
-    setGameState(G.prevPaused); $('overlay').classList.add('hidden');
-    $('pauseBtn').innerHTML='⏸&ensp;Pause';
-  } else if(G.state!==GameState.PREGAME && G.state!==GameState.GAME_OVER && G.state!==GameState.GAME_COMPLETE){
-    G.prevPaused=G.state; setGameState(GameState.PAUSED);
-    $('pauseBtn').innerHTML='▶&ensp;Resume';
-    showCard(`<h2>⏸ PAUSED</h2><p>Take a breath, mathematician!</p>
-      <button type="button" class="bigBtn" onclick="unpause()">RESUME</button>`);
-  }
-});
-window.unpause = ()=>{ AU.click(); setGameState(G.prevPaused);
-  $('overlay').classList.add('hidden'); $('pauseBtn').innerHTML='⏸&ensp;Pause'; };
-
-/* --- hint: show this level's formula --- */
-$('hintBtn').addEventListener('click', ()=>{
-  if(G.state!==GameState.AIMING) return;
-  AU.click();
-  const L=currentLevelData();
-  const f = `tan θ = Opposite ÷ Adjacent = ${meters(L.opposite)} ÷ ${meters(L.adjacent)}`;
-  showMsg('💡 '+f, 4200);
-});
 
 function showCard(html){
   const overlay = $('overlay'), card = $('overlayCard');
@@ -1188,7 +1483,10 @@ function hideMsg(){ $('msg').style.opacity=0; }
 /* ============================================================
    FIRING
    ============================================================ */
-function fire(){
+/* FIRE is a commitment, not an aim: the gun lays over to the number the
+   player typed, holds one beat, and only then shoots. Three separate moments
+   the player can read — decide, aim, boom — instead of one instant event. */
+function pressFire(){
   if(G.state!==GameState.AIMING) return;
   const v = parseInt(angleInput.value);
   if(isNaN(v)||v<1||v>89){
@@ -1196,16 +1494,38 @@ function fire(){
     angleInput.classList.add('shakeX'); AU.wrong();
     showMsg('Type an angle from 1° to 89°!'); return;
   }
-  setAngle(v);
-  setGameState(GameState.PROJECTILE_FLYING); hideMsg();
+  setAngle(v); hideMsg();
+  setGameState(GameState.LAYING);
+  const from = G.angleShown;
+  const dur = ambientMotionAllowed()
+    ? Math.min(LAY_MAX, LAY_BASE + Math.abs(v-from)*LAY_PER_DEG)
+    : .001;
+  G.lay = {from, to:v, t:0, dur, hold:LAY_HOLD, laid:false};
+  G.barrelTarget = v;                      // stays laid until the shot resolves
+  setObjective(`Laying the gun to ${v}°…`);
+  AU.servo(dur);
+}
+function updateLay(dt){
+  const l = G.lay; if(!l) return;
+  l.t += dt;
+  if(!l.laid){
+    G.angleShown = l.from + (l.to-l.from)*easeInOutCubic(clamp01(l.t/l.dur));
+    if(l.t>=l.dur){ G.angleShown = l.to; l.laid = true; l.t = 0; AU.lockOn(); }
+    return;
+  }
+  if(l.t>=l.hold){ G.lay = null; launchShell(); }
+}
+function launchShell(){
+  setGameState(GameState.PROJECTILE_FLYING);
+  setObjective('Shell away!');
   G.tries++;
-  G.angleShown = G.angleTarget;      // barrel settles instantly on fire
-  const aimPath = G.aimPath && G.aimPath.angleDeg===G.angleTarget ? G.aimPath : calculateAimPath(G.angleTarget);
+  G.angleShown = G.angleTarget;
+  const aimPath = calculateAimPath(G.angleTarget);
   G.aimPath = aimPath;
   G.shell = { x:aimPath.startX, y:aimPath.startY, a:aimPath.screenAngle, path:aimPath, travelled:0, minDz:1e9 };
   G.recoil = 14; G.flash = .13; G.shake = 5;
   AU.fire(); AU.whoosh(1.6);
-  G.zombie.mode='alert'; AU.zombieUhOh();
+  if(G.zombie){ G.zombie.mode='alert'; AU.zombieUhOh(); }
   spawnSmoke(aimPath.startX, aimPath.startY, 8);
 }
 
@@ -1215,8 +1535,7 @@ function resolveHit(){
   AU.explode(true); AU.zombiePop();
   G.shake=14;
   const pts = G.tries===1?300 : G.tries===2?200 : 100;
-  G.score+=pts; $('scoreTxt').textContent=G.score;
-  popScoreChip();
+  G.score+=pts;
   spawnStars(G.zombie.x, G.zombie.y, 16);
   G.floaters.push({x:G.zombie.x, y:G.zombie.y-50, txt:'+'+pts, t:0});
   showMsg(G.tries===1 ? `💥 PERFECT! θ = ${G.angleTarget}°` : `💥 BOOM! θ = ${G.angleTarget}°`, 3000);
@@ -1227,7 +1546,7 @@ function resolveHit(){
 
 function resolveMiss(near){
   AU.explode(false);
-  G.shake=5; G.hearts--; renderHearts();
+  G.shake=5; G.hearts--;
   G.zombie.mode='idle';
   const L=currentLevelData(), v=G.angleTarget;
   let hint = (near?'SO close! ':'') +
@@ -1242,6 +1561,8 @@ function resolveMiss(near){
     setTimeout(gameOver, 1400);
   } else {
     showMsg(hint, 4200);
+    G.barrelTarget = BARREL_REST_ANGLE;     // gun settles back down for another lay
+    setObjective('Try again — solve for θ');
     setGameState(GameState.AIMING);
   }
 }
@@ -1255,7 +1576,7 @@ function gameOver(){
 }
 window.retryLevel = ()=>{
   AU.click(); $('overlay').classList.add('hidden');
-  setupLevel();
+  setupLevel({fast:true});
 };
 
 function winGame(){
@@ -1272,7 +1593,8 @@ window.playAgain = ()=>{
   AU.click(); $('overlay').classList.add('hidden');
   G.level=0; G.score=0; G.hearts=3;
   resetWorld();
-  initializeLevel(0, {resetHearts:true, revive:true});
+  initializeLevel(0, {resetHearts:true, revive:true, enter:'none'});
+  beginIntro();
 };
 
 /* ============================================================
@@ -1327,10 +1649,9 @@ function updateZombies(dt){
     const z=node.zombie;
     if(z.dead) return;
     z.animT+=dt;
-    if(z.mode==='idle' && z.animT>.17){ z.animT=0; z.frame=(z.frame+1)%4; }
-    if(z.mode==='burst' && z.animT>.14){
+    if(z.mode==='burst' && z.animT>.11){
       z.animT=0; z.burstF++;
-      if(z.burstF>3){
+      if(z.burstF>=Z2.die.length){
         z.dead=true; z.mode='gone';
         if(node===G.activeNode) G.hitDelay=.45;
       }
@@ -1385,12 +1706,13 @@ function finishDrive(){
   G.drive = null;
   syncWorldPositions();
   updateNodeStatuses();
+  if(d.onArrive){ d.onArrive(); return; }   // the opening roll-in hands off to the briefing
   if(d.nextLevel==null){
     winGame();
     return;
   }
   initializeLevel(d.nextLevel, {resetHearts:false, revive:false});
-  showMsg('Level '+(G.level+1)+' ready!', 1500);
+  showMsg('Level '+(G.level+1)+'!', 1200);
 }
 
 function updateDrive(dt){
@@ -1437,12 +1759,18 @@ function update(dt){
   G.time+=dt;
   syncWorldPositions();
   // barrel eases toward target angle
-  G.angleShown += (G.angleTarget-G.angleShown)*Math.min(1,dt*10);
-  const guideTarget = G.state===GameState.AIMING ? 1 : (G.state===GameState.PROJECTILE_FLYING ? .55 : 0);
+  // the barrel is driven by the laying tween while a shot is being committed,
+  // and otherwise eases toward its rest / travel angle
+  if(G.lay) updateLay(dt);
+  else G.angleShown += (G.barrelTarget-G.angleShown)*Math.min(1,dt*9);
+  const guidesUp = G.state===GameState.BRIEFING || G.state===GameState.AIMING || G.state===GameState.LAYING;
+  const guideTarget = guidesUp ? 1 : (G.state===GameState.PROJECTILE_FLYING ? .6 : 0);
   G.guideAlpha += (guideTarget-G.guideAlpha)*Math.min(1,dt*12);
   if(G.recoil>0) G.recoil=Math.max(0,G.recoil-dt*60);
   if(G.flash>0) G.flash-=dt;
   if(G.shake>0) G.shake=Math.max(0,G.shake-dt*26);
+
+  if(G.state===GameState.BRIEFING) updateBriefing(dt);
 
   updateZombies(dt);
 
@@ -1451,13 +1779,15 @@ function update(dt){
   if(G.state===GameState.HIT_REACTION && G.zombie && G.zombie.dead){
     G.hitDelay = Math.max(0, G.hitDelay-dt);
     if(G.hitDelay<=0){
-      if(G.level>=TOTAL_LEVELS-1) winGame();
+      if(G.level>=TOTAL_LEVELS-1) startVictoryBoom();
       else startDrive();
     }
   }
 
-  // drive to next level
-  if(G.state===GameState.TRAVELLING){
+  if(G.trans) updateVictoryBoom(dt);
+
+  // rolling: the opening entrance and the runs between rounds share one drive
+  if(G.state===GameState.TRAVELLING || G.state===GameState.INTRO){
     updateDrive(dt);
   }
 
@@ -1478,8 +1808,10 @@ function update(dt){
 }
 
 function prepareDrive(){
-  setObjective('Target cleared - moving forward!');
+  setObjective('Target cleared — moving up!');
   G.guideAlpha = 0;
+  G.barrelTarget = BARREL_REST_ANGLE;    // gun back to travel position
+  stowDock(true);
   if(G.activeNode && G.activeNode.status==='ACTIVE') G.activeNode.status='CLEARED';
   const nextNode = G.levelNodes[G.level+1] || null;
   const cameraEnd = nextNode ? nextNode.targetWorldX - TARGET_SCREEN_X : G.cameraX + FINAL_ROLL_DISTANCE;
@@ -1515,6 +1847,281 @@ function startDrive(){
 }
 
 /* ============================================================
+   THE FINALE — one comic BOOM, and only for the last target.
+   Rounds 1–4 hand over the way they always did: the tank drives to
+   the next target. Clearing the FINAL zombie earns this instead — the
+   gun lobs a cartoon bomb into the middle of the frame, it settles,
+   its fuse catches and burns down, and THEN it goes off, filling the
+   screen so the win card comes up out of the blast.
+
+   The order is the whole point: arrive → light → burn → bang. One
+   clock (tr.t) drives it, and every beat below is a time on that
+   clock, so retiming the sequence means editing this table only.
+   ============================================================ */
+const TR = {
+  land:  .46,   // bomb reaches centre frame
+  lit:   .64,   // it has stopped wobbling; the fuse catches
+  bang: 1.16,   // the spark reaches the casing
+  pop:   .26,   // how long the burst takes to spring open
+  out:  1.88,   // panel lifts and the win card comes up behind it
+  outDur:.36,
+  total:2.24
+};
+const BOOM_CX = W/2, BOOM_CY = H*.47;
+const BOMB_R = 58;      // the finale's centrepiece — sized to be read, not spotted
+
+let BOOM_BG = null, HALFTONE = null;
+/* The backdrop is baked square at the screen's diagonal so it still covers
+   every corner while it slowly rotates, and the halftone is a repeating tile
+   drawn in screen space — a print screen doesn't scale with the art on it. */
+function bakeBoomLayers(){
+  const D = Math.ceil(Math.hypot(W,H)) + 16, R = D/2;
+  const c = makeCv(D,D), g = c.getContext('2d');
+  const rg = g.createRadialGradient(R,R,0,R,R,R);
+  rg.addColorStop(0,'#ffd23f'); rg.addColorStop(.40,'#ff9f1c'); rg.addColorStop(1,'#ef4f19');
+  g.fillStyle=rg; g.fillRect(0,0,D,D);
+  const RAYS = 30;                                   // speed lines out of the blast
+  g.fillStyle='rgba(255,240,196,.28)';
+  for(let i=0;i<RAYS;i+=2){
+    const a0=i*2*Math.PI/RAYS, a1=(i+1)*2*Math.PI/RAYS;
+    g.beginPath(); g.moveTo(R,R); g.arc(R,R,R,a0,a1); g.closePath(); g.fill();
+  }
+  g.fillStyle='rgba(198,40,18,.5)';                  // halftone, opening out toward the rim
+  const step = 27;
+  for(let y=step/2, row=0; y<D; y+=step, row++){
+    for(let x=step/2; x<D; x+=step){
+      const px = x + (row%2 ? step/2 : 0);
+      const d = Math.hypot(px-R,y-R)/R;
+      const k = (d-.30)/.70;
+      if(k<=0 || d>1.02) continue;
+      g.beginPath(); g.arc(px, y, k*k*7, 0, 7); g.fill();
+    }
+  }
+  BOOM_BG = c;
+
+  const S = 18, tile = makeCv(S,S), tg = tile.getContext('2d');
+  tg.fillStyle='rgba(206,45,22,.45)';
+  tg.beginPath(); tg.arc(S*.25,S*.25,3.1,0,7); tg.fill();
+  tg.beginPath(); tg.arc(S*.75,S*.75,3.1,0,7); tg.fill();
+  HALFTONE = ctx.createPattern(tile,'repeat');
+}
+function easeOutBack(t){
+  const c1=1.70158, c3=c1+1;
+  return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2);
+}
+/* a hand-drawn starburst: every other spike is wobbled off-length so the
+   silhouette reads as inked, not machined */
+function starburstPath(R,r,points,seed){
+  ctx.beginPath();
+  for(let i=0;i<points*2;i++){
+    const a = i*Math.PI/points - Math.PI/2;
+    const rad = i%2 ? r*(1+Math.sin(i*1.7+seed)*.06) : R*(1+Math.sin(i*2.7+seed)*.11);
+    const x=Math.cos(a)*rad, y=Math.sin(a)*rad;
+    i ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
+  }
+  ctx.closePath();
+}
+
+function startVictoryBoom(){
+  if(!ambientMotionAllowed()){ winGame(); return; }
+  setGameState(GameState.TRANSITION);
+  G.guideAlpha = 0; G.barrelTarget = BARREL_REST_ANGLE;
+  clearReveal(); stowDock(true); hideMsg();
+  if(G.activeNode && G.activeNode.status==='ACTIVE') G.activeNode.status='CLEARED';
+  G.trans = {t:0, from:muzzlePos(G.angleShown), ignited:false, banged:false, handed:false};
+  $('stage').classList.add('is-transition');
+  AU.whoosh(.44);
+}
+function updateVictoryBoom(dt){
+  const tr = G.trans; if(!tr) return;
+  tr.t += dt;
+  if(!tr.ignited && tr.t>=TR.lit){
+    tr.ignited = true;
+    AU.tick(); AU.fuse(TR.bang-TR.lit);
+  }
+  if(!tr.banged && tr.t>=TR.bang){
+    tr.banged = true;
+    AU.explode(true); G.shake = 26;
+  }
+  if(!tr.handed && tr.t>=TR.out){
+    tr.handed = true;                                // the win card rises out of the blast
+    $('stage').classList.remove('is-transition');
+    winGame();
+  }
+  if(tr.t>=TR.total) G.trans = null;
+}
+function finishVictoryBoom(){
+  const tr = G.trans; if(!tr) return;
+  G.trans = null;
+  $('stage').classList.remove('is-transition');
+  if(!tr.handed) winGame();
+}
+
+/* ---------- the bomb ---------- */
+/* the fuse, as one curve off the casing's neck — the spark rides it from the
+   far tip (p=1) down to the cap (p=0), and only the unburnt part is drawn */
+function fusePoint(p){
+  const R=BOMB_R;
+  const x0=0, y0=-R-.20*R, cx=.55*R, cy=-R-1.10*R, x1=1.15*R, y1=-R-.80*R;
+  const q=1-p;
+  return {x: q*q*x0 + 2*q*p*cx + p*p*x1,
+          y: q*q*y0 + 2*q*p*cy + p*p*y1};
+}
+function drawFinaleBomb(t){
+  const tr = G.trans, f = tr.from;
+  let x, y, sx=1, sy=1, rot, burn=1, alight=false;
+
+  if(t < TR.land){                                   // the lob
+    const u = t/TR.land;
+    x = f.x + (BOOM_CX-f.x)*u;
+    y = f.y + (BOOM_CY-f.y)*u - 260*Math.sin(Math.PI*u);
+    rot = -.6 + u*1.5;
+  } else {                                           // arrived: settle, then burn
+    const b = clamp01((t-TR.land)/(TR.lit-TR.land));
+    const k = (1-b)*Math.sin(b*Math.PI*3);           // decaying squash-and-stretch
+    x = BOOM_CX; y = BOOM_CY - Math.abs(k)*18;
+    sx = 1 + k*.22; sy = 1 - k*.22;
+    rot = .9*(1-b);
+    if(t >= TR.lit){
+      burn = 1 - clamp01((t-TR.lit)/(TR.bang-TR.lit));
+      alight = true;
+      const tense = Math.pow(1-burn, 3);              // it swells and shivers as time runs out
+      x += (Math.random()-.5)*3.4*(1-burn);
+      y += (Math.random()-.5)*3.4*(1-burn);
+      sx = sy = 1 + tense*.12;
+    }
+  }
+
+  ctx.save();
+  if(t < TR.land){                                   // fuse-smoke trail down the arc
+    const u = t/TR.land;
+    for(let i=1;i<=3;i++){
+      const pu = u - i*.07; if(pu<=0) break;
+      const px = f.x + (BOOM_CX-f.x)*pu, py = f.y + (BOOM_CY-f.y)*pu - 260*Math.sin(Math.PI*pu);
+      ctx.globalAlpha = (1-i/4)*.30*u;
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(px,py,7+i*4,0,7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  ctx.translate(x,y); ctx.rotate(rot); ctx.scale(sx,sy);
+
+  const bg = ctx.createRadialGradient(-BOMB_R*.35,-BOMB_R*.4,2,0,0,BOMB_R);
+  bg.addColorStop(0,'#5a5f66'); bg.addColorStop(.45,'#24272b'); bg.addColorStop(1,'#0b0d10');
+  ctx.fillStyle=bg; ctx.beginPath(); ctx.arc(0,0,BOMB_R,0,7); ctx.fill();
+  ctx.strokeStyle='#0a0c0e'; ctx.lineWidth=BOMB_R*.11; ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.4)'; ctx.lineWidth=BOMB_R*.11; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(0,0,BOMB_R*.66,Math.PI*1.05,Math.PI*1.5); ctx.stroke();
+  if(alight){                                        // the spark throws its own light on the casing
+    ctx.globalAlpha = .30 + (1-burn)*.45;
+    ctx.strokeStyle='#ffb02e'; ctx.lineWidth=BOMB_R*.14;
+    ctx.beginPath(); ctx.arc(0,0,BOMB_R*.93,-Math.PI*.85,-Math.PI*.15); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  ctx.fillStyle='#2c3036';                           // the neck the fuse sits in
+  ctx.beginPath(); ctx.moveTo(-BOMB_R*.27,-BOMB_R-1); ctx.lineTo(BOMB_R*.27,-BOMB_R-1);
+  ctx.lineTo(BOMB_R*.20,-BOMB_R*1.28); ctx.lineTo(-BOMB_R*.20,-BOMB_R*1.28); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='#0a0c0e'; ctx.lineWidth=BOMB_R*.09; ctx.stroke();
+
+  if(burn > .02){                                    // what is left of the fuse
+    ctx.strokeStyle = alight ? '#a97b3c' : '#d8b06a';
+    ctx.lineWidth=BOMB_R*.15; ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.beginPath();
+    for(let i=0;i<=14;i++){
+      const p = fusePoint(burn*i/14);
+      i ? ctx.lineTo(p.x,p.y) : ctx.moveTo(p.x,p.y);
+    }
+    ctx.stroke();
+  }
+  if(alight){
+    const s = fusePoint(burn);
+    const fl = .78 + Math.sin(G.time*46)*.22;
+    const ig = 1-clamp01((t-TR.lit)/.16);            // the flare of it catching
+    ctx.globalAlpha = .5;
+    ctx.fillStyle='#ff9a2e'; ctx.beginPath(); ctx.arc(s.x,s.y,BOMB_R*.44*fl,0,7); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle='#ffd23f'; ctx.beginPath(); ctx.arc(s.x,s.y,BOMB_R*.22*fl,0,7); ctx.fill();
+    ctx.fillStyle='#fff6c4'; ctx.beginPath(); ctx.arc(s.x,s.y,BOMB_R*.11*fl,0,7); ctx.fill();
+    if(ig>0){
+      ctx.globalAlpha = ig*.9;
+      ctx.strokeStyle='#fff6c4'; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.arc(s.x,s.y,BOMB_R*(.3+(1-ig)*.9),0,7); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    for(let i=0;i<4;i++){                            // sparks flicking off the burn
+      const a = G.time*9 + i*2.3, d = BOMB_R*(.3+((i*7+Math.floor(G.time*22))%9)*.02);
+      ctx.globalAlpha = .55;
+      ctx.fillStyle='#ffd23f';
+      ctx.beginPath(); ctx.arc(s.x+Math.cos(a)*d, s.y+Math.sin(a)*d*.7, BOMB_R*.055, 0, 7); ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- the blast ---------- */
+function drawBoomBackdrop(a, t){
+  ctx.save(); ctx.globalAlpha *= clamp01(a);
+  ctx.translate(BOOM_CX, H/2); ctx.rotate((t-TR.bang)*.30);
+  ctx.drawImage(BOOM_BG, -BOOM_BG.width/2, -BOOM_BG.height/2);
+  ctx.restore();
+}
+function drawBoomStar(s, t){
+  if(s<=.01) return;
+  const jitter = 3.5*Math.max(0, 1-(t-TR.bang)/.35);   // the burst shudders on impact
+  ctx.save();
+  ctx.translate(BOOM_CX + (Math.random()-.5)*jitter, BOOM_CY + (Math.random()-.5)*jitter);
+  ctx.scale(s,s);
+  ctx.lineJoin='miter'; ctx.miterLimit=3;
+  starburstPath(452, 300, 13, 1.2);
+  ctx.strokeStyle='#150d08'; ctx.lineWidth=11; ctx.stroke();
+  ctx.fillStyle='#f0891d'; ctx.fill();
+  ctx.rotate(.11);
+  starburstPath(372, 244, 13, 4.1);
+  ctx.strokeStyle='#150d08'; ctx.lineWidth=7; ctx.stroke();
+  ctx.fillStyle='#ffd645'; ctx.fill();
+  ctx.clip();                                   // halftone stays a fixed print screen,
+  ctx.setTransform(1,0,0,1,0,0);                // so it does not scale with the pop
+  ctx.fillStyle=HALFTONE; ctx.fillRect(0,0,W,H);
+  ctx.restore();
+}
+function drawBoomWord(s){
+  if(s<=.01) return;
+  ctx.save();
+  ctx.translate(BOOM_CX, BOOM_CY);
+  ctx.rotate(-6*Math.PI/180);
+  ctx.scale(s,s);
+  ctx.font=`900 168px ${FONT}`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.lineJoin='round';
+  ctx.fillStyle='#160b05'; ctx.fillText('BOOM!', 13, 16);       // the comic's offset block
+  ctx.lineWidth=26; ctx.strokeStyle='#160b05'; ctx.strokeText('BOOM!',0,0);
+  const g = ctx.createLinearGradient(0,-80,0,80);
+  g.addColorStop(0,'#f0483a'); g.addColorStop(1,'#bf1f16');
+  ctx.fillStyle=g; ctx.fillText('BOOM!',0,0);
+  ctx.lineWidth=4; ctx.strokeStyle='rgba(255,214,69,.75)'; ctx.strokeText('BOOM!',0,0);
+  ctx.restore();
+}
+/* Drawn outside the shake transform: this panel is the screen's whole
+   surface for a moment, so nothing is allowed to slide its edges off. */
+function drawTransition(){
+  const tr = G.trans; if(!tr) return;
+  const t = tr.t;
+  const out = t<TR.out ? 1 : 1-clamp01((t-TR.out)/TR.outDur);
+  if(out<=0) return;
+  if(t < TR.bang){ drawFinaleBomb(t); return; }
+  ctx.save();
+  ctx.globalAlpha = out;
+  drawBoomBackdrop((t-TR.bang)/.09, t);
+  drawBoomStar(easeOutBack(clamp01((t-TR.bang)/TR.pop)), t);
+  drawBoomWord(easeOutBack(clamp01((t-TR.bang-.06)/TR.pop)));
+  const flash = 1-clamp01((t-TR.bang)/.09);       // the white kick of the detonation
+  if(flash>0){
+    ctx.globalAlpha = out*flash*.85;
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  }
+  ctx.restore();
+}
+
+/* ============================================================
    DRAW
    ============================================================ */
 function drawBG(){
@@ -1522,94 +2129,98 @@ function drawBG(){
   ctx.drawImage(BGL.world, cam,0,W,H, 0,0,W,H);
 }
 
-/* ---------- in-flight sky clouds — the background plates are painted
-   clean of clouds; every cloud on screen is this code-drawn, drifting
-   layer instead, tiled seamlessly so a handful of clouds cover a world
-   of any length. Parallax (<1) makes them glide slower than the ground,
-   reading as the farthest layer; the wind drift keeps them alive even
-   while the camera holds still (aiming). ---------- */
-const SKY_CLOUD_SPAN = 1400, SKY_CLOUD_PARALLAX = .45;
-const SKY_CLOUDS = Array.from({length:9}, (_,i)=>({
-  baseX: (i+.5)/9*SKY_CLOUD_SPAN + (Math.random()-.5)*110,
-  y: 55 + Math.random()*185,
-  s: .32 + Math.random()*.34,
-  a: .22 + Math.random()*.24,
-  phase: Math.random()*Math.PI*2,
-  bobAmp: 3 + Math.random()*4,
-  bobSpeed: .3 + Math.random()*.3,
-  wind: 5 + Math.random()*9
-}));
+/* ---------- sky clouds — the background plates are painted clean of
+   clouds, so every cloud on screen is this drifting layer, cut from the
+   one painted cloud.png. With a single source sprite the trick is to stop
+   it reading as copy-paste: each cloud gets a DEPTH, and size, opacity,
+   parallax and wind speed are all derived from that one number, so far
+   clouds are small, pale and slow while near ones are big, solid and
+   quick — the layer gains real depth instead of looking like one shape
+   scattered nine times. A per-cloud mirror and slight vertical squash
+   then break up the silhouette so no two repeats line up. ---------- */
+const SKY_CLOUD_SPAN = 1800;             // world-px before the pattern repeats
+const CLOUD_BAND_Y = [34, 250];          // kept in open sky, clear of the mountain line
+const lerp = (a,b,t)=>a+(b-a)*t;
+// few and small on purpose: the sky is backdrop, not scenery — a handful of
+// modest clouds spaced wide apart keeps the tank, target and guides dominant
+const SKY_CLOUDS = Array.from({length:5}, (_,i)=>{
+  const depth = Math.random();           // 0 = near/bold, 1 = far/faint
+  return {
+    // evenly spaced, then jittered, so they never sit in a visible rhythm
+    baseX:   (i+.5)/5*SKY_CLOUD_SPAN + (Math.random()-.5)*150,
+    y:       lerp(CLOUD_BAND_Y[1], CLOUD_BAND_Y[0], depth) + (Math.random()-.5)*40,
+    w:       lerp(200, 85, depth),       // near clouds read bigger
+    alpha:   lerp(.82, .38, depth),      // ...and more solid
+    parallax:lerp(.55, .20, depth),      // ...and slide past faster
+    wind:    lerp(11, 3.5, depth),       // ...and outrun the far ones on the breeze
+    flip:    Math.random()<.5 ? -1 : 1,  // mirror half of them
+    squash:  .86 + Math.random()*.28,    // vary the silhouette height
+    phase:   Math.random()*Math.PI*2,
+    bobAmp:  2 + Math.random()*3.5,
+    bobSpeed:.25 + Math.random()*.28
+  };
+});
+/* one cloud, centred on (x,y), drawn from the baked sprite */
+function drawCloud(x, y, w, alpha, flip=1, squash=1){
+  if(!BGL.cloud) return;
+  const h = w/BGL.cloudAspect*squash;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(x, y);
+  if(flip<0) ctx.scale(-1,1);
+  ctx.drawImage(BGL.cloud, -w/2, -h/2, w, h);
+  ctx.restore();
+}
 function drawSkyClouds(){
   SKY_CLOUDS.forEach(c=>{
-    const driftedX = c.baseX + G.time*c.wind;
-    let sx = (driftedX - G.cameraX*SKY_CLOUD_PARALLAX) % SKY_CLOUD_SPAN;
+    // wind drifts them even while the camera holds still (aiming); parallax
+    // slides them against the camera at less than ground speed
+    let sx = (c.baseX + G.time*c.wind - G.cameraX*c.parallax) % SKY_CLOUD_SPAN;
     if(sx<0) sx += SKY_CLOUD_SPAN;
     const y = c.y + Math.sin(G.time*c.bobSpeed + c.phase)*c.bobAmp;
-    for(const off of [-SKY_CLOUD_SPAN,0,SKY_CLOUD_SPAN]){
+    const half = c.w/2;
+    for(const off of [-SKY_CLOUD_SPAN, 0, SKY_CLOUD_SPAN]){
       const x = sx+off;
-      if(x>-90 && x<W+90) drawCodeCloud(x,y,c.s,c.a);
+      if(x > -half && x < W+half) drawCloud(x, y, c.w, c.alpha, c.flip, c.squash);
     }
   });
 }
 
-const TITLE_CLOUDS = [
-  {x:58,y:108,s:.45,a:.42,phase:0,drift:.42,amp:22,bob:4},
-  {x:260,y:92,s:.36,a:.35,phase:1.4,drift:.36,amp:18,bob:3},
-  {x:1018,y:86,s:.5,a:.4,phase:3.1,drift:.3,amp:20,bob:4},
-  {x:1168,y:218,s:.34,a:.3,phase:4.6,drift:.48,amp:16,bob:3}
+const TITLE_ZOMBIE_FRAMES = [
+  [0,0,256,256],
+  [256,0,256,256],
+  [768,256,256,256],
+  [256,0,256,256]
 ];
-function drawCodeCloud(x,y,s=1,a=.55){
-  ctx.save();
-  ctx.globalAlpha = a;
-  ctx.shadowColor = 'rgba(255,255,255,.45)';
-  ctx.shadowBlur = 12*s;
-  ctx.fillStyle = 'rgba(255,255,255,.88)';
-  ctx.beginPath();
-  ctx.ellipse(x-34*s,y+8*s,28*s,13*s,0,0,7);
-  ctx.ellipse(x-12*s,y-2*s,25*s,19*s,0,0,7);
-  ctx.ellipse(x+16*s,y-7*s,31*s,23*s,0,0,7);
-  ctx.ellipse(x+46*s,y+8*s,30*s,14*s,0,0,7);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = 'rgba(196,235,255,.32)';
-  ctx.beginPath();
-  ctx.ellipse(x+20*s,y+15*s,55*s,5*s,0,0,7);
-  ctx.fill();
-  ctx.restore();
-}
-function drawTitleClouds(){
-  TITLE_CLOUDS.forEach(c=>{
-    const x = c.x + Math.sin(G.time*c.drift + c.phase) * c.amp;
-    const y = c.y + Math.sin(G.time*.55 + c.phase) * c.bob;
-    drawCodeCloud(x,y,c.s,c.a);
-  });
-}
-
 function titleZombiePose(){
-  return {x:1070, y:196};
+  return {x:1092, feetY:318, size:108};
 }
 function drawTitleZombie(){
-  const z = titleZombiePose(), size = 158;
-  const cell = SP.zWalk[0]; // fixed planted stance: no floating or leg cycle
+  const z = titleZombiePose();
+  const frameIndex = Math.floor(G.time*5.2) % TITLE_ZOMBIE_FRAMES.length;
+  const f = TITLE_ZOMBIE_FRAMES[frameIndex];
 
-  const fy = z.y + 70;
-  const sg = ctx.createRadialGradient(z.x, fy, 0, z.x, fy, 54);
+  const sg = ctx.createRadialGradient(z.x, z.feetY+2, 0, z.x, z.feetY+2, 46);
   sg.addColorStop(0,'rgba(2,22,24,.32)');
   sg.addColorStop(1,'rgba(2,22,24,0)');
   ctx.fillStyle=sg;
-  ctx.beginPath(); ctx.ellipse(z.x, fy, 54, 9, 0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(z.x, z.feetY+2, 46, 7, 0,0,7); ctx.fill();
 
   ctx.save();
-  ctx.translate(z.x, z.y);
-  ctx.scale(-1,1);
-  ctx.drawImage(IMGS.zombie, cell[0],cell[1],256,256, -size/2,-size/2, size,size);
+  ctx.translate(z.x, z.feetY);
+  ctx.scale(-1,1);                       // face the tank on the left
+  ctx.drawImage(IMGS.titleZombie, f[0],f[1],f[2],f[3], -z.size/2, -z.size, z.size, z.size);
   ctx.restore();
+}
+function drawTitleTowerForeground(){
+  // Repaint the roof lip/rail over the feet so the zombie sits inside the scene.
+  drawCoverSlice(ctx, IMGS.pre, 1266,389,335,58, 0,0,W,H);
 }
 function drawTitleScene(){
   ctx.clearRect(0, 0, W, H);
   drawCover(ctx, IMGS.pre, 0, 0, W, H);
-  drawTitleClouds();
   drawTitleZombie();
+  drawTitleTowerForeground();
 
   ctx.save();
   const grd = ctx.createLinearGradient(0,0,0,H);
@@ -1629,145 +2240,171 @@ function visibleLevelNodes(){
   });
 }
 
-/* ---------- the zombie's perch: a cartoon apartment building built from
-   Builds.png, stacked cap + repeat-floor + base to any height a level
-   needs — same technique the old brick tower used, new town-building skin --- */
+/* ---------- the zombie's perch: one complete building illustration,
+   scaled as a single piece so its flat deck lands at the height this
+   level's opposite side needs — no sliced or repeated sections --- */
 function drawTower(tower=G.tower){
   const b=tower; if(!b) return;
-  const skin = BLD_SKINS[b.skin] || BLD_SKINS.tower;     // which Builds.png building this level wears
-  const sc = b.w/skin.nativeW;                           // uniform scale from that skin's native width
-  const capH=skin.cap[3]*sc, baseH=skin.base[3]*sc;
   // contact shadow at the base
-  const cs=ctx.createRadialGradient(b.x+b.w/2, GROUND_Y, 0, b.x+b.w/2, GROUND_Y, b.w*.8);
+  const cs=ctx.createRadialGradient(b.x+b.w/2, GROUND_Y, 0, b.x+b.w/2, GROUND_Y, b.w*.7);
   cs.addColorStop(0,'rgba(20,35,20,.4)'); cs.addColorStop(1,'rgba(20,35,20,0)');
   ctx.fillStyle=cs;
-  ctx.beginPath(); ctx.ellipse(b.x+b.w/2, GROUND_Y, b.w*.8, 14, 0,0,7); ctx.fill();
-  // repeat floors fill the gap between roof and ground-floor entrance,
-  // rescaled slightly so N whole floors always meet the required height exactly
-  const nFloors = Math.max(1, Math.round((b.h-capH-baseH)/(skin.floor[3]*sc)));
-  const floorH = (b.h-capH-baseH)/nFloors;
-  ctx.drawImage(IMGS.bld, skin.base[0],skin.base[1],skin.base[2],skin.base[3],
-    b.x, GROUND_Y-baseH, b.w, baseH);
-  for(let i=0,y=GROUND_Y-baseH; i<nFloors; i++){
-    y -= floorH;
-    ctx.drawImage(IMGS.bld, skin.floor[0],skin.floor[1],skin.floor[2],skin.floor[3],
-      b.x, y, b.w, floorH);
-  }
-  ctx.drawImage(IMGS.bld, skin.cap[0],skin.cap[1],skin.cap[2],skin.cap[3],
-    b.x, b.y, b.w, capH);
-  // fire-escape ladder down the side, matching the building's steel trim
-  const lx=b.x+b.w+6;
-  ctx.strokeStyle='rgba(88,102,118,.85)'; ctx.lineWidth=3.5;
-  ctx.beginPath();
-  ctx.moveTo(lx,b.y+capH+8); ctx.lineTo(lx,GROUND_Y);
-  ctx.moveTo(lx+16,b.y+capH+8); ctx.lineTo(lx+16,GROUND_Y);
-  for(let ry=b.y+capH+20; ry<GROUND_Y-6; ry+=22){ ctx.moveTo(lx,ry); ctx.lineTo(lx+16,ry); }
-  ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(b.x+b.w/2, GROUND_Y, b.w*.7, 14, 0,0,7); ctx.fill();
+  // one complete structure, scaled as a single piece — no stacked slices
+  const [sx,sy,sw,sh] = b.bld.box;
+  ctx.drawImage(IMGS[b.bld.img], sx,sy,sw,sh, b.x, b.y, b.w, b.h);
 }
 function hitTower(x,y){
   const b=G.tower;
-  return b && x>b.x-4 && x<b.x+b.w+22 && y>b.y+6 && y<GROUND_Y;
+  return b && x>b.x-4 && x<b.x+b.w+4 && y>b.y+6 && y<GROUND_Y;
 }
 
 function drawZombie(z=G.zombie){
   if(!z || z.dead) return;
-  const size=165;              // the target — visually the strongest anchor after the tank
-  let cell;
-  if(z.mode==='burst') cell = SP.zBurst[Math.min(z.burstF,3)];
-  else if(z.mode==='alert') cell = SP.zAlert;
-  else cell = SP.zWalk[z.frame];
-  const bob = z.mode==='idle' ? Math.sin(G.time*4)*3 : 0;
-  if(z.mode!=='burst'){                       // contact shadow on the platform
-    const fy = z.y+48, sg = ctx.createRadialGradient(z.x, fy, 0, z.x, fy, 85);
-    sg.addColorStop(0,'rgba(2,22,24,.5)'); sg.addColorStop(1,'rgba(2,22,24,0)');
-    ctx.fillStyle=sg;
-    ctx.beginPath(); ctx.ellipse(z.x, fy, 85, 14, 0,0,7); ctx.fill();
-  }
+  const feetY = z.y + Z_FEET;            // soles rest on the building's deck
   ctx.save();
-  ctx.translate(z.x, z.y+bob);
-  ctx.scale(-1,1);                       // face the tank
-  ctx.drawImage(IMGS.zombie, cell[0],cell[1],256,256, -size/2,-size/2, size,size);
+  if(z.mode==='burst'){
+    // knockdown: each frame is bottom-anchored on the deck so he staggers,
+    // falls and crumples ON the roof, whatever shape the frame is
+    const f = Z2.die[Math.min(z.burstF, Z2.die.length-1)];
+    const w=f[2]*Z_DIE_SC, h=f[3]*Z_DIE_SC;
+    ctx.drawImage(IMGS.zkill, f[0],f[1],f[2],f[3], z.x-w/2, feetY-h, w, h);
+  } else {
+    const f = z.mode==='alert' ? Z2.alert : Z2.idle;
+    const sc = Z_H/Z2.idle[3];
+    const w=f[2]*sc, h=f[3]*sc;
+    // body movement = a breathing squash anchored at the soles, so the torso
+    // rises and falls while the feet stay glued to the roof deck
+    const breathe = z.mode==='idle' ? 1 + Math.sin(G.time*3)*.018 : 1;
+    ctx.translate(z.x, feetY);
+    ctx.scale(1, breathe);               // sheet already faces the tank — no mirror
+    ctx.drawImage(IMGS.zombie, f[0],f[1],f[2],f[3], -w/2, -h, w, h);
+  }
   ctx.restore();
 }
 
-function arrowCap(x,y,ang){
-  ctx.save(); ctx.setLineDash([]);
-  ctx.translate(x,y); ctx.rotate(ang);
-  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-8,-4); ctx.lineTo(-8,4);
-  ctx.closePath(); ctx.fill(); ctx.restore();
-}
-function measureLine(x1,y1,x2,y2){
-  ctx.setLineDash([9,7]);
-  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-  const a=Math.atan2(y2-y1,x2-x1);
-  arrowCap(x2,y2,a); arrowCap(x1,y1,a+Math.PI);
-  ctx.setLineDash([]);
-}
-function rr(x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r);     ctx.arcTo(x,y,x+w,y,r);
-  ctx.closePath();
-}
-/* compact single-line measurement chip: muted label + bright value,
-   e.g. "Adjacent: 10 m" — a small translucent pill, never a big card */
-function pill(cx,cy,label,value){
-  ctx.save();
-  ctx.textBaseline='middle';
-  const lf='600 11px '+FONT, vf='700 13px '+FONT;
-  ctx.font=lf; const lw=ctx.measureText(label+' ').width;
-  ctx.font=vf; const vw=ctx.measureText(value).width;
-  const padX=11, h=23, w=lw+vw+padX*2, x=cx-w/2, y=cy-h/2;
-  ctx.fillStyle='rgba(9,20,28,.6)';
-  ctx.strokeStyle='rgba(120,197,224,.4)'; ctx.lineWidth=1;
-  rr(x,y,w,h,h/2); ctx.fill(); ctx.stroke();
-  ctx.textAlign='left';
-  ctx.fillStyle='#9fc3d3'; ctx.font=lf;
-  ctx.fillText(label+' ', x+padX, cy+1);
-  ctx.fillStyle='#fff'; ctx.font=vf;
-  ctx.fillText(value, x+padX+lw, cy+1);
-  ctx.restore();
+/* ============================================================
+   THE TRIANGLE — the round's word problem, drawn on the world.
+
+     A = the gun's rotation centre      B = corner under the target
+     C = the target                     θ = the unknown at A
+
+   Every zombie is placed on the ray leaving A at its level's answer angle,
+   so this triangle IS the level data — there is no second source of truth
+   to drift out of sync with what actually hits.
+   ============================================================ */
+const GUIDE_INK='#fff4c8',            // the given sides — lit filament, not hairline
+      GUIDE_BLOOM='#ffb02e',          // the amber light they throw
+      GUIDE_HALO='rgba(30,11,3,.42)', // keeps them readable over a bright wall
+      GUIDE_VALUE='#ffcb57',          // the plates' tan, for numbers and θ
+      GUIDE_CAPTION='#fef8dc',        // the FIRE cream, for labels
+      GUIDE_SHOT='#ff9a2e';           // your committed angle
+function trigTriangle(){
+  const z = G.zombie; if(!z) return null;
+  const ax = TANK.x + TANK.w*.44, ay = TANK.y + TANK.h*.10;   // pivot, ignoring recoil
+  return {ax, ay, bx:z.x, by:ay, cx:z.x, cy:z.y};
 }
 function meters(v){
   return Math.abs(v-Math.round(v))<.05 ? `${Math.round(v)} m` : `${v.toFixed(1)} m`;
 }
-function drawGuides(){
-  if(G.guideAlpha<=.01 || !G.zombie || !G.tower) return;
-  const L=currentLevelData(), p=TANK.pivot(), z=G.zombie, tw=G.tower;
-  const aim = G.shell ? G.shell.path : (G.aimPath || calculateAimPath(G.angleShown));
-  const zx=z.x, gy=GROUND_Y-42;            // lifted just above the grass so labels stay out of the dirt
+/* Every measured mark is struck the same way, so the whole triangle reads as
+   one filament of light: a faint dark halo (so it survives a bright wall), a
+   wide soft bloom, a tighter hot bloom, then a near-white core inside both.
+   `path` only builds the path — each pass re-strokes it.
+   The bloom breathes slowly, which is what makes the sides read as LIT rather
+   than merely drawn; held still when the player asked for reduced motion. */
+function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, blur=1, cap='round'}={}){
+  const pulse = ambientMotionAllowed() ? 1 + Math.sin(G.time*2.4)*.14 : 1;
   ctx.save();
-  ctx.globalAlpha*=G.guideAlpha;
-  // thin, subtle guide lines — they support the shot, they don't compete with it
-  ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.fillStyle='rgba(255,255,255,.6)';
-  ctx.lineWidth=1.6;
-  // adjacent — along the ground from the tank to the tower foot
-  ctx.setLineDash([7,6]);
-  ctx.beginPath(); ctx.moveTo(TANK.x+TANK.w-14, gy); ctx.lineTo(tw.x-8, gy); ctx.stroke();
-  ctx.setLineDash([]);
-  arrowCap(tw.x-8, gy, 0);
-  // opposite — from the zombie straight down to the baseline
-  measureLine(zx, z.y-42, zx, gy);
-  // aim line — one source of truth for both the prediction and projectile
-  ctx.setLineDash([7,6]);
-  ctx.beginPath(); ctx.moveTo(aim.startX, aim.startY); ctx.lineTo(aim.endX, aim.endY); ctx.stroke();
-  ctx.setLineDash([]);
-  arrowCap(aim.endX, aim.endY, aim.screenAngle);
-  // value chips — only the sides the student is given, small and out of the way
-  pill((p.x+tw.x)/2, gy-18, 'Adjacent:', meters(L.adjacent));
-  pill(tw.x - 58, (z.y+gy)/2-6, 'Opposite:', meters(L.opposite));
-  // θ near the cannon — deliberately quiet: the editable value lives in the
-  // bottom dock, so this is just a small arc + number, not a second HUD.
-  const a=G.angleShown*Math.PI/180;
-  ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=1.6;
-  ctx.beginPath(); ctx.arc(p.x,p.y,50,-a,0); ctx.stroke();
-  ctx.font='600 13px '+FONT; ctx.textAlign='left'; ctx.textBaseline='middle';
-  ctx.lineWidth=3; ctx.strokeStyle='rgba(5,20,26,.7)';
-  const tx=p.x+58, ty=p.y-52*Math.sin(a/2);
-  ctx.strokeText(`${G.angleTarget}°`, tx, ty);
-  ctx.fillStyle='rgba(255,255,255,.88)'; ctx.fillText(`${G.angleTarget}°`, tx, ty);
+  ctx.lineCap=cap; ctx.lineJoin='round';
+  ctx.strokeStyle=GUIDE_HALO; ctx.lineWidth=halo; path(); ctx.stroke();
+  ctx.shadowColor=bloom; ctx.shadowBlur=22*blur*pulse;      // the amber band and its spill
+  ctx.strokeStyle=bloom; ctx.lineWidth=w+3.5; path(); ctx.stroke();
+  ctx.shadowColor='rgba(255,228,152,.95)'; ctx.shadowBlur=7*blur;
+  ctx.strokeStyle=core;  ctx.lineWidth=w;     path(); ctx.stroke();
   ctx.restore();
+}
+/* a side that draws itself on: u is how much of it has arrived */
+function guideLeg(x1,y1,x2,y2,u){
+  if(u<=.002) return;
+  const x=x1+(x2-x1)*u, y=y1+(y2-y1)*u;
+  glowStroke(()=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x,y); });
+}
+function guideText(txt,x,y,{size=21,weight=800,fill=GUIDE_VALUE,align='center'}={}){
+  ctx.font=`${weight} ${size}px ${FONT}`;
+  ctx.textAlign=align; ctx.textBaseline='middle';
+  ctx.lineJoin='round'; ctx.lineWidth=Math.max(4,size*.34);
+  ctx.strokeStyle='rgba(38,14,4,.72)'; ctx.strokeText(txt,x,y);
+  ctx.fillStyle=fill; ctx.fillText(txt,x,y);
+}
+/* a given length: small caption over a big number, so it reads as data */
+function guideValue(x,y,caption,value,u,align='center'){
+  if(u<=.01) return;
+  ctx.save();
+  ctx.globalAlpha *= clamp01(u);
+  const rise = (1-u)*10;
+  guideText(caption, x, y-15+rise, {size:12, weight:700, fill:GUIDE_CAPTION, align});
+  guideText(value,   x, y+5+rise,  {size:22, weight:800, align});
+  ctx.restore();
+}
+function elbowPath(x,y,dx,dy){
+  ctx.beginPath(); ctx.moveTo(x+dx,y); ctx.lineTo(x+dx,y+dy); ctx.lineTo(x,y+dy);
+}
+/* The sides go BEHIND the tank, so the barrel hides the triangle's root: the
+   horizontal reads as leaving the muzzle (exactly like the sketch) while the
+   maths still measures the full side from the pivot. */
+function drawTriangleLegs(){
+  if(G.guideAlpha<=.01) return;
+  const t = trigTriangle(); if(!t) return;
+  ctx.save(); ctx.globalAlpha *= G.guideAlpha;
+  guideLeg(t.ax,t.ay,t.bx,t.by,G.reveal.adj);   // adjacent
+  guideLeg(t.bx,t.by,t.cx,t.cy,G.reveal.opp);   // opposite
+  guideLeg(t.ax,t.ay,t.cx,t.cy,G.reveal.hyp);   // hypotenuse / line of fire
+  ctx.restore();
+}
+/* The parts that must stay readable over everything: right-angle box, the θ
+   sweep at the gun, the two given lengths, and — only once a shot has been
+   committed — where the barrel is actually pointing. */
+function drawGuides(){
+  if(G.guideAlpha<=.01) return;
+  const t = trigTriangle(); if(!t) return;
+  const L = currentLevelData();
+  const inSign = Math.sign(t.ax-t.bx) || -1, upSign = Math.sign(t.cy-t.by) || -1;
+
+  const ru = clamp01((G.reveal.opp-.5)/.35);
+  if(ru>0){
+    const s = 15*ru;
+    ctx.save(); ctx.globalAlpha *= G.guideAlpha*ru;
+    glowStroke(()=>elbowPath(t.bx,t.by,inSign*s,upSign*s), {w:2.8, halo:6, blur:.8});
+    ctx.restore();
+  }
+
+  if(G.reveal.theta>0){
+    const ans = Math.atan2(t.ay-t.cy, t.cx-t.ax);    // the unknown, straight off the geometry
+    const u = G.reveal.theta, R = 104, swept = ans*u;
+    ctx.save(); ctx.globalAlpha *= G.guideAlpha;
+    glowStroke(()=>{ ctx.beginPath(); ctx.arc(t.ax,t.ay,R,-swept,0); },
+               {w:3.6, halo:7, cap:'butt'});
+    const mid = swept*.5;
+    guideText('θ', t.ax+Math.cos(mid)*(R+32), t.ay-Math.sin(mid)*(R+32), {size:26+8*(1-u)});
+    ctx.restore();
+  }
+
+  ctx.save(); ctx.globalAlpha *= G.guideAlpha;
+  guideValue((t.ax+t.bx)/2, t.by+36, 'ADJACENT', meters(L.adjacent), G.reveal.chipA);
+  guideValue(t.bx+24, (t.by+t.cy)/2, 'OPPOSITE', meters(L.opposite), G.reveal.chipO, 'left');
+  ctx.restore();
+
+  if(G.state===GameState.LAYING || G.state===GameState.PROJECTILE_FLYING){
+    const p = G.shell ? G.shell.path : calculateAimPath(G.angleShown);
+    ctx.save(); ctx.globalAlpha *= .8*G.guideAlpha;
+    ctx.setLineDash([12,10]); ctx.lineCap='butt';
+    ctx.strokeStyle='rgba(38,14,4,.4)'; ctx.lineWidth=6;
+    ctx.beginPath(); ctx.moveTo(p.startX,p.startY); ctx.lineTo(p.endX,p.endY); ctx.stroke();
+    ctx.strokeStyle=GUIDE_SHOT; ctx.lineWidth=2.4;
+    ctx.beginPath(); ctx.moveTo(p.startX,p.startY); ctx.lineTo(p.endX,p.endY); ctx.stroke();
+    ctx.restore();
+  }
 }
 
 function drawTank(){
@@ -1813,8 +2450,14 @@ function drawTank(){
   TANK.wheelFr.forEach((f,i)=>{
     const wx = hx + TANK.w*f[0], wy = TANK.y + TANK.h*f[1];
     const cell = SP.wheels[i];
-    ctx.save(); ctx.translate(wx,wy); ctx.rotate(G.wheelRot);
-    ctx.drawImage(IMGS.tank, cell[0],cell[1],cell[2],cell[3], -wr,-wr, wr*2, wr*2);
+    const pivot = SP.wheelPivot[i] || [cell[2]*.5, cell[3]*.5];
+    const sc = (wr*2) / cell[2];
+    // Keep the current rested placement, but spin around the actual hub.
+    const axisX = wx + (pivot[0] - cell[2]*.5) * sc;
+    const axisY = wy + (pivot[1] - cell[3]*.5) * sc;
+    ctx.save(); ctx.translate(axisX,axisY); ctx.rotate(G.wheelRot);
+    ctx.drawImage(IMGS.tank, cell[0],cell[1],cell[2],cell[3],
+      -pivot[0]*sc, -pivot[1]*sc, cell[2]*sc, cell[3]*sc);
     ctx.restore();
   });
 }
@@ -1896,12 +2539,14 @@ function render(){
   drawSkyClouds();
   nodes.forEach(node=>drawTower(node.tower));
   nodes.forEach(node=>drawZombie(node.zombie));
+  drawTriangleLegs();      // behind the tank — the barrel hides the triangle's root
   drawTank();
-  drawGuides();
+  drawGuides();            // in front — right angle, θ sweep, the given lengths
   drawShell();
   drawParticles();
   drawFloaters();
   ctx.restore();
+  drawTransition();        // full-screen comic panel — the level swap hides under it
 }
 
 /* ============================================================
@@ -1910,19 +2555,19 @@ function render(){
 loadAll(()=>{
   buildLayers();
   setTitleReady();
-  setupLevel({enterAiming:false});          // so the title screen shows a live scene behind the start layer
+  setupLevel({enter:'none'});               // so the title screen shows a live scene behind the start layer
   setGameState(GameState.PREGAME);
   const dp = location.hash.match(/^#previewdrive(\d{1,3})$/);
   const sp = location.hash.match(/^#previewshot(\d{1,3})$/);
   const auto = location.hash==='#autoplay';
   const pv = location.hash.match(/^#preview(\d)?(f)?$/);   // headless screenshot helper
   if(auto){
-    resetWorld(); G.score=0; G.hearts=3; initializeLevel(0, {resetHearts:true, revive:true});
+    resetWorld(); G.score=0; G.hearts=3; initializeLevel(0, {resetHearts:true, revive:true, enter:'aim'});
     $('overlay').classList.add('hidden');
     const autoTimer = setInterval(()=>{
       if(G.state===GameState.AIMING){
         setAngle(Math.round(currentLevelData().ans));
-        fire();
+        pressFire();
       }
       if(G.state===GameState.GAME_COMPLETE || G.state===GameState.GAME_OVER){
         document.body.dataset.autoplay = G.state===GameState.GAME_COMPLETE ? 'complete' : 'gameover';
@@ -1933,7 +2578,7 @@ loadAll(()=>{
     }, 180);
   } else if(sp){
     const progress = Math.min(100,+sp[1])/100;
-    resetWorld(); initializeLevel(0, {resetHearts:true, revive:true});
+    resetWorld(); initializeLevel(0, {resetHearts:true, revive:true, enter:'aim'});
     $('overlay').classList.add('hidden');
     setAngle(Math.round(currentLevelData().ans));
     const path = calculateAimPath(G.angleTarget);
@@ -1945,7 +2590,7 @@ loadAll(()=>{
     G.guideAlpha=.55; G.prevPaused=GameState.PROJECTILE_FLYING; setGameState(GameState.PAUSED);
   } else if(dp){
     const progress = Math.min(100,+dp[1])/100;
-    resetWorld(); G.level=0; setupLevel();
+    resetWorld(); G.level=0; setupLevel({enter:'aim'});
     $('overlay').classList.add('hidden');
     G.zombie.dead=true; G.zombie.mode='gone';
     if(G.activeNode) G.activeNode.status='CLEARED';
@@ -1955,8 +2600,7 @@ loadAll(()=>{
       G.cameraX = G.drive.cameraEnd;
       G.tankWorldX = G.drive.tankEnd;
       G.drive=null;
-      initializeLevel(nextLevel, {resetHearts:false, revive:false});
-      setObjective('Hit the zombie using trigonometry');
+      initializeLevel(nextLevel, {resetHearts:false, revive:false, enter:'aim'});
       syncWorldPositions();
     } else {
       G.prevPaused=GameState.TRAVELLING; setGameState(GameState.PAUSED);
@@ -1965,12 +2609,14 @@ loadAll(()=>{
     if(pv[1]){
       const level = Math.min(+pv[1],TOTAL_LEVELS-1);
       resetWorld();
-      G.cameraX = level*TARGET_SPACING;
-      G.tankWorldX = G.cameraX + (level===0 ? TANK_START_X : CAMERA_FOLLOW_X);
-      initializeLevel(level, {resetHearts:true, revive:true});
+      G.cameraX = levelRestCamera(level);
+      G.tankWorldX = levelRestTankX(level);
+      initializeLevel(level, {resetHearts:true, revive:true, enter:'aim'});
+    } else {
+      initializeLevel(0, {resetHearts:true, revive:true, enter:'aim'});
     }
-    $('overlay').classList.add('hidden'); setGameState(GameState.AIMING);
-    if(pv[2]) setTimeout(()=>{ setAngle(Math.round(currentLevelData().ans)); fire(); }, 700);
+    $('overlay').classList.add('hidden');
+    if(pv[2]) setTimeout(()=>{ setAngle(Math.round(currentLevelData().ans)); pressFire(); }, 700);
   }
   requestAnimationFrame(loop);
 });
