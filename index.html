@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tank vs Zombie — Angle Academy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    DESIGN TOKENS — one language for every panel in the game
@@ -101,7 +101,7 @@ canvas{position:absolute;inset:0;display:block}
      --stud              : the 3D block the button sits on
      --depth             : how tall that block is (px)
    ============================================================ */
-.bigBtn,.playTitleBtn,.titleSecondary,.titleIconBtn{
+.bigBtn,.playTitleBtn{
   --face-a:#b8571f; --face-b:#5d2210;
   --rim:var(--btn-rim); --stud:var(--btn-stud); --depth:6px;
   position:relative;cursor:pointer;color:var(--btn-ink);font-family:inherit;
@@ -118,17 +118,17 @@ canvas{position:absolute;inset:0;display:block}
   -webkit-tap-highlight-color:transparent}
 
 /* glossy dome highlight — the thing that makes a button look moulded */
-.bigBtn::before,.playTitleBtn::before,.titleSecondary::before,.titleIconBtn::before{
+.bigBtn::before,.playTitleBtn::before{
   content:"";position:absolute;left:7%;right:7%;top:2px;height:34%;pointer-events:none;
   border-radius:inherit;
   border-bottom-left-radius:70% 100%;border-bottom-right-radius:70% 100%;
   background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.05) 60%,rgba(255,255,255,0))}
 
 /* press physics: shell squashes onto its stud */
-.bigBtn:hover,.playTitleBtn:hover,.titleSecondary:hover,.titleIconBtn:hover{
+.bigBtn:hover,.playTitleBtn:hover{
   filter:brightness(1.09) saturate(1.05);transform:translateY(-2px)}
-.bigBtn:active,.playTitleBtn:active,.titleSecondary:active,.titleIconBtn:active,
-.bigBtn.is-pressed,.playTitleBtn.is-pressed,.titleSecondary.is-pressed,.titleIconBtn.is-pressed{
+.bigBtn:active,.playTitleBtn:active,
+.bigBtn.is-pressed,.playTitleBtn.is-pressed{
   transition:transform .045s ease-out,box-shadow .045s ease-out,filter .07s ease;
   transform:translateY(calc(var(--depth) - 1px)) scale(.985);
   box-shadow:
@@ -301,138 +301,86 @@ canvas{position:absolute;inset:0;display:block}
     0 15px 22px rgba(0,0,0,.42),
     0 0 26px rgba(147,206,93,.34);
   text-shadow:0 3px 0 rgba(20,58,8,.6)}
-#loadBar{display:none;width:340px;height:12px;border-radius:6px;background:#2c0f05;margin:18px auto 0;
-  border:2px solid var(--btn-rim);overflow:hidden}
-#loadFill{height:100%;width:0%;
-  background:linear-gradient(90deg,var(--gem-green-mid),var(--gem-green));
-  transition:width .2s;box-shadow:0 0 12px rgba(147,206,93,.8)}
-#loadBar.ready{opacity:0;transform:scaleX(.86);transition:opacity .35s ease,transform .35s ease}
 .stars{font-size:50px;letter-spacing:10px;margin-top:8px}
 
+/* ============================================================
+   TITLE SCREEN
+   Laid out after the arcade key-art convention: a night skyline
+   behind a burst of light, the slime wordmark up top, one fat
+   PLAY GAME pill on the burst's centre, and the utilities parked
+   as chunky wooden plates in the corners.
+   The wordmark and the whole landscape are painted into the plate
+   drawTitleScene() lays down, and the zombie line-up is drawn on the
+   canvas beside it, so this sheet dresses one thing: the pill.
+   ============================================================ */
 .titleScreenInner{position:absolute;inset:0;color:var(--text-primary);text-align:center;
   animation:titleIn .65s cubic-bezier(.2,.8,.2,1) both}
 #overlay.leaving .titleScreenInner{animation:titleOut .42s ease-in both}
-.titleTop{position:absolute;left:18px;right:18px;top:18px;display:none;
-  align-items:flex-start;justify-content:space-between;z-index:2}
-.bestBadge{min-width:120px;padding:9px 13px;border-radius:var(--panel-radius-sm);
-  background:rgba(7,21,31,.78);border:1px solid var(--hud-border-bright);
-  box-shadow:var(--hud-shadow);text-align:left}
-.bestBadge .label{display:block;font-size:12px;font-weight:700;color:#cfe8f3;letter-spacing:.7px}
-.bestBadge .scoreLine{display:flex;align-items:center;gap:7px;margin-top:3px;
-  font-size:24px;font-weight:800;color:#ffd23f;text-shadow:0 2px 0 rgba(0,0,0,.35)}
-.titleActions{display:flex;gap:10px}
-.titleIconBtn{--face-a:#e08a3e;--face-b:#8d2c2b;--depth:5px;
-  width:50px;height:50px;border-radius:15px;
-  display:flex;align-items:center;justify-content:center;color:#fff4dd}
-.titleIconBtn svg{width:26px;height:26px}
-.titleIconBtn .muteSlash{opacity:0;transition:opacity .15s}
-.titleIconBtn.is-muted .muteSlash{opacity:1}
-.titleBrand{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+
+.srOnly{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
-.gradeTag{display:inline-flex;align-items:center;justify-content:center;
-  padding:5px 12px;border-radius:999px;background:rgba(6,22,30,.64);
-  border:1px solid rgba(120,197,224,.45);color:#bcefff;font-size:12px;font-weight:800;
-  letter-spacing:.8px;text-transform:uppercase;box-shadow:0 8px 18px rgba(0,0,0,.2)}
-.titleLogo{margin-top:7px;line-height:.9;text-transform:uppercase;font-weight:800;letter-spacing:2px}
-.titleLogo h1{margin:0;font-size:66px;color:#f8fbff;text-shadow:
-  0 4px 0 rgba(5,17,25,.95),0 8px 0 rgba(0,0,0,.42),0 0 24px rgba(79,211,245,.28);
-  -webkit-text-stroke:1px rgba(255,255,255,.2)}
-.titleLogo .tankWord{color:#e8e76a}
-.titleLogo .zombieWord{color:#9bec46}
-.titleLogo .vsWord{display:inline-block;margin:0 12px;font-size:.58em;color:#fff;
-  transform:translateY(-6px);text-shadow:0 3px 0 rgba(0,0,0,.78)}
-.titleSub{display:inline-flex;align-items:center;gap:13px;margin-top:14px;
-  color:#67e5ff;font-size:23px;font-weight:800;letter-spacing:5px;text-transform:uppercase;
-  text-shadow:0 2px 0 rgba(0,0,0,.55);animation:subtitleFloat 3.4s ease-in-out infinite}
-.titleSub::before,.titleSub::after{content:"";width:42px;height:2px;background:linear-gradient(90deg,rgba(103,229,255,0),rgba(103,229,255,.9))}
-.titleSub::after{background:linear-gradient(90deg,rgba(103,229,255,.9),rgba(103,229,255,0))}
-.thetaBadge{position:absolute;right:20px;top:36px;width:88px;height:88px;border-radius:50%;
-  border:5px solid var(--accent-orange);color:#fff;display:flex;align-items:center;justify-content:center;
-  font-size:46px;font-weight:700;background:rgba(6,22,30,.28);
-  box-shadow:0 0 22px rgba(255,140,26,.34),inset 0 0 20px rgba(255,255,255,.08);
-  animation:thetaDrift 5s ease-in-out infinite}
-.thetaBadge::before,.thetaBadge::after{content:"";position:absolute;background:var(--accent-orange);
-  border-radius:2px;box-shadow:0 0 12px rgba(255,140,26,.55)}
-.thetaBadge::before{width:4px;height:26px;top:-15px;left:50%;transform:translateX(-50%)}
-.thetaBadge::after{height:4px;width:28px;right:-16px;top:50%;transform:translateY(-50%)}
-.tagline{margin:14px auto 0;max-width:560px;font-size:18px;font-weight:700;line-height:1.25;
-  color:#f3fbff;text-shadow:0 2px 0 rgba(0,0,0,.65)}
-.tagline .blast{color:#ffd23f}
-.titleCtas{position:absolute;left:50%;top:492px;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:13px;z-index:3}
-.playTitleBtn{--depth:8px;height:78px;min-width:306px;border-radius:30px;padding:0 58px;
-  border-width:4px;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;gap:17px;color:var(--btn-ink);
-  font-size:35px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+
+/* --- PLAY GAME — the one pill, parked on the burst's centre -------------
+   top is derived, not guessed: the pill's own centre must land on
+   TITLE_BURST.y (548), so top = 548 - height/2 = 506. Move one, move both. */
+.titleCtas{position:absolute;left:50%;top:506px;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:12px;z-index:3}
+.playTitleBtn{--depth:8px;
+  width:318px;height:84px;padding:0 0 4px;border-radius:22px;
+  border:5px solid #f0c063;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Luckiest Guy','Chakra Petch',cursive;
+  font-size:40px;letter-spacing:3px;font-weight:400;color:#3d3005;
   background:
-    linear-gradient(180deg,rgba(255,205,120,.92) 0%,rgba(255,205,120,0) 36%),
-    linear-gradient(180deg,#fea50c 0%,var(--fire-orange) 45%,#d34a03 78%,var(--fire-deep) 100%);
-  text-shadow:0 4px 0 rgba(96,26,4,.66),0 0 14px rgba(255,232,180,.45);
-  animation:playGlow 2.6s ease-in-out infinite}
-.playTitleBtn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(100deg,transparent 44%,rgba(255,255,255,.34) 50%,transparent 56%);
-  background-size:300% 100%;background-position:200% 0;
-  animation:fireSheen 3.6s ease-in-out infinite}
-.playTitleBtn:disabled::after{animation-play-state:paused}
-.playTitleBtn>*{position:relative}
-.playIcon{width:0;height:0;border-top:17px solid transparent;border-bottom:17px solid transparent;
-  border-left:25px solid var(--btn-ink);filter:drop-shadow(0 3px 0 rgba(96,26,4,.55))}
-.titleSecondaryRow{display:none;align-items:center;gap:11px}
-.titleSecondary{--face-a:#e08a3e;--face-b:#8d2c2b;--depth:5px;
-  height:46px;padding:0 22px;border-radius:14px;color:#fff4dd;font-size:14px;font-weight:800;
-  letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
-.pressEnter{font-size:12px;font-weight:700;color:#b7d5e2;text-shadow:0 2px 0 rgba(0,0,0,.5)}
-.titleGuide{display:none;position:absolute;left:50%;bottom:17px;transform:translateX(-50%);
-  width:560px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;z-index:2;
-  background:rgba(6,18,25,.66);border:1px solid rgba(120,197,224,.38);border-radius:16px;
-  box-shadow:0 14px 30px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.08);
-  overflow:hidden;transition:transform .18s,box-shadow .18s}
-.titleGuide.is-highlighted{transform:translateX(-50%) translateY(-4px);
-  box-shadow:0 18px 36px rgba(0,0,0,.4),0 0 24px rgba(79,211,245,.25)}
-.guideStep{min-height:96px;padding:13px 13px 12px;display:grid;grid-template-columns:34px 1fr;
-  column-gap:9px;align-items:start;text-align:left;position:relative}
-.guideStep+.guideStep{border-left:1px solid rgba(120,197,224,.28)}
-.guideNum{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,var(--gem-green),var(--gem-green-deep));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px rgba(0,0,0,.35);
-  color:#fff;font-weight:800}
-.guideText strong{display:block;color:#ffe05a;font-size:13px;font-weight:800;text-transform:uppercase}
-.guideText span{display:block;margin-top:4px;color:#e0eff5;font-size:12px;font-weight:600;line-height:1.25}
-.missionPreview{display:none;position:absolute;right:36px;bottom:18px;width:302px;z-index:2;
-  padding:14px 16px 13px;border-radius:16px;background:rgba(6,18,25,.66);
-  border:1px solid rgba(120,197,224,.38);box-shadow:0 14px 30px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.08)}
-.missionPreview h3{margin:0 0 11px;color:#ffe05a;font-size:15px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
-.missionDots{display:flex;align-items:center;justify-content:center;gap:7px}
-.missionDots span{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  border:2px solid rgba(181,222,239,.64);background:rgba(4,14,21,.8);color:#fff;font-weight:800;
-  box-shadow:inset 0 -3px 0 rgba(255,255,255,.08),0 4px 12px rgba(0,0,0,.28)}
-.missionDots i{width:14px;height:2px;border-radius:2px;background:rgba(181,222,239,.42)}
-.missionPreview p{margin:10px 0 0;color:#67e5ff;font-size:12px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
-#overlay.titleScreen .titleTop,
-#overlay.titleScreen #loadBar,
-#overlay.titleScreen .titleSecondaryRow,
-#overlay.titleScreen .titleGuide,
-#overlay.titleScreen .missionPreview{display:none!important}
+    linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,#dcf055 0%,#b4d833 38%,#8cb81e 68%,#6b9612 100%);
+  box-shadow:
+    inset 0 4px 0 rgba(255,255,255,.5),
+    inset 0 -9px 0 rgba(63,92,8,.45),
+    0 0 0 5px #6b3a14,
+    0 var(--depth) 0 #4a2409,
+    0 calc(var(--depth) + 10px) 22px rgba(0,0,0,.5),
+    0 0 40px rgba(190,236,86,.35);
+  text-shadow:0 2px 0 rgba(255,255,255,.4),0 -2px 0 rgba(74,58,6,.25);
+  animation:playPulse 2.8s ease-in-out infinite}
+.playTitleBtn::before{left:8px;right:8px;top:6px;height:34%;border-radius:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0))}
+.playTitleBtn:hover{transform:scale(1.035);filter:brightness(1.05) saturate(1.05)}
+.playTitleBtn:active,.playTitleBtn.is-pressed{animation:none;
+  transform:translateY(var(--depth));
+  box-shadow:
+    inset 0 4px 0 rgba(255,255,255,.35),
+    inset 0 -5px 0 rgba(63,92,8,.5),
+    0 0 0 5px #6b3a14,
+    0 0 0 #4a2409,
+    0 4px 10px rgba(0,0,0,.45)}
+.playTitleBtn:disabled{animation:none;filter:grayscale(.55) brightness(.75)}
+.playTitleBtn:disabled:hover{transform:none;filter:grayscale(.55) brightness(.75)}
+#loadBar{position:absolute;left:50%;top:-30px;transform:translateX(-50%);
+  width:322px;height:12px;border-radius:7px;background:#12211f;
+  border:2px solid #6b3a14;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.45)}
+#loadFill{height:100%;width:0%;
+  background:linear-gradient(90deg,#6b9612,#dcf055);
+  transition:width .2s;box-shadow:0 0 12px rgba(190,236,86,.75)}
+#loadBar.ready{opacity:0;transform:scaleX(.86);transition:opacity .35s ease,transform .35s ease}
 
 @keyframes titleIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes titleOut{to{opacity:0;transform:translateY(-18px) scale(1.02)}}
-@keyframes subtitleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes thetaDrift{0%,100%{transform:rotate(-5deg) translateY(0)}50%{transform:rotate(4deg) translateY(-5px)}}
-@keyframes playGlow{
+@keyframes playPulse{
   0%,100%{box-shadow:
-    inset 0 3px 0 rgba(255,232,190,.52),inset 0 -9px 0 rgba(96,26,4,.7),
-    0 0 0 3px var(--btn-rim-dark),0 8px 0 #5c2005,
-    0 18px 30px rgba(0,0,0,.4),0 0 26px rgba(253,139,6,.42)}
+    inset 0 4px 0 rgba(255,255,255,.5),inset 0 -9px 0 rgba(63,92,8,.45),
+    0 0 0 5px #6b3a14,0 8px 0 #4a2409,
+    0 18px 22px rgba(0,0,0,.5),0 0 34px rgba(190,236,86,.3)}
   50%{box-shadow:
-    inset 0 3px 0 rgba(255,244,215,.62),inset 0 -9px 0 rgba(96,26,4,.7),
-    0 0 0 3px var(--btn-rim-dark),0 8px 0 #5c2005,
-    0 18px 30px rgba(0,0,0,.4),0 0 48px rgba(255,176,58,.78)}
+    inset 0 4px 0 rgba(255,255,255,.62),inset 0 -9px 0 rgba(63,92,8,.45),
+    0 0 0 5px #6b3a14,0 8px 0 #4a2409,
+    0 18px 22px rgba(0,0,0,.5),0 0 60px rgba(214,247,120,.6)}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .titleScreenInner,.titleSub,.thetaBadge,.playTitleBtn,.playTitleBtn::after,
+  .titleScreenInner,.playTitleBtn,
   #fireBtn,.shakeX{animation:none!important}
-  .titleIconBtn:hover,.titleSecondary:hover,.playTitleBtn:hover,.artBtn:hover{transform:none}
+  .playTitleBtn:hover,.artBtn:hover{transform:none}
   #hud,#msg,#loadFill,#loadBar.ready{transition:none}
   #controlDock{transition:opacity .2s ease}
 }
@@ -479,63 +427,9 @@ canvas{position:absolute;inset:0;display:block}
   </div>
 
   <div id="overlay" class="titleScreen">
-    <div class="titleScreenInner" id="overlayCard">
-      <div class="titleTop">
-        <div class="bestBadge">
-          <span class="label">BEST SCORE</span>
-          <span class="scoreLine"><span>★</span><span id="bestScoreTxt">0</span></span>
-        </div>
-        <div class="titleActions">
-          <button type="button" class="titleIconBtn" id="titleSoundBtn" aria-label="Toggle sound" title="Toggle sound">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/>
-              <path d="M16 8.5c1.2 1.1 1.8 2.3 1.8 3.5s-.6 2.4-1.8 3.5M18.8 6c1.9 1.8 2.9 3.8 2.9 6s-1 4.2-2.9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path class="muteSlash" d="M4 4l16 16" stroke="#ff5b68" stroke-width="2.8" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <section class="titleBrand" aria-label="Tank vs Zombie Angle Academy">
-        <span class="gradeTag">Grade 10 Trigonometry Game</span>
-        <div class="titleLogo">
-          <h1><span class="tankWord">TANK</span><span class="vsWord">VS</span><span class="zombieWord">ZOMBIE</span></h1>
-        </div>
-        <div class="titleSub">Angle Academy</div>
-        <div class="thetaBadge" aria-hidden="true">θ</div>
-        <p class="tagline">Use trigonometry to find the correct angle and <span class="blast">blast rooftop zombies!</span></p>
-      </section>
-
-      <div class="titleCtas">
-        <div id="loadBar"><div id="loadFill"></div></div>
-        <button type="button" class="playTitleBtn" id="playBtn" disabled><span class="playIcon" aria-hidden="true"></span><span>LOADING</span></button>
-        <div class="titleSecondaryRow">
-          <button type="button" class="titleSecondary" id="howBtn" aria-controls="titleGuide">HOW TO PLAY</button>
-          <span class="pressEnter">Press Enter to Play</span>
-        </div>
-      </div>
-
-      <div class="titleGuide" id="titleGuide">
-        <div class="guideStep">
-          <span class="guideNum">1</span>
-          <span class="guideText"><strong>Adjust Angle</strong><span>Use + / - or arrow keys</span></span>
-        </div>
-        <div class="guideStep">
-          <span class="guideNum">2</span>
-          <span class="guideText"><strong>Aim Carefully</strong><span>Match the dotted line to the zombie</span></span>
-        </div>
-        <div class="guideStep">
-          <span class="guideNum">3</span>
-          <span class="guideText"><strong>Fire</strong><span>Hit the rooftop target and roll forward</span></span>
-        </div>
-      </div>
-
-      <aside class="missionPreview" aria-label="Five rooftop challenges">
-        <h3>5 Rooftop Challenges</h3>
-        <div class="missionDots" aria-hidden="true"><span>1</span><i></i><span>2</span><i></i><span>3</span><i></i><span>4</span><i></i><span>5</span></div>
-        <p>Master angles. Save Sunnyville.</p>
-      </aside>
-    </div>
+    <!-- authored once in titleMarkup() and painted in before the first
+         asset lands, so the loading bar has somewhere to go -->
+    <div class="titleScreenInner" id="overlayCard"></div>
   </div>
 </div>
 
@@ -604,12 +498,15 @@ addEventListener('resize', fitStage); fitStage();
    ASSETS
    ============================================================ */
 const IMGS = {}, MANIFEST = {
-  zombie:'assets/Zombie2.webp',     // walk/idle poses, one row of 8
-  titleZombie:'assets/ZombieSprite.webp',
-  zkill:'assets/killZombie2.webp',  // 8-frame knockdown: hit → stagger → fall → crawl → poof
+  // three playable targets, each a character sheet plus a knockdown sheet
+  zombie:'assets/Zombie2.webp',      // SHAMBLER — 8 poses in a row, 4 is the alarm
+  zkill:'assets/killZombie2.webp',   // …and its 8-frame knockdown
+  zsprite:'assets/ZombieSprite.webp',// RUNNER — 4x3 grid: walk cycle, alarm, knockout
+  zombie3:'assets/Zombie3.png',      // BRUISER — 8 poses in a row, 4 is the alarm
+  zkill3:'assets/ZombieSprite3.png', // …and its 8-frame knockdown (name is the artist's)
   tank:'assets/tankSheet.webp',
   shot:'assets/TankShot.webp',
-  pre:'assets/preLBD1.webp',
+  pre:'assets/preLBD.png',          // the painted title plate — wordmark and all
   scene:'assets/bgm4.webp',         // complete 16:9 illustrated background plate
   scene2:'assets/bgm2.webp', scene3:'assets/bgm1.webp',
   scene4:'assets/bgm3.webp', scene5:'assets/bgm.webp',
@@ -652,18 +549,85 @@ const SP = {
   blast:  [350,450,350,275]
 };
 
-/* ---------- zombie frames, measured content boxes [sx,sy,sw,sh] ----------
-   Zombie2.png: 8 poses in one row — 0 is the planted idle stance, 4 is the
-   arms-up alarm. killZombie2.png: the 8-frame knockdown played on a hit.
-   Both sheets face LEFT natively (toward the tank), so no mirroring. ---- */
-const Z2 = {
-  idle: [16,106,67,167],
-  alert:[359,103,82,170],
-  die:[[17,342,163,311],[186,332,194,321],[380,359,222,295],[602,428,204,223],
-       [824,500,210,168],[1047,551,243,116],[1290,517,229,152],[1519,514,140,147]]
+/* ============================================================
+   ZOMBIE TYPES
+   Three characters share one rig. A type owns its art, its
+   on-screen height and its animation cadence; the rest of the game
+   never asks which one is standing on the roof — it asks the
+   registry.
+
+   A pose is [sx, sy, sw, sh, ax?] in that sheet's own pixels:
+     sx,sy,sw,sh  the frame's content box
+     ax           the body's centre-line, measured from sx. Optional;
+                  defaults to the box centre.
+   Poses draw bottom-anchored on feetY and ax-anchored on z.x, so a
+   type can neither resize nor slide sideways between poses. That
+   `ax` matters: on a sheet where the arms reach, the content box
+   grows with the arm and box-centre anchoring would swing the body
+   up to 23px — a visible shuffle in place.
+
+   `bodyPx` is the STANDING body height in that sheet's own pixels,
+   which is what turns `height` into a draw scale. A type's idle art
+   and its knockdown art are drawn at different resolutions, so each
+   frame set carries its own — that is what keeps a zombie the same
+   size at the instant it is hit.
+
+   Where a knockdown leaves the ground, its box is padded down to the
+   sheet's common ground line instead of cropped to the body, so plain
+   bottom-anchoring reproduces the airborne beat the artist drew.
+
+   All five sheets face LEFT — toward the tank — so nothing is mirrored.
+
+   FAIRNESS: the types differ in silhouette, palette and cadence but
+   NOT in how hard they are to hit. zombieHitbox() is one fixed box
+   around the trig anchor for every type, so a round's difficulty
+   comes from its triangle and nothing else. Heights are kept inside
+   a narrow band for the same reason.
+   ============================================================ */
+const ZOMBIE_TYPES = {
+  /* Zombie2 — the lavender one. A planted stance that only breathes,
+     and the longest knockdown of the three. */
+  shambler:{
+    name:'Shambler', height:165,
+    look:{sheet:'zombie', bodyPx:167, fps:0,
+      idle:[[16,106,67,167]],
+      alert:[359,103,82,170]},
+    fall:{sheet:'zkill', bodyPx:311, fps:9,
+      poses:[[17,342,163,311],[186,332,194,321],[380,359,222,295],[602,428,204,223],
+             [824,500,210,168],[1047,551,243,116],[1290,517,229,152],[1519,514,140,147]]}
+  },
+  /* ZombieSprite — tie and sneakers, and the restless one: a 4-frame
+     shuffle on the spot. Its walk frames are packed on a shared ground
+     line at the cell's bottom edge, so the whole 256 cell is the pose
+     and the rig is fixed by construction — no per-frame anchors. */
+  runner:{
+    name:'Runner', height:170,
+    look:{sheet:'zsprite', bodyPx:250, fps:6,
+      idle:[[0,0,256,256],[256,0,256,256],[512,0,256,256],[768,0,256,256]],
+      alert:[768,256,256,256]},
+    fall:{sheet:'zsprite', bodyPx:250, fps:6,
+      poses:[[35,512,221,231],[256,512,234,229],[519,517,225,234],[784,523,225,220]]}
+  },
+  /* Zombie3 — the feral one: yellow eyes, ragged trousers. Its eight
+     poses are one reach-and-return cycle with the alarm at its apex,
+     so the idle loop runs 0-3 then 5-7 and keeps 4 for the alarm. */
+  bruiser:{
+    name:'Bruiser', height:176,
+    look:{sheet:'zombie3', bodyPx:383, fps:5,
+      idle:[[22,299,160,383,82],  [209,300,184,382,104], [403,300,207,382,126],
+            [631,296,215,386,109],[1060,302,204,380,124],[1290,301,181,381,102],
+            [1497,301,160,381,82]],
+      alert:[844,270,230,412,102]},
+    fall:{sheet:'zkill3', bodyPx:397, fps:9,
+      poses:[[3,160,228,413],[231,160,280,413],[511,235,287,338],[798,325,273,248],
+             [1091,382,276,191],[1375,403,269,170],[1651,420,286,153],[1951,313,212,260]]}
+  }
 };
-const Z_H = 165;                       // on-screen zombie height (idle)
-const Z_DIE_SC = Z_H/311;              // knockdown sheet is drawn at the same body scale (frame 0 = standing)
+// the trig anchor (z.y) sits at mid-body on every type, so the soles are
+// this fraction of the body below it — measured once off the shambler
+const Z_ANCHOR = 82/165;
+Object.values(ZOMBIE_TYPES).forEach(t=>{ t.feetOffset = t.height*Z_ANCHOR; });
+const zombieTypeOf = z => ZOMBIE_TYPES[z && z.type] || ZOMBIE_TYPES.shambler;
 
 /* ---------- buildings: one complete structure per file ----------
    box    = content bounds [sx,sy,sw,sh] inside the 1122x1402 file
@@ -694,20 +658,23 @@ const LEVEL_BUILDING_POOL = [
   [2,4,3,6,1]     // tall deck — slender shapes only
 ];
 
-// zombie sprite: soles sit Z_FEET px below the trig anchor (z.y); sink them
-// Z_SINK px into the deck so the shoes visibly grip the roof, never graze it
-const Z_FEET = 82, Z_SINK = 3;
+// each type's soles sit t.feetOffset px below its trig anchor (z.y); sink
+// them Z_SINK px into the deck so the shoes grip the roof, never graze it
+const Z_SINK = 3;
 
 /* ============================================================
    LEVELS — five target nodes. Adjacent/opposite define the real
    right-triangle ratio; hypotenuse and answer are computed once.
    ============================================================ */
+/* `zombie` names the type from ZOMBIE_TYPES that mans this roof. The run
+   tours all three and never repeats one two rounds running, so each level
+   reads as a fresh target; the finale draws the tallest silhouette. */
 const LEVELS = [
-  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof'},
-  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof'},
-  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof'},
-  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof'},
-  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof'}
+  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof',     zombie:'shambler'},
+  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof',  zombie:'runner'},
+  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof', zombie:'bruiser'},
+  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof',    zombie:'shambler'},
+  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof',   zombie:'bruiser'}
 ].map(level=>({
   ...level,
   h:level.opposite,
@@ -730,12 +697,14 @@ const AU = {
     this.master = this.ctx.createGain(); this.master.gain.value = this.muted ? 0 : .9;
     this.master.connect(this.ctx.destination);
     this.sfxGain = this.ctx.createGain(); this.sfxGain.connect(this.master);
-    this.musGain = this.ctx.createGain(); this.musGain.gain.value = .16;
+    this.musGain = this.ctx.createGain(); this.musGain.gain.value = this.musicMuted ? 0 : .16;
     this.musGain.connect(this.master);
     this.startMusic();
   },
   resume(){ if(this.ctx && this.ctx.state==='suspended') this.ctx.resume(); },
   setMuted(m){ this.muted=m; if(this.master) this.master.gain.value = m?0:.9; },
+  musicMuted:false,
+  setMusicMuted(m){ this.musicMuted=m; if(this.musGain) this.musGain.gain.value = m?0:.16; },
   now(){ return this.ctx.currentTime; },
 
   tone(freq, t0, dur, type='sine', vol=.3, dest, bendTo){
@@ -954,6 +923,7 @@ function buildLayers(){
     wg.drawImage(blend, x, 0);
   }
   bakeCloud();
+  bakeTitlePatches();
   bakeBoomLayers();
 }
 
@@ -1023,7 +993,8 @@ function makeLevelNode(level, targetWorldX, bld){
   // the zombie's soles, and slides sideways so the deck's centre (deckCx)
   // sits at the zombie's x — he stands ON the flat spot, not the art centre
   const [bsx,bsy,bsw,bsh] = bld.box;
-  const deckPlaneY = zombieY + Z_FEET - Z_SINK;
+  const zType = ZOMBIE_TYPES[L.zombie] ? L.zombie : 'shambler';
+  const deckPlaneY = zombieY + ZOMBIE_TYPES[zType].feetOffset - Z_SINK;
   const s = (GROUND_Y - deckPlaneY) / (bsy + bsh - bld.deck);
   const towerY = deckPlaneY - (bld.deck - bsy) * s;
   const tw = bsw * s;
@@ -1031,7 +1002,7 @@ function makeLevelNode(level, targetWorldX, bld){
   const zombie = {
     offsetX:(bld.deckCx - bsx) * s, offsetY:0,
     worldX:targetWorldX, x:targetWorldX-G.cameraX, y:zombieY,
-    frame:0, animT:0, mode:'idle', burstF:0, dead:false
+    type:zType, frame:0, animT:0, mode:'idle', burstF:0, dead:false
   };
   const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:towerY, w:tw, h:GROUND_Y-towerY, bld};
   return {
@@ -1157,7 +1128,7 @@ function beginBriefing(opts){
   const fast = !!(opts && opts.fast);
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   clearReveal(); stowDock(true);
-  setObjective('Reading the target…');
+  setObjective(`Reading the target — ${zombieTypeOf(G.zombie).name}…`);
   setGameState(GameState.BRIEFING);
   G.brief = {t:0, rate:fast ? 2.1 : (G.level===0 ? 1 : 1.32), fired:0};
   if(!ambientMotionAllowed()) finishBriefing();
@@ -1316,7 +1287,7 @@ $('fireBtn').addEventListener('click', pressFire);
 /* tapping the world fast-forwards the roll-in / briefing */
 cv.addEventListener('pointerdown', ()=>{ if(inChoreo()){ AU.click(); skipChoreo(); } });
 const BEST_SCORE_KEY = 'tankVsZombieAngleAcademyBest';
-let startingMission = false, titleGuideTimer = null;
+let startingMission = false;
 function getBestScore(){
   try{ return Math.max(0, parseInt(localStorage.getItem(BEST_SCORE_KEY),10)||0); }
   catch(_){ return 0; }
@@ -1324,108 +1295,49 @@ function getBestScore(){
 function saveBestScore(score){
   const best = Math.max(getBestScore(), score);
   try{ localStorage.setItem(BEST_SCORE_KEY, String(best)); }catch(_){}
-  updateBestScoreUI(best);
   return best;
 }
-function updateBestScoreUI(score=getBestScore()){
-  const el = $('bestScoreTxt');
-  if(el) el.textContent = score;
-}
-function updateSoundUi(){
-  const titleSound = $('titleSoundBtn');
-  if(titleSound){
-    titleSound.classList.toggle('is-muted', AU.muted);
-    titleSound.setAttribute('aria-label', AU.muted ? 'Unmute sound' : 'Mute sound');
-    titleSound.title = AU.muted ? 'Unmute sound' : 'Mute sound';
-  }
-}
+/* The title screen is the painted plate and one button, so the mute,
+   music, fullscreen and how-to plates are gone. AU.setMuted /
+   AU.setMusicMuted are left intact — the capability is still there, it
+   just has no control surface on this screen any more. */
 function toggleSound(){
   AU.setMuted(!AU.muted);
-  updateSoundUi();
   if(!AU.muted) AU.click();
 }
-function highlightHowTo(){
-  AU.click();
-  const guide = $('titleGuide');
-  if(!guide) return;
-  guide.classList.remove('is-highlighted'); void guide.offsetWidth;
-  guide.classList.add('is-highlighted');
-  clearTimeout(titleGuideTimer);
-  titleGuideTimer = setTimeout(()=>guide.classList.remove('is-highlighted'), 900);
-}
-function titleMarkup(ready=true){
-  return `<div class="titleTop">
-        <div class="bestBadge">
-          <span class="label">BEST SCORE</span>
-          <span class="scoreLine"><span>★</span><span id="bestScoreTxt">${getBestScore()}</span></span>
-        </div>
-        <div class="titleActions">
-          <button type="button" class="titleIconBtn" id="titleSoundBtn" aria-label="Toggle sound" title="Toggle sound">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/>
-              <path d="M16 8.5c1.2 1.1 1.8 2.3 1.8 3.5s-.6 2.4-1.8 3.5M18.8 6c1.9 1.8 2.9 3.8 2.9 6s-1 4.2-2.9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path class="muteSlash" d="M4 4l16 16" stroke="#ff5b68" stroke-width="2.8" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <section class="titleBrand" aria-label="Tank vs Zombie Angle Academy">
-        <span class="gradeTag">Grade 10 Trigonometry Game</span>
-        <div class="titleLogo">
-          <h1><span class="tankWord">TANK</span><span class="vsWord">VS</span><span class="zombieWord">ZOMBIE</span></h1>
-        </div>
-        <div class="titleSub">Angle Academy</div>
-        <div class="thetaBadge" aria-hidden="true">θ</div>
-        <p class="tagline">Use trigonometry to find the correct angle and <span class="blast">blast rooftop zombies!</span></p>
-      </section>
+/* ============================================================
+   TITLE MARKUP
+   The wordmark, the tank and the watchtower are painted into the
+   preLBD1 plate that drawTitleScene() lays down, so this layer
+   carries no art of its own — only the pill, the corner plates and
+   the heading screen readers need.
+   ============================================================ */
+function titleMarkup(ready=true){
+  return `<h1 class="srOnly">Tank vs Zombie — Angle Academy</h1>
 
       <div class="titleCtas">
-        <div id="loadBar" class="${ready?'ready':''}"><div id="loadFill" style="width:${ready?'100':'0'}%"></div></div>
-        <button type="button" class="playTitleBtn" id="playBtn" ${ready?'':'disabled'}><span class="playIcon" aria-hidden="true"></span><span>${ready?'PLAY':'LOADING'}</span></button>
-        <div class="titleSecondaryRow">
-          <button type="button" class="titleSecondary" id="howBtn" aria-controls="titleGuide">HOW TO PLAY</button>
-          <span class="pressEnter">Press Enter to Play</span>
-        </div>
-      </div>
-
-      <div class="titleGuide" id="titleGuide">
-        <div class="guideStep">
-          <span class="guideNum">1</span>
-          <span class="guideText"><strong>Adjust Angle</strong><span>Use + / - or arrow keys</span></span>
-        </div>
-        <div class="guideStep">
-          <span class="guideNum">2</span>
-          <span class="guideText"><strong>Aim Carefully</strong><span>Match the dotted line to the zombie</span></span>
-        </div>
-        <div class="guideStep">
-          <span class="guideNum">3</span>
-          <span class="guideText"><strong>Fire</strong><span>Hit the rooftop target and roll forward</span></span>
-        </div>
-      </div>
-
-      <aside class="missionPreview" aria-label="Five rooftop challenges">
-        <h3>5 Rooftop Challenges</h3>
-        <div class="missionDots" aria-hidden="true"><span>1</span><i></i><span>2</span><i></i><span>3</span><i></i><span>4</span><i></i><span>5</span></div>
-        <p>Master angles. Save Sunnyville.</p>
-      </aside>`;
+        ${ready ? '' : '<div id="loadBar"><div id="loadFill"></div></div>'}
+        <button type="button" class="playTitleBtn" id="playBtn" ${ready?'':'disabled'}
+                title="Play — or press Enter">${ready?'PLAY GAME':'LOADING'}</button>
+      </div>`;
 }
 function wireTitleButtons(){
-  const play = $('playBtn'), sound = $('titleSoundBtn'), how = $('howBtn');
+  const play = $('playBtn');
   if(play) play.onclick = startGame;
-  if(sound) sound.onclick = toggleSound;
-  if(how) how.onclick = highlightHowTo;
-  updateBestScoreUI();
-  updateSoundUi();
 }
 function setTitleReady(){
   const fill = $('loadFill'), bar = $('loadBar'), play = $('playBtn');
   if(fill) fill.style.width = '100%';
-  if(bar) bar.classList.add('ready');
+  if(bar){
+    bar.classList.add('ready');
+    // opacity:0 still occupies the layer, and a transition that never runs
+    // would leave the bar sitting on the plate — so pull it once it has gone
+    setTimeout(()=>bar.remove(), 420);
+  }
   if(play){
     play.disabled = false;
-    const label = play.querySelector('span:last-child');
-    if(label) label.textContent = 'PLAY';
+    play.textContent = 'PLAY GAME';
   }
   wireTitleButtons();
 }
@@ -1449,7 +1361,6 @@ function startGame(){
     startingMission = false;
   }, 420);
 }
-$('playBtn').addEventListener('click', startGame);
 
 function showCard(html){
   const overlay = $('overlay'), card = $('overlayCard');
@@ -1648,17 +1559,25 @@ function updateZombies(dt){
   G.levelNodes.forEach(node=>{
     const z=node.zombie;
     if(z.dead) return;
+    const t = zombieTypeOf(z);
     z.animT+=dt;
-    if(z.mode==='burst' && z.animT>.11){
-      z.animT=0; z.burstF++;
-      if(z.burstF>=Z2.die.length){
-        z.dead=true; z.mode='gone';
-        if(node===G.activeNode) G.hitDelay=.45;
+    if(z.mode==='burst'){
+      if(z.animT > 1/t.fall.fps){
+        z.animT=0; z.burstF++;
+        if(z.burstF>=t.fall.poses.length){
+          z.dead=true; z.mode='gone';
+          if(node===G.activeNode) G.hitDelay=.45;
+        }
       }
+    } else if(z.mode==='idle' && t.look.fps>0 && z.animT > 1/t.look.fps){
+      // the alarm pose is a held beat, so only the idle loop steps
+      z.animT=0; z.frame=(z.frame+1)%t.look.idle.length;
     }
   });
 }
 
+/* One box for all three types — see the FAIRNESS note on ZOMBIE_TYPES.
+   It is anchored on z.y, the point the triangle actually solves for. */
 function zombieHitbox(z){
   return {
     x:z.x-48-HIT_PADDING,
@@ -2186,50 +2105,159 @@ function drawSkyClouds(){
   });
 }
 
-const TITLE_ZOMBIE_FRAMES = [
-  [0,0,256,256],
-  [256,0,256,256],
-  [768,256,256,256],
-  [256,0,256,256]
-];
-function titleZombiePose(){
-  return {x:1092, feetY:318, size:108};
+/* ============================================================
+   TITLE SCENE
+   The attract screen is the painted key-art plate: preLBD.png is a
+   finished 16:9 illustration — wordmark, valley, ruins, hedgerow —
+   so this draws exactly two things over it. A burst of light thrown
+   from behind the wordmark, and then the plate's own wordmark
+   rectangle re-blitted on top of that burst.
+
+   That second draw is the whole trick. Without it the rays wash
+   across the letters; with it they read as light spilling from
+   BEHIND the logo, which is how the reference key art reads. It
+   costs one drawImage and never needs re-registering, because
+   drawCoverSlice puts the rect back exactly where the plate had it.
+
+   The pill itself is HTML, parked on TITLE_BURST's centre.
+   ============================================================ */
+/* ---------- feathered plate patches ----------
+   Two live layers get painted over the plate and then partly covered by
+   the plate again: the burst goes behind the wordmark, and the zombie
+   line-up stands inside the hedgerow. Both are the same move — re-blit a
+   rectangle of preLBD.png on top — and both need the same care.
+
+   A HARD-edged re-blit is the trap. It cuts every ray, and every zombie
+   leg, along one straight line, which reads as a seam the moment the
+   light gets bright. So each patch is baked once with the edges that
+   actually get crossed faded out; the light dies under the logo and the
+   legs sink into the leaves instead of stopping dead.
+
+   `feather` values are stage px per edge. Edges the live layers never
+   reach are left hard — no point paying for a fade nobody sees. */
+function bakePlatePatch(rect, feather){
+  const img = IMGS.pre, [sx,sy,sw,sh] = rect;
+  const sc = Math.max(W/img.naturalWidth, H/img.naturalHeight);
+  const coverSx = (img.naturalWidth - W/sc)/2, coverSy = (img.naturalHeight - H/sc)/2;
+  const dw = Math.ceil(sw*sc), dh = Math.ceil(sh*sc);
+  const c = makeCv(dw, dh), g = c.getContext('2d');
+  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+  g.drawImage(img, sx,sy,sw,sh, 0,0, dw,dh);
+  // Each pass multiplies the patch's alpha by one edge ramp. destination-in
+  // clears whatever the source misses, so every ramp must be filled across
+  // the WHOLE patch — two part-canvas fills would erase each other.
+  g.globalCompositeOperation = 'destination-in';
+  const ramp = (x0,y0,x1,y1, len, span)=>{
+    const grd = g.createLinearGradient(x0,y0,x1,y1);
+    grd.addColorStop(0, 'rgba(0,0,0,0)');
+    grd.addColorStop(Math.min(1, len/span), 'rgba(0,0,0,1)');
+    grd.addColorStop(1, 'rgba(0,0,0,1)');
+    g.fillStyle = grd; g.fillRect(0,0,dw,dh);
+  };
+  if(feather.top)    ramp(0,0, 0,dh, feather.top,    dh);
+  if(feather.bottom) ramp(0,dh, 0,0, feather.bottom, dh);
+  if(feather.left)   ramp(0,0, dw,0, feather.left,   dw);
+  if(feather.right)  ramp(dw,0, 0,0, feather.right,  dw);
+  g.globalCompositeOperation = 'source-over';
+  return {cv:c, at:[(sx-coverSx)*sc, (sy-coverSy)*sc, dw, dh]};
 }
-function drawTitleZombie(){
-  const z = titleZombiePose();
-  const frameIndex = Math.floor(G.time*5.2) % TITLE_ZOMBIE_FRAMES.length;
-  const f = TITLE_ZOMBIE_FRAMES[frameIndex];
+/* Rects are in preLBD.png's own 1672x941 pixels. The hedge rect runs to the
+   plate's exact right and bottom edges, so only its top and left are cut —
+   and its top sits DEEP inside the plate's own leaf mass (stage y ~686,
+   where the plate is bushes above and below alike). That is what lets the
+   feather be tight: the seam falls bush-on-bush, so no straight line shows.
+   It only ever veils the mob's toes — enough to plant them in the hedge,
+   never enough to cut a leg. */
+const TITLE_LOGO_RECT  = [439, 39, 807, 531];
+const TITLE_HEDGE_RECT = [1071, 896, 601, 45];
+function bakeTitlePatches(){
+  BGL.titleLogo  = bakePlatePatch(TITLE_LOGO_RECT,  {bottom:46});
+  BGL.titleHedge = bakePlatePatch(TITLE_HEDGE_RECT, {top:14, left:74});
+}
 
-  const sg = ctx.createRadialGradient(z.x, z.feetY+2, 0, z.x, z.feetY+2, 46);
-  sg.addColorStop(0,'rgba(2,22,24,.32)');
-  sg.addColorStop(1,'rgba(2,22,24,0)');
-  ctx.fillStyle=sg;
-  ctx.beginPath(); ctx.ellipse(z.x, z.feetY+2, 46, 7, 0,0,7); ctx.fill();
+/* The plate leaves one open band — under the logo, across the dirt lip —
+   and this is its centre. .titleCtas in the stylesheet is anchored to the
+   same number: move one and move both. */
+const TITLE_BURST = {x:640, y:548, rx:276, ry:238, rays:20};
 
+function drawTitleBurst(){
+  const b = TITLE_BURST;
   ctx.save();
-  ctx.translate(z.x, z.feetY);
-  ctx.scale(-1,1);                       // face the tank on the left
-  ctx.drawImage(IMGS.titleZombie, f[0],f[1],f[2],f[3], -z.size/2, -z.size, z.size, z.size);
+  ctx.translate(b.x, b.y);
+  ctx.rotate(G.time*0.075);
+  ctx.scale(1, b.ry/b.rx);
+  const fade = ctx.createRadialGradient(0,0,18, 0,0,b.rx);
+  // the pill covers the bright core, so the alpha is held out to ~80% of the
+  // radius — otherwise the only ray the player ever sees is its faintest tail
+  fade.addColorStop(0,   'rgba(255,253,206,.96)');
+  fade.addColorStop(.5,  'rgba(252,230,74,.84)');
+  fade.addColorStop(.82, 'rgba(244,212,44,.52)');
+  fade.addColorStop(1,   'rgba(238,202,34,0)');
+  ctx.fillStyle = fade;
+  const step = Math.PI*2/b.rays;
+  for(let i=0;i<b.rays;i++){
+    const a = i*step;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.arc(0,0,b.rx, a-step*.27, a+step*.27);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // the warm core the pill is bedded into
+  const core = ctx.createRadialGradient(b.x,b.y,0, b.x,b.y,b.rx*.7);
+  core.addColorStop(0,'rgba(255,250,206,.6)');
+  core.addColorStop(1,'rgba(255,244,166,0)');
+  ctx.fillStyle = core;
+  ctx.beginPath(); ctx.ellipse(b.x,b.y,b.rx*.7,b.ry*.7,0,0,7); ctx.fill();
+}
+
+/* ---------- the corner lurker ----------
+   One zombie, enlarged, leaning in over the bottom-right corner with
+   roughly half of him out of frame.
+
+   The bruiser gets the job on resolution alone. Its sheet carries a 383px
+   body, so 600px on screen is a 1.6x push; the runner's 250px sheet would
+   be 2.4x and the shambler's 167px sheet 3.6x — visibly soft at this size.
+   Nothing else about him is special here, and swapping `type` is the only
+   edit needed if better art turns up.
+
+   The rotation is taken about the pivot, and the pivot is the point his
+   soles stand on — the whole figure hangs off it. That means `tilt` swings
+   him without ever unplanting the anchor, and `x`/`feetY` stay readable as
+   "where his boots are", even though they are off-canvas.
+   Drawn straight off the type registry, so he shuffles at the same cadence
+   the player will meet on level 3. */
+/* x/feetY are deliberately off-canvas — that is the point. Only the top
+   half of him lands inside the 1280x720 frame; the rest leans out past the
+   corner. Shrinking him means pulling the pivot in as well as dropping
+   `height` — the figure scales toward its soles, so height alone would
+   just slide him off the edge. Tuned by eye against the plate: further
+   left and his hair fouls the wordmark's 'E', bigger and it crowds it. */
+const TITLE_LURKER = {type:'bruiser', x:1245, feetY:845, height:540, tilt:-19};
+function drawTitleLurker(){
+  const L = TITLE_LURKER, set = ZOMBIE_TYPES[L.type].look;
+  const f  = set.fps>0 ? set.idle[Math.floor(G.time*set.fps) % set.idle.length]
+                       : set.idle[0];
+  const sc = L.height/set.bodyPx;
+  const ax = (f[4]!==undefined ? f[4] : f[2]/2)*sc;
+  // a slow rock on top of the fixed tilt, so the corner is never a still frame
+  const a  = (L.tilt + Math.sin(G.time*.9)*1.4) * Math.PI/180;
+  ctx.save();
+  ctx.translate(L.x, L.feetY);
+  ctx.rotate(a);
+  ctx.drawImage(IMGS[set.sheet], f[0],f[1],f[2],f[3], -ax, -f[3]*sc, f[2]*sc, f[3]*sc);
   ctx.restore();
 }
-function drawTitleTowerForeground(){
-  // Repaint the roof lip/rail over the feet so the zombie sits inside the scene.
-  drawCoverSlice(ctx, IMGS.pre, 1266,389,335,58, 0,0,W,H);
-}
+
 function drawTitleScene(){
   ctx.clearRect(0, 0, W, H);
   drawCover(ctx, IMGS.pre, 0, 0, W, H);
-  drawTitleZombie();
-  drawTitleTowerForeground();
-
-  ctx.save();
-  const grd = ctx.createLinearGradient(0,0,0,H);
-  grd.addColorStop(0,'rgba(5,20,30,0)');
-  grd.addColorStop(.55,'rgba(5,20,30,0)');
-  grd.addColorStop(1,'rgba(1,8,10,.08)');
-  ctx.fillStyle=grd;
-  ctx.fillRect(0,0,W,H);
-  ctx.restore();
+  drawTitleBurst();
+  ctx.drawImage(BGL.titleLogo.cv,  ...BGL.titleLogo.at);   // rays fall in behind the wordmark
+  drawTitleLurker();
+  ctx.drawImage(BGL.titleHedge.cv, ...BGL.titleHedge.at);  // leaves close over their boots
 }
 
 function visibleLevelNodes(){
@@ -2261,25 +2289,23 @@ function hitTower(x,y){
 
 function drawZombie(z=G.zombie){
   if(!z || z.dead) return;
-  const feetY = z.y + Z_FEET;            // soles rest on the building's deck
+  const t = zombieTypeOf(z);
+  const feetY = z.y + t.feetOffset;      // soles rest on the building's deck
+  const set = z.mode==='burst' ? t.fall : t.look;
+  const f   = z.mode==='burst' ? set.poses[Math.min(z.burstF, set.poses.length-1)]
+            : z.mode==='alert' ? set.alert
+            : set.idle[z.frame % set.idle.length];
+  const sc = t.height/set.bodyPx;
+  const w = f[2]*sc, h = f[3]*sc;
+  const ax = (f[4]!==undefined ? f[4] : f[2]/2)*sc;   // the body's centre-line
+  // every pose hangs off (z.x, feetY), so a knockdown staggers, falls and
+  // crumples ON the roof whatever shape its frame happens to be
   ctx.save();
-  if(z.mode==='burst'){
-    // knockdown: each frame is bottom-anchored on the deck so he staggers,
-    // falls and crumples ON the roof, whatever shape the frame is
-    const f = Z2.die[Math.min(z.burstF, Z2.die.length-1)];
-    const w=f[2]*Z_DIE_SC, h=f[3]*Z_DIE_SC;
-    ctx.drawImage(IMGS.zkill, f[0],f[1],f[2],f[3], z.x-w/2, feetY-h, w, h);
-  } else {
-    const f = z.mode==='alert' ? Z2.alert : Z2.idle;
-    const sc = Z_H/Z2.idle[3];
-    const w=f[2]*sc, h=f[3]*sc;
-    // body movement = a breathing squash anchored at the soles, so the torso
-    // rises and falls while the feet stay glued to the roof deck
-    const breathe = z.mode==='idle' ? 1 + Math.sin(G.time*3)*.018 : 1;
-    ctx.translate(z.x, feetY);
-    ctx.scale(1, breathe);               // sheet already faces the tank — no mirror
-    ctx.drawImage(IMGS.zombie, f[0],f[1],f[2],f[3], -w/2, -h, w, h);
-  }
+  ctx.translate(z.x, feetY);
+  // a type with no idle loop breathes instead: a squash anchored at the soles,
+  // so the torso rises and falls while the feet stay glued to the deck
+  if(z.mode==='idle' && set.fps===0) ctx.scale(1, 1 + Math.sin(G.time*3)*.018);
+  ctx.drawImage(IMGS[set.sheet], f[0],f[1],f[2],f[3], -ax, -h, w, h);
   ctx.restore();
 }
 
@@ -2552,6 +2578,9 @@ function render(){
 /* ============================================================
    BOOT
    ============================================================ */
+$('overlayCard').innerHTML = titleMarkup(false);
+wireTitleButtons();
+
 loadAll(()=>{
   buildLayers();
   setTitleReady();
