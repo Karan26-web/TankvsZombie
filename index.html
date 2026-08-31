@@ -333,8 +333,28 @@ canvas{position:absolute;inset:0;display:block}
 #upBtn{background-image:url(assets/btnPlus.webp)}
 
 /* angle read-out: recessed slot, not a button */
-.valBox{position:relative;display:flex;align-items:center;justify-content:center;gap:1px;
-  width:138px;height:76px;border-radius:18px;border:4px solid var(--btn-rim);z-index:1;
+/* θ = is a LABEL, not part of the read-out, so it stands outside the slot —
+   the slot holds the answer and nothing else. It used to sit hunched in the
+   slot's top-left corner competing with the number for the same box. */
+/* Gold on timber is gold on gold — the label was the same family of warm
+   brown-orange as the plank behind it, so it sank into the grain. Everything
+   else on this board carries its own edge (the keys are painted with one,
+   the read-out has a tan ring), and this was the one mark relying on a drop
+   shadow alone. It gets a real outline: eight offsets of the board's own
+   saw-line colour, which is a ring rather than a shadow and so holds the
+   glyph at every angle instead of only from above. */
+.thetaTag{position:relative;z-index:1;display:flex;align-items:center;gap:7px;
+  padding-bottom:3px;font-size:37px;font-weight:800;line-height:1;color:#ffd487;
+  text-shadow:
+    -2px -2px 0 #4a1b28, 0 -2px 0 #4a1b28,  2px -2px 0 #4a1b28,
+    -2px  0    0 #4a1b28,                   2px  0    0 #4a1b28,
+    -2px  2px 0 #4a1b28, 0  2px 0 #4a1b28,  2px  2px 0 #4a1b28,
+    0 5px 0 rgba(40,10,22,.6),
+    0 0 15px rgba(255,190,110,.4)}
+.thetaTag i{font-style:normal;font-size:31px;color:#ffc978}
+
+.valBox{position:relative;display:flex;align-items:center;justify-content:center;
+  width:126px;height:76px;border-radius:18px;border:4px solid var(--btn-rim);z-index:1;
   background:linear-gradient(180deg,#3a1a0c 0%,#261006 58%,#160903 100%);
   /* cut into the plank rather than screwed onto it: the board's own dark
      edge rings it, and the shadow falls INWARD from the top */
@@ -344,13 +364,20 @@ canvas{position:absolute;inset:0;display:block}
     0 0 0 3px var(--board-frame),
     0 3px 0 rgba(255,200,140,.16),
     0 8px 14px rgba(0,0,0,.34)}
-.thetaMark{position:absolute;top:7px;left:13px;
-  color:#ffc978;font-size:19px;font-weight:800;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.6)}
-#angleInput{width:78px;margin-top:11px;font-size:42px;font-weight:800;text-align:right;
+/* The number owns the middle of the slot. It is centred rather than pushed
+   right because the slot now holds ONE thing — with the unit lifted into the
+   corner, an off-centre number just looks off-centre. */
+#angleInput{width:100%;font-size:44px;font-weight:800;text-align:center;
   border:none;background:transparent;color:var(--btn-ink);outline:none;font-family:inherit;
   text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 14px rgba(255,226,178,.35)}
-.valBox .deg{align-self:center;margin-top:9px;font-size:33px;font-weight:800;color:var(--btn-ink);
-  text-shadow:0 3px 0 rgba(0,0,0,.6)}
+/* the unit rides the corner, the way a form field carries its unit: present,
+   never competing with the value for the eye */
+/* the reference sets its unit in the same ink as the field's contents, not
+   as a second colour — at this size a gold speck in the corner read as dirt
+   on the glass rather than as a degree sign */
+.valBox .deg{position:absolute;top:6px;right:12px;line-height:1;
+  font-size:24px;font-weight:800;color:var(--btn-ink);
+  text-shadow:0 2px 0 rgba(0,0,0,.55)}
 
 /* FIRE: the painted pill itself, glowing on its own */
 #fireBtn{width:200px;height:92px;z-index:1;--sink:9px;
@@ -402,7 +429,7 @@ canvas{position:absolute;inset:0;display:block}
    so the two that paint past their edge are given 18 and the honest one 22.
    Measured on screen: 21.6 / 21.3 / 22.2. */
 .trigPanel{position:relative;max-width:880px;width:100%;
-  padding:14px 26px 18px;text-align:center;color:var(--parch-ink);
+  padding:24px 26px 18px;text-align:center;color:var(--parch-ink);
   border:5px solid var(--plate-ring);border-radius:26px;
   background:
     linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 22%),
@@ -415,8 +442,12 @@ canvas{position:absolute;inset:0;display:block}
   animation:sheetPop .26s cubic-bezier(.2,.9,.3,1.25) both}
 @keyframes sheetPop{from{transform:translateY(14px) scale(.97)}to{transform:none}}
 
-/* the header is the dock's own plank, stood on its end of the panel */
-.trigTitle{display:inline-block;margin:-40px auto 18px;padding:13px 46px 15px;
+/* The header is the dock's own plank, stood on its end of the panel.
+   BLOCK, not inline-block: as an inline-block its vertical position comes
+   from baseline alignment inside a line box, so a margin-top on it moved
+   nothing — the air above the sign is the panel's own padding-top instead,
+   and that is the number to turn. */
+.trigTitle{display:block;width:fit-content;margin:0 auto 18px;padding:13px 46px 15px;
   font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:27px;letter-spacing:2px;
   color:var(--board-cream,#fcebc5);text-shadow:0 3px 0 rgba(60,16,40,.55);
   background:url(assets/board.svg) 0 0/100% 100% no-repeat;
@@ -719,12 +750,12 @@ canvas{position:absolute;inset:0;display:block}
     <div id="controlDock">
       <div class="stepperGroup">
         <button type="button" class="stepBtn artBtn" id="downBtn" aria-label="Decrease angle"></button>
+        <span class="thetaTag" aria-hidden="true">θ<i>=</i></span>
         <div class="valBox">
-          <span class="thetaMark" aria-hidden="true">θ</span>
           <input id="angleInput" readonly value="0" autocomplete="off"
                  title="Angle — step it with + and −"
                  aria-label="Angle in degrees, chosen from 0, 30, 45, 60 and 90">
-          <span class="deg">°</span>
+          <span class="deg" aria-hidden="true">°</span>
         </div>
         <button type="button" class="stepBtn artBtn" id="upBtn" aria-label="Increase angle"></button>
       </div>
@@ -3187,19 +3218,25 @@ function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, b
   ctx.strokeStyle=core;  ctx.lineWidth=w;     path(); ctx.stroke();
   ctx.restore();
 }
-/* a side that draws itself on: u is how much of it has arrived */
+/* A side that draws itself on: u is how much of it has arrived.
+   BUTT caps, not round. Every vertex of this triangle is a place where two
+   legs end at the same point, and a round cap adds half a stroke width of
+   overshoot past that point — on three stacked passes (halo 7.5, bloom 6.9,
+   core 3.4) the caps piled up and the corners read as lumps rather than
+   joins. Cut flat, the strokes meet exactly where the maths says they do. */
 function guideLeg(x1,y1,x2,y2,u){
   if(u<=.002) return;
   const x=x1+(x2-x1)*u, y=y1+(y2-y1)*u;
-  glowStroke(()=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x,y); });
+  glowStroke(()=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x,y); }, {cap:'butt'});
 }
-function guideText(txt,x,y,{size=21,weight=800,fill=GUIDE_VALUE,align='center'}={}){
+function guideText(txt,x,y,{size=21,weight=800,fill=GUIDE_VALUE,align='center',
+                            outline='rgba(38,14,4,.72)'}={}){
   ctx.font=`${weight} ${size}px ${FONT}`;
   ctx.textAlign=align; ctx.textBaseline='middle';
   ctx.lineJoin='round'; ctx.lineWidth=Math.max(4,size*.34);
-  ctx.strokeStyle='rgba(38,14,4,.72)'; ctx.strokeText(txt,x,y);
+  if(outline){ ctx.strokeStyle=outline; ctx.strokeText(txt,x,y); }
   ctx.fillStyle=fill; ctx.fillText(txt,x,y);
-  vinculum(txt,x,y,size,align,fill);
+  vinculum(txt,x,y,size,align,fill,outline);
 }
 /* A radical whose bar you cannot see is a division sign, and "8√2 m" read as
    "8/2 m" is 4 metres instead of 11.3 — in a maths game that is not a
@@ -3207,7 +3244,7 @@ function guideText(txt,x,y,{size=21,weight=800,fill=GUIDE_VALUE,align='center'}=
    glyph's vinculum is thinner than the dark outline every value is stroked
    with, so it disappears. The bar is drawn as a real rule instead, over
    exactly the radicand, in the same two passes as the text it belongs to. */
-function vinculum(txt,x,y,size,align,fill){
+function vinculum(txt,x,y,size,align,fill,outline='rgba(38,14,4,.72)'){
   const i = txt.indexOf('√');
   if(i < 0) return;
   const w = ctx.measureText(txt).width;
@@ -3221,22 +3258,68 @@ function vinculum(txt,x,y,size,align,fill){
   const digits = ctx.measureText(txt.slice(i+1, stop<0 ? txt.length : stop));
   const yBar = y - (digits.actualBoundingBoxAscent || size*.36) - Math.max(3, size*.13);
   ctx.save(); ctx.lineCap='butt';
-  ctx.strokeStyle='rgba(38,14,4,.72)'; ctx.lineWidth=Math.max(3.4,size*.26);
-  ctx.beginPath(); ctx.moveTo(from,yBar); ctx.lineTo(to,yBar); ctx.stroke();
-  ctx.strokeStyle=fill; ctx.lineWidth=Math.max(1.8,size*.10);
+  if(outline){
+    ctx.strokeStyle=outline; ctx.lineWidth=Math.max(3.4,size*.26);
+    ctx.beginPath(); ctx.moveTo(from,yBar); ctx.lineTo(to,yBar); ctx.stroke();
+  }
+  ctx.strokeStyle=fill; ctx.lineWidth=Math.max(outline?1.8:2.2,size*(outline?.10:.11));
   ctx.beginPath(); ctx.moveTo(from,yBar); ctx.lineTo(to,yBar); ctx.stroke();
   ctx.restore();
 }
-/* a given length: small caption over a big number, so it reads as data */
-function guideValue(x,y,caption,value,u,align='center'){
+function roundRectPath(x,y,w,h,r){
+  ctx.beginPath();
+  if(ctx.roundRect) ctx.roundRect(x,y,w,h,r);
+  else {
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+  }
+}
+/* ---- A GIVEN LENGTH, ON ITS OWN CARD ---------------------------------
+   These two numbers are the question. As glowing text they were competing
+   with the very thing they label — the sides glow too — and they crossed
+   girders, brickwork and sky depending on the round, so their legibility
+   changed with whatever happened to be behind them. On a card they read the
+   same everywhere.
+   The card is DRAWN rather than the smlBrd plaque: at ~150x66 that art had
+   to stretch nearly 3x, and where the dock's board can carry that (it is a
+   long board, and reads as one), a label this small stretched into a wide
+   plank fought its own proportions. Drawn, the corner radius and the rim
+   stay honest at any width the number happens to need.
+   Its COLOURS are the plaque's, though — the plum saw-line, the plank face
+   that darkens downward, the cream the glyphs on every wooden key are cut
+   in. So it belongs to the same set without having to be the same picture.
+   THETA keeps the glow: it is not a given, it is the unknown standing on the
+   triangle itself, and it should look like part of the drawing. */
+function guideCard(x,y,caption,value,u,align='center'){
   if(u<=.01) return;
   ctx.save();
   ctx.globalAlpha *= clamp01(u);
-  const rise = (1-u)*10;
-  // a surd's rule stands above the digits, in the room the caption was using
-  const lift = value.indexOf('√') >= 0 ? 7 : 0;
-  guideText(caption, x, y-15-lift+rise, {size:12, weight:700, fill:GUIDE_CAPTION, align});
-  guideText(value,   x, y+5+rise,  {size:22, weight:800, align});
+  const rise = (1-u)*10, cy = y + rise;
+  ctx.font = `700 12px ${FONT}`;  const cw = ctx.measureText(caption).width;
+  ctx.font = `800 23px ${FONT}`;  const vw = ctx.measureText(value).width;
+  const w = Math.max(cw, vw) + 34, h = 58, r = 13;
+  const left = align==='center' ? x - w/2 : align==='left' ? x : x - w;
+  const top  = cy - h/2;
+  // it sits ON the scene, so it carries its own ground shadow
+  ctx.save();
+  ctx.shadowColor = 'rgba(20,8,4,.5)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 4;
+  roundRectPath(left, top, w, h, r);
+  ctx.fillStyle = '#59173e'; ctx.fill();                    // the saw-cut edge
+  ctx.restore();
+  roundRectPath(left+3.5, top+3.5, w-7, h-7, r-3);
+  const g = ctx.createLinearGradient(0, top, 0, top+h);
+  g.addColorStop(0,'#b8502e'); g.addColorStop(.55,'#a54331'); g.addColorStop(1,'#933934');
+  ctx.fillStyle = g; ctx.fill();
+  ctx.strokeStyle = 'rgba(247,171,104,.75)'; ctx.lineWidth = 1.6;   // the lit rim
+  roundRectPath(left+4.8, top+4.8, w-9.6, h-9.6, r-4); ctx.stroke();
+  const cx = left + w/2;
+  // a surd's rule needs room above the digits, and the caption is what gives it
+  const lift = value.indexOf('√') >= 0 ? 3 : 0;
+  const ink = 'rgba(58,18,10,.85)';
+  guideText(caption, cx, top+17-lift, {size:12, weight:700, fill:'#f4d7a4',
+                                       align:'center', outline:ink});
+  guideText(value,   cx, top+39,      {size:23, weight:800, fill:'#fff3d6',
+                                       align:'center', outline:ink});
   ctx.restore();
 }
 function elbowPath(x,y,dx,dy){
@@ -3265,9 +3348,13 @@ function drawGuides(){
 
   const ru = clamp01((G.reveal.opp-.5)/.35);
   if(ru>0){
-    const s = 15*ru;
+    const s = 16*ru, gap = 3;
     ctx.save(); ctx.globalAlpha *= G.guideAlpha*ru;
-    glowStroke(()=>elbowPath(t.bx,t.by,inSign*s,upSign*s), {w:2.8, halo:6, blur:.8});
+    /* held `gap` off both legs: drawn flush it was a third stroke crossing
+       the very junction it is meant to annotate, and the corner turned to
+       mush. Butt caps for the same reason the legs have them. */
+    glowStroke(()=>elbowPath(t.bx+inSign*gap, t.by+upSign*gap, inSign*s, upSign*s),
+               {w:2.6, halo:5.4, blur:.8, cap:'butt'});
     ctx.restore();
   }
 
@@ -3288,15 +3375,17 @@ function drawGuides(){
      same. The two chips arrive on the same two beats whichever sides they
      land on, so the briefing's rhythm is unchanged. */
   const given = GIVEN_SIDES[L.type] || ['adj','opp'];
+  /* the cards stand OFF their side rather than on it, so neither the glow
+     nor the card has to be read through the other */
   const SIDE = {
-    adj: {x:(t.ax+t.bx)/2,      y:t.by+36,             cap:'ADJACENT',   align:'center'},
-    opp: {x:t.bx+24,            y:(t.by+t.cy)/2,       cap:'OPPOSITE',   align:'left'},
-    hyp: {x:(t.ax+t.cx)/2 - 34, y:(t.ay+t.cy)/2 - 30,  cap:'HYPOTENUSE', align:'right'}
+    adj: {x:(t.ax+t.bx)/2,      y:t.by+50,             cap:'ADJACENT',   align:'center'},
+    opp: {x:t.bx+22,            y:(t.by+t.cy)/2,       cap:'OPPOSITE',   align:'left'},
+    hyp: {x:(t.ax+t.cx)/2 - 26, y:(t.ay+t.cy)/2 - 40,  cap:'HYPOTENUSE', align:'right'}
   };
   [G.reveal.chipA, G.reveal.chipO].forEach((u,i)=>{
     const p = SIDE[given[i]]; if(!p) return;
     const shown = (L.show && L.show[i]) ? `${L.show[i]} m` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
-    guideValue(p.x, p.y, p.cap, shown, u, p.align);
+    guideCard(p.x, p.y, p.cap, shown, u, p.align);
   });
   ctx.restore();
 
