@@ -842,6 +842,17 @@ const TARGET_EDGE_MARGIN = 26;     // frame the building has to stay whole insid
                                    // the edge reads as cropped even when it isn't
 const MIN_TANK_CLEARANCE = 96;     // ground that has to stay open between the
                                    // tank's nose and the structure's near wall
+/* ...except that a STEEP round has no ground to leave. At 60 degrees the
+   target stands at opposite/tan60 — barely 220px out — while the tank alone
+   reaches 161px past its own pivot. The geometry puts the tower AT the tank's
+   nose, and that IS what a 60-degree shot looks like; demanding clearance
+   there is demanding the angle not exist.
+   So a steep round may tuck its structure behind the hull instead. It reads
+   as depth rather than collision because the structure stands on the set-back
+   lane and the tank is drawn over it — the same reason the tank passes in
+   front of cleared buildings. Capped at TANK_TUCK so a tower can never appear
+   to grow out of the turret. */
+const TANK_TUCK = -46;
 const TANK_BOTTOM_PADDING = 6;             // lets visible wheels/tracks meet the surface, not the PNG box
 /* The tank is anchored at CAMERA_FOLLOW_X, and the round's own numbers put
    its target: `adjacent` metres out along the gun's line, `opposite` metres
@@ -1176,18 +1187,31 @@ function labelValue(txt){
   const m = SURD_LABEL.exec(String(txt).trim());
   return m ? parseFloat(m[1]) * (m[2] ? Math.sqrt(parseFloat(m[2])) : 1) : NaN;
 }
-/* Ordered by the size of the triangle, not by its angle: 5 m of opposite up
-   to 9 m, so every round is visibly bigger than the last. That reads as an
-   escalation ONLY because the ruler is fixed — it is the same fact the
-   numbers state, drawn. The three far 30-degree rounds come first and the two
-   near, steep 45-degree ones close the run, which is also the order that puts
-   the tightest staging last, where the player already knows the shape. */
+/* All three table angles are used, no two rounds running share one, and the
+   ratio type turns over as well — a student meets sin, cos and tan rather
+   than one of them five times.
+   The SIZES are not free to be a neat ascending ramp, and the reason is the
+   tank. Clearance at 45 degrees works out to 0.711*opposite - 146px, so a
+   45-degree round needs ~345px of opposite before its structure clears the
+   hull at all; below that the round cannot be staged. 30 degrees has no such
+   floor — it runs wide and low — so the shallow rounds are free to be the
+   small ones and the steep rounds have to be big. The load-time check
+   enforces this: an earlier draft of this table put a 6m 45-degree round at
+   level 2 and the game refused to start, naming the round and the distance.
+   Rounds 1 and 5 share their numbers, 5 and 10, on purpose: one asks for sin
+   and one for cos, and they answer 30 and 60. Same two lengths, different
+   question, different angle — which is the whole point of the table.
+   SIXTY closes the run, and its position is not a preference: it is the
+   steepest angle the stage can hold, which makes it both the tightest
+   staging and the most dramatic picture — the target almost overhead, the
+   tower's foot tucked behind the tank. Putting it last means the player meets
+   that composition once they already know how to read the triangle. */
 const LEVELS = [
   {id:1, ans:30, type:'sin', h:5,     hyp:10,   show:['5','10'],    zombie:'shambler'},
-  {id:2, ans:30, type:'tan', h:6,     d:6*R3,   show:['6√3','6'],   zombie:'runner'},
+  {id:2, ans:45, type:'tan', d:9,     h:9,      show:['9','9'],     zombie:'runner'},
   {id:3, ans:30, type:'cos', d:7*R3,  hyp:14,   show:['7√3','14'],  zombie:'shambler'},
-  {id:4, ans:45, type:'tan', d:8,     h:8,      show:['8','8'],     zombie:'runner'},
-  {id:5, ans:45, type:'sin', h:9,     hyp:9*R2, show:['9','9√2'],   zombie:'bruiser'}
+  {id:4, ans:45, type:'sin', h:8,     hyp:8*R2, show:['8','8√2'],   zombie:'runner'},
+  {id:5, ans:60, type:'cos', d:5,     hyp:10,   show:['5','10'],    zombie:'bruiser'}
 ].map(L=>{
   // the third side is never given, but the triangle still has to be drawn
   const t = L.ans*Math.PI/180;
@@ -1430,6 +1454,7 @@ const G = {
   angleTarget:DEFAULT_START_ANGLE,      // the number in the dock — the player's answer
   angleShown:BARREL_REST_ANGLE,         // where the barrel actually points
   barrelTarget:BARREL_REST_ANGLE,
+  chipAlpha:1,                          // the measured lengths, gone once FIRE lands
   lay:null, brief:null, trans:null,     // active choreography, if any
   reveal:{adj:0,opp:0,hyp:0,theta:0,chipA:0,chipO:0},
   aimPath:null, shell:null, particles:[], floaters:[],
@@ -1645,9 +1670,14 @@ function tankClearance(level, bld){
    toward the gun while a tall deck pushes the shape's reach out, so the wide
    ones simply run out of room — this is the question the hand-written pools
    used to answer by eye, asked of the geometry instead. */
+/* a declaration, not a const: the level table validates itself at load, and
+   that check runs stagingFits from further UP the file than this sits */
+function clearanceFloor(level){
+  return LEVELS[level].ans >= 60 ? TANK_TUCK : MIN_TANK_CLEARANCE;
+}
 function stagingFits(level, bld){
   const f = frameRound(level, bld);
-  return f.tankScreenX >= TARGET_EDGE_MARGIN && tankClearance(level, bld) >= MIN_TANK_CLEARANCE;
+  return f.tankScreenX >= TARGET_EDGE_MARGIN && tankClearance(level, bld) >= clearanceFloor(level);
 }
 
 function makeLevelNode(level, targetWorldX, bld){
@@ -2543,6 +2573,13 @@ function update(dt){
   const guidesUp = G.state===GameState.BRIEFING || G.state===GameState.AIMING || G.state===GameState.LAYING;
   const guideTarget = guidesUp ? 1 : (G.state===GameState.PROJECTILE_FLYING ? .6 : 0);
   G.guideAlpha += (guideTarget-G.guideAlpha)*Math.min(1,dt*8);
+  /* The measured lengths are the QUESTION, and the question is over the
+     moment FIRE is pressed — from there the round is watching an answer land.
+     They also sit in the air the shell is about to fly through. So they clear
+     as soon as the gun starts laying, while the triangle itself stays: the
+     player still wants to see the shot against the shape they solved. */
+  const chipsUp = G.state===GameState.BRIEFING || G.state===GameState.AIMING;
+  G.chipAlpha += ((chipsUp?1:0)-G.chipAlpha)*Math.min(1,dt*9);
   if(G.recoil>0) G.recoil=Math.max(0,G.recoil-dt*46);   // the gun rides back out, not snaps
   if(G.flash>0) G.flash-=dt;
   if(G.shake>0) G.shake=Math.max(0,G.shake-dt*21);
@@ -3207,11 +3244,16 @@ function meters(v){
    `path` only builds the path — each pass re-strokes it.
    The bloom breathes slowly, which is what makes the sides read as LIT rather
    than merely drawn; held still when the player asked for reduced motion. */
-function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, blur=1, cap='round'}={}){
+function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, blur=1,
+                           cap='round', dash=null}={}){
   const pulse = ambientMotionAllowed() ? 1 + Math.sin(G.time*1.6)*.16 : 1;
   ctx.save();
   ctx.lineCap=cap; ctx.lineJoin='round';
-  ctx.strokeStyle=GUIDE_HALO; ctx.lineWidth=halo; path(); ctx.stroke();
+  if(dash) ctx.setLineDash(dash);
+  // halo 0 = skip the dark backing pass. Over the tank that backing is a dark
+  // line on dark armour, which at low alpha reads as grime rather than as a
+  // guide; there, only the hot core is worth drawing.
+  if(halo>0){ ctx.strokeStyle=GUIDE_HALO; ctx.lineWidth=halo; path(); ctx.stroke(); }
   ctx.shadowColor=bloom; ctx.shadowBlur=22*blur*pulse;      // the amber band and its spill
   ctx.strokeStyle=bloom; ctx.lineWidth=w+3.5; path(); ctx.stroke();
   ctx.shadowColor='rgba(255,228,152,.95)'; ctx.shadowBlur=7*blur;
@@ -3224,10 +3266,11 @@ function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, b
    overshoot past that point — on three stacked passes (halo 7.5, bloom 6.9,
    core 3.4) the caps piled up and the corners read as lumps rather than
    joins. Cut flat, the strokes meet exactly where the maths says they do. */
-function guideLeg(x1,y1,x2,y2,u){
+function guideLeg(x1,y1,x2,y2,u,opts){
   if(u<=.002) return;
   const x=x1+(x2-x1)*u, y=y1+(y2-y1)*u;
-  glowStroke(()=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x,y); }, {cap:'butt'});
+  glowStroke(()=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x,y); },
+             Object.assign({cap:'butt'}, opts));
 }
 function guideText(txt,x,y,{size=21,weight=800,fill=GUIDE_VALUE,align='center',
                             outline='rgba(38,14,4,.72)'}={}){
@@ -3290,7 +3333,7 @@ function roundRectPath(x,y,w,h,r){
    in. So it belongs to the same set without having to be the same picture.
    THETA keeps the glow: it is not a given, it is the unknown standing on the
    triangle itself, and it should look like part of the drawing. */
-function guideCard(x,y,caption,value,u,align='center'){
+function guideCard(x,y,caption,value,u,align='center',minLeft=null){
   if(u<=.01) return;
   ctx.save();
   ctx.globalAlpha *= clamp01(u);
@@ -3298,7 +3341,8 @@ function guideCard(x,y,caption,value,u,align='center'){
   ctx.font = `700 12px ${FONT}`;  const cw = ctx.measureText(caption).width;
   ctx.font = `800 23px ${FONT}`;  const vw = ctx.measureText(value).width;
   const w = Math.max(cw, vw) + 34, h = 58, r = 13;
-  const left = align==='center' ? x - w/2 : align==='left' ? x : x - w;
+  let left = align==='center' ? x - w/2 : align==='left' ? x : x - w;
+  if(minLeft!=null && left < minLeft) left = minLeft;
   const top  = cy - h/2;
   // it sits ON the scene, so it carries its own ground shadow
   ctx.save();
@@ -3325,16 +3369,58 @@ function guideCard(x,y,caption,value,u,align='center'){
 function elbowPath(x,y,dx,dy){
   ctx.beginPath(); ctx.moveTo(x+dx,y); ctx.lineTo(x+dx,y+dy); ctx.lineTo(x,y+dy);
 }
-/* The sides go BEHIND the tank, so the barrel hides the triangle's root: the
-   horizontal reads as leaving the muzzle (exactly like the sketch) while the
-   maths still measures the full side from the pivot. */
+/* ---- THE THREE SIDES, ACROSS THE TANK --------------------------------
+   The sides used to be drawn BEHIND the tank, which hid the apex: the
+   adjacent leg and the hypotenuse both start at the gun's pivot, and the
+   pivot sits INSIDE the hull — so the one corner that shows the angle being
+   solved for was the one corner buried under the sprite.
+   They are in front now, but a bright line painted straight over the tank
+   reads as a scratch on the paint. So the legs are drawn TWICE, each pass
+   clipped to a different half of the screen:
+     · everywhere except the tank's box, at full strength;
+     · inside it, faded — present, subordinate, obviously behind the armour.
+   Clipping is what makes this cheap AND correct: neither pass touches the
+   other's pixels, so there is no double-strength overdraw where they meet,
+   and the step in brightness lands exactly on the tank's own edge, which is
+   where the eye expects a change anyway.
+   The BOX rather than the silhouette is deliberate and it costs nothing
+   here: the adjacent leg runs the length of the hull, and the hypotenuse
+   leaves through the top within ~16px of the pivot — both over solid armour
+   the whole time they are inside the box. */
+const TANK_OVERLAY_FADE = .78;
 function drawTriangleLegs(){
   if(G.guideAlpha<=.01) return;
   const t = trigTriangle(); if(!t) return;
+  const legs = o=>{
+    guideLeg(t.ax,t.ay,t.bx,t.by,G.reveal.adj,o);   // adjacent
+    guideLeg(t.bx,t.by,t.cx,t.cy,G.reveal.opp,o);   // opposite
+    guideLeg(t.ax,t.ay,t.cx,t.cy,G.reveal.hyp,o);   // hypotenuse / line of fire
+  };
+  /* DASHED over the hull, and that is the point of the whole exercise.
+     The adjacent leg leaves the pivot horizontally and the gun RESTS
+     horizontally, so that leg is collinear with the barrel — drawn solid it
+     was not hidden by the tank so much as indistinguishable from it, a cream
+     line lying along a cream barrel highlight. A dash cannot be mistaken for
+     anything the tank is made of.
+     It is also the right convention: a hidden edge is dashed in every
+     technical drawing a student will ever meet, which is exactly what this
+     is — the part of the triangle that runs behind the armour. */
+  const OVER_TANK = {halo:0, w:2.8, blur:.5, dash:[10,8]};
+  const hx = TANK.x - G.recoil*.6, hy = TANK.y;   // the hull, where it is this frame
+
   ctx.save(); ctx.globalAlpha *= G.guideAlpha;
-  guideLeg(t.ax,t.ay,t.bx,t.by,G.reveal.adj);   // adjacent
-  guideLeg(t.bx,t.by,t.cx,t.cy,G.reveal.opp);   // opposite
-  guideLeg(t.ax,t.ay,t.cx,t.cy,G.reveal.hyp);   // hypotenuse / line of fire
+  // everything but the tank: the whole canvas minus the hull, wound the other
+  // way so evenodd cuts the hull out of it
+  ctx.beginPath();
+  ctx.rect(0,0,W,H);
+  ctx.rect(hx, hy, TANK.w, TANK.h);
+  ctx.clip('evenodd');
+  legs();
+  ctx.restore();
+
+  ctx.save(); ctx.globalAlpha *= G.guideAlpha * TANK_OVERLAY_FADE;
+  ctx.beginPath(); ctx.rect(hx, hy, TANK.w, TANK.h); ctx.clip();
+  legs(OVER_TANK);
   ctx.restore();
 }
 /* The parts that must stay readable over everything: right-angle box, the θ
@@ -3377,15 +3463,21 @@ function drawGuides(){
   const given = GIVEN_SIDES[L.type] || ['adj','opp'];
   /* the cards stand OFF their side rather than on it, so neither the glow
      nor the card has to be read through the other */
+  /* On a steep round the adjacent leg is short and its midpoint lands ON the
+     tank, so that card is held clear of the hull's nose instead. The other
+     two are never near it. */
+  const clearOfTank = TANK.x - G.recoil*.6 + TANK.w + 12;
   const SIDE = {
-    adj: {x:(t.ax+t.bx)/2,      y:t.by+50,             cap:'ADJACENT',   align:'center'},
+    adj: {x:(t.ax+t.bx)/2,      y:t.by+50,             cap:'ADJACENT',   align:'center',
+          minLeft:clearOfTank},
     opp: {x:t.bx+22,            y:(t.by+t.cy)/2,       cap:'OPPOSITE',   align:'left'},
     hyp: {x:(t.ax+t.cx)/2 - 26, y:(t.ay+t.cy)/2 - 40,  cap:'HYPOTENUSE', align:'right'}
   };
-  [G.reveal.chipA, G.reveal.chipO].forEach((u,i)=>{
+  [G.reveal.chipA, G.reveal.chipO].forEach((u0,i)=>{
+    const u = u0 * G.chipAlpha;
     const p = SIDE[given[i]]; if(!p) return;
     const shown = (L.show && L.show[i]) ? `${L.show[i]} m` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
-    guideCard(p.x, p.y, p.cap, shown, u, p.align);
+    guideCard(p.x, p.y, p.cap, shown, u, p.align, p.minLeft);
   });
   ctx.restore();
 
@@ -3533,9 +3625,9 @@ function render(){
   drawSkyClouds();
   nodes.forEach(node=>drawTower(node.tower));
   nodes.forEach(node=>drawZombie(node.zombie));
-  drawTriangleLegs();      // behind the tank — the barrel hides the triangle's root
   drawTank();
-  drawGuides();            // in front — right angle, θ sweep, the given lengths
+  drawTriangleLegs();      // over the tank, faded where it crosses the hull
+  drawGuides();            // right angle, θ sweep, the given lengths
   drawShell();
   drawParticles();
   drawFloaters();
