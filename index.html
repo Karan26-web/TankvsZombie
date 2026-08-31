@@ -2431,7 +2431,6 @@ function spawnDriveDust(){
 function easeInOutCubic(t){
   return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
 }
-
 function updateNodeStatuses(){
   G.levelNodes.forEach(node=>{
     if(node.status==='CLEARED' && G.tankWorldX > node.worldX + node.tower.w + 60){
@@ -3245,11 +3244,10 @@ function meters(v){
    The bloom breathes slowly, which is what makes the sides read as LIT rather
    than merely drawn; held still when the player asked for reduced motion. */
 function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, blur=1,
-                           cap='round', dash=null}={}){
+                           cap='round'}={}){
   const pulse = ambientMotionAllowed() ? 1 + Math.sin(G.time*1.6)*.16 : 1;
   ctx.save();
   ctx.lineCap=cap; ctx.lineJoin='round';
-  if(dash) ctx.setLineDash(dash);
   // halo 0 = skip the dark backing pass. Over the tank that backing is a dark
   // line on dark armour, which at low alpha reads as grime rather than as a
   // guide; there, only the hot core is worth drawing.
@@ -3396,16 +3394,14 @@ function drawTriangleLegs(){
     guideLeg(t.bx,t.by,t.cx,t.cy,G.reveal.opp,o);   // opposite
     guideLeg(t.ax,t.ay,t.cx,t.cy,G.reveal.hyp,o);   // hypotenuse / line of fire
   };
-  /* DASHED over the hull, and that is the point of the whole exercise.
-     The adjacent leg leaves the pivot horizontally and the gun RESTS
-     horizontally, so that leg is collinear with the barrel — drawn solid it
-     was not hidden by the tank so much as indistinguishable from it, a cream
-     line lying along a cream barrel highlight. A dash cannot be mistaken for
-     anything the tank is made of.
-     It is also the right convention: a hidden edge is dashed in every
-     technical drawing a student will ever meet, which is exactly what this
-     is — the part of the triangle that runs behind the armour. */
-  const OVER_TANK = {halo:0, w:2.8, blur:.5, dash:[10,8]};
+  /* Solid over the hull, but it keeps a thin dark backing. The adjacent leg
+     leaves the pivot horizontally and the gun RESTS horizontally, so that leg
+     runs along the barrel — with no outline a solid cream line there is not
+     hidden by the tank so much as indistinguishable from it, lost in the
+     barrel's own highlight. The halo is what separates the two, and it is
+     kept narrow so it reads as an edge on the line rather than as grime on
+     the armour. */
+  const OVER_TANK = {halo:4.6, w:2.8, blur:.5};
   const hx = TANK.x - G.recoil*.6, hy = TANK.y;   // the hull, where it is this frame
 
   ctx.save(); ctx.globalAlpha *= G.guideAlpha;
