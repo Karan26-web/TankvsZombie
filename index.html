@@ -34,14 +34,40 @@
   --btn-rim-dark:#8a3a18;     /* their rust outer casing     */
   --btn-stud:#4b1c0b;         /* the block a key presses on  */
   --btn-ink:#fef8dc;          /* the FIRE cream              */
-  --frame-a:#a44d24;          /* console body, lit           */
-  --frame-b:#6c2a13;
-  --frame-c:#43170a;          /* console body, shadow        */
-  --gem-green:#93ce5d;
-  --gem-green-mid:#56a21e;
-  --gem-green-deep:#2b6b10;
+  /* the console-body and loose gem tokens that used to live here are gone:
+     the dock is timber now (see --board-* below) and every gem face comes
+     off the PLAY-PLATE kit, so nothing was reading them. A palette that
+     still lists colours nothing uses is a palette that lies about itself. */
   --fire-orange:#fd8b06;
   --fire-deep:#88200a;
+
+  /* --- BOARD — the dock is assets/board.svg now, so the timber palette it
+     used to be painted with is gone. This one colour survives: the θ
+     read-out is cut INTO that board, and its ring is the board's own
+     shadow line, sampled off the art. */
+  --board-frame:#4a1b28;
+
+  /* --- PLAY-PLATE KIT — the PLAY GAME pill's material, promoted to a
+     panel language. One recipe, four layers, top to bottom:
+       brown casing ring → cream bezel → glossy green gem → dark-olive ink.
+     Every panel that carries WORDS is built from these, so a banner, a
+     toast, a heading plaque and a card button all read as the same
+     moulded plastic part the player already pressed on the title screen.
+     Long-form copy sits on the parchment face instead: the same frame,
+     a light interior, because a paragraph needs a page, not a gem. */
+  --plate-case:#6b3a14;       /* outer brown casing  */
+  --plate-case-deep:#4a2409;  /* the block it stands on */
+  --plate-ring:#f0c063;       /* cream bezel         */
+  --plate-a:#dcf055;          /* gem face, lit       */
+  --plate-b:#b4d833;
+  --plate-c:#8cb81e;
+  --plate-d:#6b9612;          /* gem face, shadow    */
+  --plate-ink:#3d3005;        /* the PLAY GAME letter colour */
+  --parch-a:#fff4d2;          /* card page, lit      */
+  --parch-b:#f6e1ab;
+  --parch-c:#e6c98a;          /* card page, shadow   */
+  --parch-ink:#4a2b10;        /* body copy on parchment */
+  --parch-ink-soft:#8a6437;
 }
 
 /* ============================================================
@@ -72,24 +98,100 @@ canvas{position:absolute;inset:0;display:block}
    TOP HUD — the objective banner, the status line and the control dock.
    ============================================================ */
 #hud{position:absolute;inset:0;pointer-events:none;color:var(--text-primary)}
-.hudPanel{border:3px solid var(--btn-rim);border-radius:var(--panel-radius);
-  background:linear-gradient(180deg,rgba(164,77,36,.94) 0%,rgba(108,42,19,.95) 52%,rgba(67,23,10,.96) 100%);
-  box-shadow:inset 0 2px 0 rgba(255,232,190,.3),inset 0 -6px 0 rgba(24,7,2,.45),
-    0 0 0 3px var(--btn-rim-dark),0 6px 0 #3a1207,0 13px 20px rgba(0,0,0,.4);
-  color:var(--btn-ink)}
+/* .hudPanel is gone. It was the old painted-console recipe, and #controlDock
+   was the last thing still wearing it — but the ID rule only overrode its
+   border and background, so its box-shadow (carrying `0 0 0 3px` of rust)
+   kept drawing a brown rectangle around the board art. A base class whose
+   leftovers outlive the thing it styled is worse than no base class. */
 
-#objBanner{position:absolute;left:50%;top:14px;transform:translateX(-50%);
-  padding:9px 20px;font-size:14px;font-weight:700;gap:9px;white-space:nowrap;
-  display:flex;align-items:center;color:var(--btn-ink);letter-spacing:.3px;
-  text-shadow:0 2px 0 rgba(48,16,6,.65)}
-#objBanner svg{flex:none;width:16px;height:16px}
+/* --- the text plate itself: the PLAY GAME pill, flattened into a label.
+   Same four layers and the same dark-olive ink, so every line of copy the
+   game speaks arrives on the part the player already knows how to read. --- */
+.gemPlate{position:relative;color:var(--plate-ink);
+  border:4px solid var(--plate-ring);border-radius:18px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,.5),
+    inset 0 -7px 0 rgba(63,92,8,.42),
+    0 0 0 4px var(--plate-case),
+    0 5px 0 var(--plate-case-deep),
+    0 12px 18px rgba(0,0,0,.42);
+  text-shadow:0 2px 0 rgba(255,255,255,.38),0 -1px 0 rgba(74,58,6,.22)}
+/* the moulded dome — the highlight that makes a flat rectangle look pressed */
+.gemPlate::after{content:"";position:absolute;left:7px;right:7px;top:3px;height:36%;
+  pointer-events:none;border-radius:13px;
+  border-bottom-left-radius:60% 100%;border-bottom-right-radius:60% 100%;
+  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0))}
 
-#msg{position:absolute;left:50%;top:70px;transform:translateX(-50%);
-  font-size:15px;font-weight:800;color:var(--btn-ink);letter-spacing:.4px;
-  background:linear-gradient(180deg,var(--frame-b),var(--frame-c));border:3px solid var(--btn-rim);
-  border-radius:14px;padding:7px 18px;opacity:0;text-shadow:0 2px 0 rgba(0,0,0,.55);
-  transition:opacity .25s;white-space:nowrap;
-  box-shadow:0 0 0 3px var(--btn-rim-dark),0 5px 0 #3a1207,0 12px 20px rgba(0,0,0,.4)}
+/* Parked over the tank's own corner, not centred. A 45-degree round stands
+   its target at x~700 and high — dead behind a centred banner — while the
+   sky above the tank is empty in every round the geometry can produce, since
+   the nearest a structure ever comes to the gun is MIN_TANK_CLEARANCE. */
+#objBanner{position:absolute;left:18px;top:14px;
+  padding:8px 22px 10px;gap:10px;white-space:nowrap;
+  display:flex;align-items:center;
+  font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
+  font-size:17px;letter-spacing:.6px}
+#objBanner svg{flex:none;width:17px;height:17px;position:relative;z-index:1}
+#objBanner span,#msgText{position:relative;z-index:1}
+
+#msg{position:absolute;left:18px;top:78px;
+  padding:7px 22px 9px;border-radius:16px;opacity:0;
+  font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
+  font-size:19px;letter-spacing:.7px;
+  transition:opacity .34s;white-space:nowrap}
+
+/* --- utility keys: hint and restart -----------------------------------
+   Parked top-right, opposite the objective plate, on the one strip of frame
+   the composition never reaches: frameRound() centres the scene, so the
+   content's right edge lands around x=1030 at its widest and this corner
+   stays clear in every round. Same gem as everything else you can press. */
+#utilBtns{position:absolute;right:18px;top:14px;display:flex;gap:11px;
+  align-items:flex-start;pointer-events:auto}
+/* Both keys are painted plates, so both are artBtns: the art carries its own
+   bevel, ring and lighting and all the CSS owes it is honest press physics.
+   THE TWO FILES ARE FRAMED DIFFERENTLY and that is the only fiddly part —
+   resetBtn.svg is trimmed to its plate, while hintbtn.png carries a wide
+   transparent halo and its plaque fills just 66% of the file. Sized to their
+   BOXES the bulb would come out a third smaller than the arrow, so the hint
+   is given the larger box its halo needs and then pulled back by the halo's
+   own width. What lines up on screen is the timber, not the bounding box. */
+#resetBtn{width:56px;height:58px;--sink:5px;
+  background-image:url(assets/resetBtn.svg);
+  filter:drop-shadow(0 4px 4px rgba(38,10,2,.42))}
+#hintBtn{width:84px;height:84px;--sink:5px;
+  margin:-12px -15px -15px -14px;      /* the halo, taken back out of layout */
+  background-image:url(assets/hintbtn.png);
+  filter:drop-shadow(0 4px 4px rgba(38,10,2,.42))}
+#resetBtn:hover,#hintBtn:hover{filter:drop-shadow(0 6px 6px rgba(38,10,2,.38)) brightness(1.06)}
+#resetBtn:active,#resetBtn.is-pressed,
+#hintBtn:active,#hintBtn.is-pressed{filter:drop-shadow(0 1px 2px rgba(38,10,2,.5)) brightness(.96)}
+/* A wrong answer is the moment help is worth offering, so the bulb asks to be
+   pressed instead of waiting to be found — and stops the instant it is. The
+   call is a GLOW around the plate's own silhouette, not a box-shadow: there
+   is no box here to cast one, only art on a transparent field. */
+/* The old call was a slow glow and it was easy to miss against a bright sky.
+   This one moves as well as glows — a small rise and settle on the same beat
+   — because motion is what the eye actually catches in peripheral vision,
+   and the bulb lives in a corner nobody is looking at. A halo ring behind it
+   carries the same pulse so the shape reads even where the sky is pale. */
+#hintBtn.is-calling{animation:hintCall 1.05s cubic-bezier(.4,0,.3,1) infinite}
+#hintBtn.is-calling::after{content:"";position:absolute;left:14px;right:15px;top:12px;bottom:15px;
+  border-radius:20%;pointer-events:none;z-index:-1;
+  animation:hintHalo 1.05s cubic-bezier(.4,0,.3,1) infinite}
+@keyframes hintCall{
+  0%,100%{filter:drop-shadow(0 4px 4px rgba(38,10,2,.42)) drop-shadow(0 0 3px rgba(255,214,88,.35));
+          transform:translateY(0) scale(1)}
+  45%    {filter:drop-shadow(0 8px 7px rgba(38,10,2,.36)) drop-shadow(0 0 17px rgba(255,226,120,1))
+          brightness(1.12);
+          transform:translateY(-5px) scale(1.06)}
+}
+@keyframes hintHalo{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,214,88,.5)}
+  45%    {box-shadow:0 0 0 11px rgba(255,214,88,0)}
+}
 
 /* ============================================================
    GAMIFIED BUTTON KIT
@@ -174,42 +276,56 @@ canvas{position:absolute;inset:0;display:block}
 /* The dock is furniture, not scenery: it sits entirely inside the dirt band
    BELOW the play surface (PLAY_SURFACE_Y = 600 of the 720-tall stage), so it
    never covers ground the tank, the target or the triangle can occupy.
-   That invariant fixes the two numbers below —
-       visual top = 720 - bottom - 104*dockScale
-   which must stay clear of 600. At .86/18px that lands on 612.6, about 12px
-   of dirt above the frame. Retune the scale and the offset together, and
-   keep the narrow-screen override below on the same rule. */
-#controlDock{position:absolute;left:50%;bottom:18px;--dockScale:.86;
+   That invariant fixes the three numbers below —
+       visual top = 720 - bottom - height*dockScale
+   which must stay clear of 600. At 118/.79/10px that lands on 617, about
+   17px of dirt above the board — it used to clear by 6px, which read as the
+   board grazing the grass line. Retune all three together, and keep the
+   narrow-screen override below on the same rule.
+
+   The HEIGHT is set by the board rather than chosen: the timber in
+   board.svg fills 90% of the file's height (the rest is its baked shadow),
+   and the tallest thing standing on it is the 92px FIRE key — so the box
+   has to be at least 92/0.90 plus margin, or FIRE overhangs the plank it is
+   supposed to be bolted to. 118 also brings the dock's own aspect nearer the
+   art's, which drops the stretch from 2.2x anisotropic to 1.8x.
+   118 is a FLOOR, not a preference: the 92px FIRE key has to sit inside the
+   timber, which needs height >= 92/(0.905-0.5) = 114. Anything thinner than
+   that means shrinking FIRE first. So "thinner" is spent on the scale
+   instead, where it costs nothing structural. */
+#controlDock{position:absolute;left:50%;bottom:10px;--dockScale:.79;height:118px;
   transform:translateX(-50%) translateY(var(--dockY,0)) scale(var(--dockScale,1));
   transform-origin:center bottom;
-  transition:transform .46s cubic-bezier(.18,.86,.24,1),opacity .3s ease,filter .2s ease;
-  pointer-events:auto;display:flex;align-items:center;gap:13px;height:104px;
-  padding:11px 21px;border:4px solid var(--btn-rim);border-radius:32px;
-  background:
-    radial-gradient(circle at 17px 17px,rgba(255,222,172,.6) 0 2.5px,rgba(0,0,0,.34) 3px 4.5px,transparent 5px),
-    radial-gradient(circle at calc(100% - 17px) 17px,rgba(255,222,172,.6) 0 2.5px,rgba(0,0,0,.34) 3px 4.5px,transparent 5px),
-    radial-gradient(circle at 17px calc(100% - 17px),rgba(255,222,172,.55) 0 2.5px,rgba(0,0,0,.32) 3px 4.5px,transparent 5px),
-    radial-gradient(circle at calc(100% - 17px) calc(100% - 17px),rgba(255,222,172,.55) 0 2.5px,rgba(0,0,0,.32) 3px 4.5px,transparent 5px),
-    linear-gradient(180deg,rgba(255,255,255,.17),rgba(255,255,255,0) 20%),
-    linear-gradient(180deg,var(--frame-a) 0%,var(--frame-b) 52%,var(--frame-c) 100%);
-  box-shadow:
-    inset 0 2px 0 rgba(255,232,190,.38),
-    inset 0 -9px 0 rgba(24,7,2,.6),
-    0 9px 0 #3a1207,
-    0 20px 36px rgba(0,0,0,.46);
+  transition:transform .60s cubic-bezier(.18,.86,.24,1),opacity .38s ease,filter .2s ease;
+  pointer-events:auto;display:flex;align-items:center;gap:13px;
+  padding:13px 26px;border:none;border-radius:0;
+  /* --- THE BOARD is the art, stretched ---------------------------------
+     assets/board.svg, drawn to the dock's whole box. It carries its own
+     frame, plank edges, knots, lit rim and shadow, so the CSS that used to
+     paint all of that in gradients is gone with it — none of it was ever
+     going to beat a painted board.
+     The stretch is ~3.1x across against ~1.4x down, and it survives because
+     of WHAT is being stretched: the art is loose and hand-drawn, its grain
+     already runs horizontally, and its two knots simply go elliptical —
+     which is what a knot looks like on a plank cut along the grain. There
+     is nothing in it with a circle that has to stay a circle.
+     It needs preserveAspectRatio="none" on the file to stretch at all; the
+     default maps a viewBox with "meet", which letterboxes instead. */
+  background:url(assets/board.svg) 0 0/100% 100% no-repeat;
+  filter:drop-shadow(0 9px 11px rgba(20,6,10,.42));
   overflow:visible}
 /* stowed = below the deck (during the roll-in and the briefing);
    busy = present but not yours yet (a shot is in the air) */
 #controlDock.is-stowed{--dockY:165%;opacity:0;pointer-events:none}
-#controlDock.is-busy{filter:saturate(.82) brightness(.9)}
-#controlDock::before{content:"";position:absolute;inset:5px;border-radius:28px;
-  border:1px solid rgba(255,236,200,.26);pointer-events:none}
-#controlDock::after{content:"";position:absolute;left:30px;right:30px;bottom:-11px;height:13px;
-  border-radius:0 0 26px 26px;background:rgba(6,2,8,.4);filter:blur(2px);pointer-events:none}
+/* filter is not additive — a plain saturate() here would drop the board's
+   ground shadow the moment a shot was in the air */
+#controlDock.is-busy{filter:drop-shadow(0 9px 11px rgba(20,6,10,.42)) saturate(.82) brightness(.9)}
+/* no ::before chamfer and no ::after ground shadow any more — the painted
+   board already has both, and a second set drawn over it only muddies it */
 .stepperGroup{position:relative;display:flex;align-items:center;gap:12px;z-index:1}
-.dockDivider{position:relative;z-index:1;width:4px;height:70px;border-radius:999px;
-  background:linear-gradient(180deg,rgba(24,7,2,.85),rgba(255,226,178,.42) 50%,rgba(24,7,2,.85));
-  box-shadow:1.5px 0 0 rgba(255,214,158,.24),-1.5px 0 0 rgba(0,0,0,.55)}
+.dockDivider{position:relative;z-index:1;width:4px;height:70px;border-radius:2px;
+  background:linear-gradient(180deg,rgba(60,16,40,.62),rgba(60,16,40,.44) 50%,rgba(60,16,40,.62));
+  box-shadow:1.5px 0 0 rgba(255,214,158,.26),-1px 0 0 rgba(60,16,40,.35)}
 
 /* the three keys: two painted plates and the painted FIRE pill */
 .stepBtn{width:74px;height:74px;z-index:1}
@@ -218,14 +334,16 @@ canvas{position:absolute;inset:0;display:block}
 
 /* angle read-out: recessed slot, not a button */
 .valBox{position:relative;display:flex;align-items:center;justify-content:center;gap:1px;
-  width:138px;height:76px;border-radius:22px;border:4px solid var(--btn-rim);z-index:1;
+  width:138px;height:76px;border-radius:18px;border:4px solid var(--btn-rim);z-index:1;
   background:linear-gradient(180deg,#3a1a0c 0%,#261006 58%,#160903 100%);
+  /* cut into the plank rather than screwed onto it: the board's own dark
+     edge rings it, and the shadow falls INWARD from the top */
   box-shadow:
     inset 0 5px 10px rgba(0,0,0,.7),
     inset 0 0 0 2px rgba(255,216,136,.22),
-    0 0 0 3px var(--btn-rim-dark),
-    0 4px 0 #3a1207,
-    0 8px 14px rgba(0,0,0,.4)}
+    0 0 0 3px var(--board-frame),
+    0 3px 0 rgba(255,200,140,.16),
+    0 8px 14px rgba(0,0,0,.34)}
 .thetaMark{position:absolute;top:7px;left:13px;
   color:#ffc978;font-size:19px;font-weight:800;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.6)}
 #angleInput{width:78px;margin-top:11px;font-size:42px;font-weight:800;text-align:right;
@@ -238,7 +356,7 @@ canvas{position:absolute;inset:0;display:block}
 #fireBtn{width:200px;height:92px;z-index:1;--sink:9px;
   background-image:url(assets/btnFire.webp);
   filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 16px rgba(253,139,6,.42));
-  animation:firePulse 2.6s ease-in-out infinite}
+  animation:firePulse 3.4s ease-in-out infinite}
 #fireBtn:hover{filter:drop-shadow(0 9px 8px rgba(38,10,2,.45)) drop-shadow(0 0 22px rgba(253,139,6,.6)) brightness(1.05)}
 #fireBtn:active{animation-play-state:paused;
   filter:drop-shadow(0 2px 3px rgba(38,10,2,.55)) drop-shadow(0 0 10px rgba(253,139,6,.4))}
@@ -261,9 +379,147 @@ canvas{position:absolute;inset:0;display:block}
   100%{background-position:-80% 0}
 }
 /* ============================================================
+   THE TRIG TABLE
+   Built in code rather than shipped as the reference PNG, for one reason:
+   a picture of a table cannot POINT. The whole value of opening it mid-round
+   is that it can light the row the round needs and, when asked, the column
+   that answers it — and a flat image can do neither.
+   ============================================================ */
+#trigSheet{position:absolute;inset:0;z-index:6;display:flex;
+  align-items:center;justify-content:center;padding:22px;
+  background:rgba(6,14,20,.55);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  pointer-events:auto;animation:sheetIn .22s ease-out both}
+#trigSheet.hidden{display:none!important}
+@keyframes sheetIn{from{opacity:0}to{opacity:1}}
+
+/* Three blocks, two gaps: sign, table, keys — and with nothing written under
+   the title, the panel is set on one rhythm of ~22px between them.
+   The MARGINS are not all 22 because two of these blocks paint outside their
+   boxes: the title plank carries a baked shadow under its bottom plank, and
+   the footer keys sit on a stud with a drop shadow below it. Setting every
+   margin to the same number leaves gaps that MEASURE equal and LOOK uneven,
+   so the two that paint past their edge are given 18 and the honest one 22.
+   Measured on screen: 21.6 / 21.3 / 22.2. */
+.trigPanel{position:relative;max-width:880px;width:100%;
+  padding:14px 26px 18px;text-align:center;color:var(--parch-ink);
+  border:5px solid var(--plate-ring);border-radius:26px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 22%),
+    linear-gradient(180deg,var(--parch-a) 0%,var(--parch-b) 60%,var(--parch-c) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,.8),
+    0 0 0 5px var(--plate-case),
+    0 12px 0 var(--plate-case-deep),
+    0 26px 60px rgba(0,0,0,.6);
+  animation:sheetPop .26s cubic-bezier(.2,.9,.3,1.25) both}
+@keyframes sheetPop{from{transform:translateY(14px) scale(.97)}to{transform:none}}
+
+/* the header is the dock's own plank, stood on its end of the panel */
+.trigTitle{display:inline-block;margin:-40px auto 18px;padding:13px 46px 15px;
+  font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:27px;letter-spacing:2px;
+  color:var(--board-cream,#fcebc5);text-shadow:0 3px 0 rgba(60,16,40,.55);
+  background:url(assets/board.svg) 0 0/100% 100% no-repeat;
+  filter:drop-shadow(0 5px 6px rgba(20,6,10,.45))}
+.trigScroll{overflow-x:auto;overflow-y:hidden}
+
+#trigTable{border-collapse:separate;border-spacing:5px;margin:0 auto;
+  font-family:'Chakra Petch','Trebuchet MS',sans-serif}
+#trigTable th,#trigTable td{
+  padding:7px 6px;min-width:112px;height:56px;border-radius:10px;
+  font-size:23px;font-weight:800;text-align:center;vertical-align:middle;
+  transition:opacity .2s ease,filter .2s ease,transform .2s ease}
+/* the angle headings, in the FIRE orange */
+#trigTable th.ang{color:#fff6e2;
+  background:linear-gradient(180deg,#ffa32e 0%,#f07d16 55%,#d85f0b 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 0 0 2px #8a3a18,0 3px 0 #8a3a18;
+  text-shadow:0 2px 0 rgba(120,45,6,.6)}
+#trigTable th.corner{color:#fff6e2;letter-spacing:1px;
+  background:linear-gradient(180deg,#8f5bd8 0%,#6f3cbb 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 0 0 2px #4b2483,0 3px 0 #4b2483;
+  text-shadow:0 2px 0 rgba(50,20,95,.6)}
+/* the ratio names down the side */
+#trigTable th.fn{color:var(--btn-ink);min-width:148px;letter-spacing:.5px;
+  background:linear-gradient(180deg,#a44d24 0%,#7c3315 60%,#5b220d 100%);
+  box-shadow:inset 0 2px 0 rgba(255,232,190,.3),0 0 0 2px #4a1b28,0 3px 0 #4a1b28;
+  text-shadow:0 2px 0 rgba(40,12,4,.6)}
+#trigTable td{color:#4a2b10;
+  background:linear-gradient(180deg,#fff6dc 0%,#f7e6b8 100%);
+  box-shadow:inset 0 0 0 2px rgba(168,125,60,.28)}
+
+/* stacked fractions, the way the textbook prints them */
+.frac{display:inline-flex;flex-direction:column;align-items:center;
+  line-height:1.02;font-size:19px;vertical-align:middle}
+.frac .den{border-top:2px solid currentColor;margin-top:2px;padding-top:2px}
+/* ...and a radical that actually has a bar over its radicand. The display
+   face has no √ of its own and the fallback glyph's vinculum is hairline, so
+   "√2" reads as "/2" — the same trap the triangle's own labels fell into. */
+.rad{display:inline-block;border-top:2px solid currentColor;
+  line-height:1.05;padding:0 1px;margin-left:1px}
+
+/* ---- POINTING ----------------------------------------------------------
+   The other RATIO rows recede; the round's own row stays lit. The angle
+   headings never dim — they are the axis you read the answer off, and a
+   student running along the sin row needs to see which column they have
+   stopped at. Dimming them would hide the thing the row is pointing AT.
+   The answer's column only arrives on the second ask, so the first look
+   still leaves the lookup to do — which is the skill the table is for. */
+#trigTable.is-pointing tr:not(.headRow):not(.row-on) th,
+#trigTable.is-pointing tr:not(.headRow):not(.row-on) td{opacity:.46;filter:saturate(.5)}
+/* the answer's column lifts out of the dim, but only part way: enough for
+   the eye to travel from the heading down to the cell, not enough to
+   compete with the cell itself */
+#trigTable.is-pointing tr:not(.headRow):not(.row-on) td.col-on{
+  opacity:.82;filter:none;box-shadow:inset 0 0 0 2px rgba(107,150,18,.4)}
+#trigTable td.col-on,#trigTable td.row-on{
+  box-shadow:inset 0 0 0 2px rgba(168,125,60,.5)}
+#trigTable .row-on th.fn{
+  background:linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
+  color:var(--plate-ink);text-shadow:0 2px 0 rgba(255,255,255,.35);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 0 0 2px var(--plate-case),0 3px 0 var(--plate-case)}
+/* the one cell that answers the round */
+#trigTable td.is-answer{opacity:1;filter:none;color:#2c3f06;transform:scale(1.06);
+  background:linear-gradient(180deg,#eaff9a 0%,#c7ea55 55%,#a3cf2c 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),0 0 0 3px #6b9612,0 0 20px rgba(190,236,86,.9);
+  animation:answerBeat 1.1s ease-in-out infinite}
+@keyframes answerBeat{
+  0%,100%{box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),0 0 0 3px #6b9612,0 0 14px rgba(190,236,86,.7)}
+  50%    {box-shadow:inset 0 0 0 2px rgba(255,255,255,.7),0 0 0 3px #7fae18,0 0 30px rgba(214,247,120,1)}
+}
+#trigTable th.ang.col-on{background:linear-gradient(180deg,#ffd05a 0%,#f7a222 55%,#e07f0d 100%)}
+
+.trigFoot{display:flex;gap:14px;justify-content:center;margin-top:22px}
+.sheetBtn{cursor:pointer;height:52px;padding:0 30px 3px;border-radius:18px;
+  border:4px solid var(--plate-ring);color:var(--plate-ink);
+  font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:21px;letter-spacing:1.5px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.5),inset 0 -6px 0 rgba(63,92,8,.45),
+    0 0 0 4px var(--plate-case),0 5px 0 var(--plate-case-deep),0 11px 16px rgba(0,0,0,.35);
+  text-shadow:0 2px 0 rgba(255,255,255,.4);
+  transition:transform .09s ease,filter .12s ease,box-shadow .09s ease}
+.sheetBtn.is-quiet{
+  background:linear-gradient(180deg,#f6e4b4 0%,#e2c489 100%);color:#5a3a17;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.7),0 0 0 4px var(--plate-case),
+    0 5px 0 var(--plate-case-deep),0 11px 16px rgba(0,0,0,.3)}
+.sheetBtn:hover{filter:brightness(1.07);transform:translateY(-2px)}
+.sheetBtn:active,.sheetBtn.is-pressed{transform:translateY(4px) scale(.985);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.35),0 0 0 4px var(--plate-case),
+    0 1px 0 var(--plate-case-deep),0 3px 8px rgba(0,0,0,.3)}
+.sheetBtn[hidden]{display:none}
+
+@media (max-width:900px){
+  #trigTable th,#trigTable td{min-width:80px;height:48px;font-size:19px;padding:5px 4px}
+  #trigTable th.fn{min-width:112px}
+  .frac{font-size:16px}
+  .trigTitle{font-size:22px;padding:11px 30px 13px}
+}
+
+/* ============================================================
    OVERLAYS (title screen / pause / game-over / win cards)
    ============================================================ */
-#hud{transition:opacity .35s ease}
+#hud{transition:opacity .45s ease}
 #stage.is-pregame #hud,
 #stage.is-transition #hud{opacity:0;pointer-events:none}
 #overlay{position:absolute;inset:0;background:rgba(3,10,14,.72);display:flex;
@@ -274,34 +530,77 @@ canvas{position:absolute;inset:0;display:block}
   -webkit-backdrop-filter:none;backdrop-filter:none}
 #overlay.titleScreen::before{content:"";position:absolute;inset:0;pointer-events:none;
   display:none}
-.card{background:linear-gradient(180deg,var(--frame-a),var(--frame-b) 55%,var(--frame-c));
-  border:4px solid var(--btn-rim);border-radius:24px;
-  padding:38px 56px;text-align:center;color:var(--btn-ink);
-  box-shadow:0 0 0 3px var(--btn-rim-dark),inset 0 2px 0 rgba(255,232,190,.3),
-    inset 0 -8px 0 rgba(24,7,2,.4),0 12px 0 #3a1207,0 26px 60px rgba(0,0,0,.6);max-width:760px}
-.card h1{font-size:52px;font-weight:800;letter-spacing:2px;color:var(--btn-ink);line-height:1.08;
-  text-shadow:0 4px 0 rgba(48,16,6,.6),0 0 26px rgba(255,176,58,.3)}
-.card h2{font-size:38px;font-weight:800;letter-spacing:1px;color:var(--btn-ink);
-  text-shadow:0 3px 0 rgba(48,16,6,.6)}
-.card .sub{font-size:20px;color:#ffcb57;font-weight:800;letter-spacing:5px;
-  text-transform:uppercase;margin-top:6px}
-.card p{font-size:19px;margin:16px 0;color:#ffe6bd;line-height:1.5}
-.card .hint{font-size:15px;color:#e8bd88}
-.card b{color:#fff3c4}
-.bigBtn{--depth:7px;margin-top:18px;height:64px;padding:0 54px;font-size:25px;font-weight:800;
-  letter-spacing:3px;white-space:nowrap;border-radius:32px;border-width:4px;color:#fffce4;
+/* The card wears the pill's frame — brown casing, cream bezel — but its
+   face is parchment, not gem. Paragraphs need a page: dark ink on cream
+   holds its contrast all the way down, and it leaves the green free to
+   mean "this is the thing you press". */
+.card{position:relative;text-align:center;color:var(--parch-ink);
+  border:5px solid var(--plate-ring);border-radius:28px;
+  padding:32px 54px 40px;max-width:760px;
   background:
-    linear-gradient(180deg,rgba(238,255,214,.5) 0%,rgba(238,255,214,0) 32%),
-    linear-gradient(180deg,var(--gem-green) 0%,var(--gem-green-mid) 44%,var(--gem-green-deep) 100%);
+    linear-gradient(180deg,rgba(255,255,255,.6) 0%,rgba(255,255,255,0) 24%),
+    linear-gradient(180deg,var(--parch-a) 0%,var(--parch-b) 58%,var(--parch-c) 100%);
   box-shadow:
-    inset 0 3px 0 rgba(238,255,214,.52),
-    inset 0 -8px 0 rgba(16,58,6,.55),
-    0 0 0 3px var(--btn-rim-dark),
-    0 7px 0 #1d4a08,
-    0 15px 22px rgba(0,0,0,.42),
-    0 0 26px rgba(147,206,93,.34);
-  text-shadow:0 3px 0 rgba(20,58,8,.6)}
-.stars{font-size:50px;letter-spacing:10px;margin-top:8px}
+    inset 0 3px 0 rgba(255,255,255,.85),
+    inset 0 -10px 0 rgba(170,124,60,.28),
+    0 0 0 5px var(--plate-case),
+    0 12px 0 var(--plate-case-deep),
+    0 26px 60px rgba(0,0,0,.6)}
+/* hairline stitch inside the bezel, the same trim the console dock wears */
+.card::before{content:"";position:absolute;inset:7px;border-radius:21px;pointer-events:none;
+  border:2px solid rgba(107,58,20,.16)}
+/* the heading is a plate in its own right — the pill, holding a title */
+.card h1,.card h2{position:relative;display:inline-block;
+  font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
+  color:var(--plate-ink);letter-spacing:1.5px;line-height:1.14;
+  padding:12px 30px 15px;border-radius:20px;border:4px solid var(--plate-ring);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,.5),
+    inset 0 -8px 0 rgba(63,92,8,.42),
+    0 0 0 4px var(--plate-case),
+    0 6px 0 var(--plate-case-deep),
+    0 14px 20px rgba(0,0,0,.32);
+  text-shadow:0 2px 0 rgba(255,255,255,.4),0 -2px 0 rgba(74,58,6,.22)}
+.card h1{font-size:40px}
+.card h2{font-size:34px}
+.card .sub{font-size:17px;color:var(--parch-ink-soft);font-weight:800;letter-spacing:5px;
+  text-transform:uppercase;margin-top:12px}
+.card p{font-size:19px;margin:18px 0;color:var(--parch-ink);line-height:1.55;
+  text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.card .hint{font-size:15px;color:var(--parch-ink-soft)}
+.card b{color:#4b7a0d}
+/* the card's action key IS the title pill, sized down — same gem, same
+   casing, same ink, so "press this" looks identical wherever it appears */
+.bigBtn{--depth:8px;
+  --rim:var(--plate-ring);--btn-rim-dark:var(--plate-case);--stud:var(--plate-case-deep);
+  margin-top:22px;height:68px;padding:0 46px 4px;border-radius:24px;border-width:5px;
+  font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:28px;font-weight:400;
+  letter-spacing:2.5px;white-space:nowrap;color:var(--plate-ink);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 34%),
+    linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
+  box-shadow:
+    inset 0 4px 0 rgba(255,255,255,.5),
+    inset 0 -9px 0 rgba(63,92,8,.45),
+    0 0 0 5px var(--plate-case),
+    0 var(--depth) 0 var(--stud),
+    0 calc(var(--depth) + 10px) 22px rgba(0,0,0,.45),
+    0 0 30px rgba(190,236,86,.3);
+  text-shadow:0 2px 0 rgba(255,255,255,.4),0 -2px 0 rgba(74,58,6,.25)}
+/* the casing is 5px here, so the pressed state has to say 5px too —
+   otherwise the ring snaps thinner the instant the key goes down */
+.bigBtn:active,.bigBtn.is-pressed{
+  box-shadow:
+    inset 0 4px 0 rgba(255,255,255,.35),
+    inset 0 -5px 0 rgba(63,92,8,.5),
+    0 0 0 5px var(--plate-case),
+    0 0 0 var(--stud),
+    0 4px 10px rgba(0,0,0,.45)}
+.stars{font-size:50px;letter-spacing:10px;margin-top:14px;
+  text-shadow:0 3px 0 rgba(120,80,20,.28)}
 
 /* ============================================================
    TITLE SCREEN
@@ -314,8 +613,8 @@ canvas{position:absolute;inset:0;display:block}
    canvas beside it, so this sheet dresses one thing: the pill.
    ============================================================ */
 .titleScreenInner{position:absolute;inset:0;color:var(--text-primary);text-align:center;
-  animation:titleIn .65s cubic-bezier(.2,.8,.2,1) both}
-#overlay.leaving .titleScreenInner{animation:titleOut .42s ease-in both}
+  animation:titleIn .78s cubic-bezier(.2,.8,.2,1) both}
+#overlay.leaving .titleScreenInner{animation:titleOut .52s ease-in both}
 
 .srOnly{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
@@ -342,7 +641,7 @@ canvas{position:absolute;inset:0;display:block}
     0 calc(var(--depth) + 10px) 22px rgba(0,0,0,.5),
     0 0 40px rgba(190,236,86,.35);
   text-shadow:0 2px 0 rgba(255,255,255,.4),0 -2px 0 rgba(74,58,6,.25);
-  animation:playPulse 2.8s ease-in-out infinite}
+  animation:playPulse 3.6s ease-in-out infinite}
 .playTitleBtn::before{left:8px;right:8px;top:6px;height:34%;border-radius:16px;
   background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0))}
 .playTitleBtn:hover{transform:scale(1.035);filter:brightness(1.05) saturate(1.05)}
@@ -379,13 +678,14 @@ canvas{position:absolute;inset:0;display:block}
 
 @media (prefers-reduced-motion: reduce){
   .titleScreenInner,.playTitleBtn,
-  #fireBtn,.shakeX{animation:none!important}
+  #fireBtn,.shakeX,#hintBtn.is-calling,#hintBtn.is-calling::after,
+  #trigSheet,.trigPanel,#trigTable td.is-answer{animation:none!important}
   .playTitleBtn:hover,.artBtn:hover{transform:none}
   #hud,#msg,#loadFill,#loadBar.ready{transition:none}
   #controlDock{transition:opacity .2s ease}
 }
 @media (max-width:700px){
-  #controlDock{--dockScale:.8}      /* same invariant: top = 720-18-104*.8 = 619 */
+  #controlDock{--dockScale:.75}     /* same invariant: top = 720-10-118*.75 = 622 */
 }
 
 /* ============================================================
@@ -400,29 +700,48 @@ canvas{position:absolute;inset:0;display:block}
   <canvas id="game" width="1280" height="720" aria-hidden="true"></canvas>
 
   <div id="hud">
-    <div class="hudPanel" id="objBanner">
+    <div class="gemPlate" id="objBanner">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="8" stroke="#ffcb57" stroke-width="2"/>
-        <circle cx="12" cy="12" r="2.4" fill="#ffcb57"/>
-        <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#ffcb57" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="8" stroke="#4a2409" stroke-width="2.4"/>
+        <circle cx="12" cy="12" r="2.4" fill="#4a2409"/>
+        <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#4a2409" stroke-width="2.4" stroke-linecap="round"/>
       </svg>
       <span id="objText">Hit the zombie using trigonometry</span>
     </div>
 
-    <div id="msg" role="status" aria-live="polite"></div>
+    <div id="msg" class="gemPlate" role="status" aria-live="polite"><span id="msgText"></span></div>
 
-    <div class="hudPanel" id="controlDock">
+    <div id="utilBtns">
+      <button type="button" class="artBtn" id="hintBtn" title="Hint — which ratio is this?" aria-label="Hint"></button>
+      <button type="button" class="artBtn" id="resetBtn" title="Start this round again" aria-label="Start this round again"></button>
+    </div>
+
+    <div id="controlDock">
       <div class="stepperGroup">
         <button type="button" class="stepBtn artBtn" id="downBtn" aria-label="Decrease angle"></button>
         <div class="valBox">
           <span class="thetaMark" aria-hidden="true">θ</span>
-          <input id="angleInput" inputmode="numeric" maxlength="2" value="45" autocomplete="off" title="Angle in degrees" aria-label="Angle in degrees">
+          <input id="angleInput" readonly value="0" autocomplete="off"
+                 title="Angle — step it with + and −"
+                 aria-label="Angle in degrees, chosen from 0, 30, 45, 60 and 90">
           <span class="deg">°</span>
         </div>
         <button type="button" class="stepBtn artBtn" id="upBtn" aria-label="Increase angle"></button>
       </div>
       <div class="dockDivider"></div>
       <button type="button" class="artBtn" id="fireBtn" aria-label="Fire"></button>
+    </div>
+  </div>
+
+  <!-- the trig table: built in code so it can point at things (see TRIG_TABLE) -->
+  <div id="trigSheet" class="hidden" role="dialog" aria-modal="true" aria-label="Trigonometric table">
+    <div class="trigPanel" role="document">
+      <div class="trigTitle">TRIGONOMETRIC TABLE</div>
+      <div class="trigScroll"><table id="trigTable"></table></div>
+      <div class="trigFoot">
+        <button type="button" class="sheetBtn" id="trigReveal">SHOW ME THE ANGLE</button>
+        <button type="button" class="sheetBtn is-quiet" id="trigClose">CLOSE</button>
+      </div>
     </div>
   </div>
 
@@ -444,41 +763,150 @@ canvas{position:absolute;inset:0;display:block}
 const W = 1280, H = 720;
 const PLAY_SURFACE_Y = 600;                // measured: tan field meets the grass lip at y≈602 on every plate
 const GROUND_Y = PLAY_SURFACE_Y;           // compatibility alias for shell/building collision
+/* ---- the target lane ------------------------------------------------
+   The tank drives along the FRONT of the field; every target stands one
+   lane back from it, with its foot line this far up the plate. Two things
+   come out of that one number, and they are the same thing seen twice:
+   a strip of ground runs in front of every structure, which is what makes
+   it read as standing IN the field rather than as a wall across it — and
+   because a structure is scaled to reach from its deck down to its own
+   foot line, moving that line up is what makes it SMALLER.
+   The deck itself never moves: the round's triangle pins it under the
+   zombie's soles. So this shrinks the building without touching a single
+   number the player is solving for, and hands the roof back to the zombie,
+   who is the thing they are supposed to be looking at.
+
+   What caps this number is the DIAGRAM, not the art: the triangle's
+   horizontal leg runs at the gun's own height (y~522), so a foot line set
+   back past that would put the right angle — the corner that says "this is
+   a right triangle" — on open field BELOW the building it belongs to. The
+   assertion under pivotFromTankScreen() holds anyone who raises it. */
+const TARGET_SET_BACK = 46;
+const TARGET_BASE_Y = PLAY_SURFACE_Y - TARGET_SET_BACK;
 const TOTAL_LEVELS = 5;
-const CAMERA_FOLLOW_X = 190, TARGET_SCREEN_X = W - 269;
+/* Where the camera holds the tank WHILE TRAVELLING. Each round's resting
+   position is its own — see frameRound() — and the drive lands on that. */
+const CAMERA_FOLLOW_X = 164;
+/* ---- THE RULER -----------------------------------------------------
+   One metre is this many pixels, in every round, for good.
+
+   Each round's triangle was always similar to its own numbers — the target
+   sits on the answer ray, so the three sides came out in exactly the ratio
+   the labels claim, 69.0 / 69.0 / 69.0 px per metre and so on. What was NOT
+   true is the thing a student actually builds a sense of length from: the
+   ruler CHANGED between rounds. Round 1 drew 6 m as 414px and round 3 drew
+   8 m as 398px, so the bigger number came out shorter, and "how far is 8
+   metres" stopped meaning anything the moment the round changed.
+
+   Holding it still costs the framing its freedom: a round can no longer be
+   pushed out to fill the frame, because its distance is now its own number
+   times this constant. That is the right trade — the picture IS the
+   quantity. What the rounds spend instead is SIZE: they grow 5 m to 9 m
+   through the run, which only reads as growth because the ruler doesn't. */
+const WORLD_SCALE = 44;            // px per metre — see the ceiling note below
+const TARGET_SCREEN_X_MAX = 1120;  // seeds the world x of round 1 (see below)
+const TARGET_TOP_MARGIN = 22;      // sky the tallest standing pose keeps above it
+const TARGET_EDGE_MARGIN = 26;     // frame the building has to stay whole inside,
+                                   // with a sliver to spare — a shape that kisses
+                                   // the edge reads as cropped even when it isn't
+const MIN_TANK_CLEARANCE = 96;     // ground that has to stay open between the
+                                   // tank's nose and the structure's near wall
 const TANK_BOTTOM_PADDING = 6;             // lets visible wheels/tracks meet the surface, not the PNG box
-/* Every round is framed identically — target at TARGET_SCREEN_X, tank at
-   CAMERA_FOLLOW_X — so the triangle is the only thing that changes between
-   levels. Round 1's world sits INTRO_PAN to the right of the camera's home
-   position, which gives the opening roll-in real ground to cover: the world
-   scrolls with the tank instead of the level snapping into place. */
+/* The tank is anchored at CAMERA_FOLLOW_X, and the round's own numbers put
+   its target: `adjacent` metres out along the gun's line, `opposite` metres
+   up from it, both measured with WORLD_SCALE. Nothing chooses the framing any
+   more; it is read off the level data.
+
+   THE NUMBERS ARE THE STAGING. A 30-degree round is wide and low, a
+   45-degree round is square and steep, and a round with bigger numbers is
+   simply bigger — all three of those are now visible facts about the picture
+   rather than side effects of a framing search.
+
+   WHAT LIMITS THE RULER. The stage holds ~400px of sky above the gun's line
+   before the tallest standing pose starts to crop, so the largest `opposite`
+   in the level table sets the ceiling on WORLD_SCALE: at 9 m that is 44 px/m.
+   Raise one and the other has to come down.
+
+   WHY 60 IS NOT AN ANSWER, though it is on the dial. A 60-degree round would
+   have to stand its target at run = opposite/tan60 ~ 230px, while the tank
+   itself reaches 161px right of its own pivot and the slimmest structure in
+   the set still spills ~0.29 of its height left of where it is pinned. Work
+   it through and the clearance is 0.29*O - 147 px: it does not reach zero
+   until the target is ~510px up, which is off the top of the stage. So a
+   60-degree target would stand ON the tank, with its adjacent leg and label
+   drawn across the hull. It is not a tuning problem; the tank's own length is
+   wider than the triangle. 0 and 90 have no triangle at all. Hence answers of
+   30 and 45, and three distractors that are wrong for a reason a student can
+   see on screen once they fire at them.
+   Round 1's world sits INTRO_PAN to the right of the camera's home position,
+   which gives the opening roll-in real ground to cover: the world scrolls
+   with the tank instead of the level snapping into place. */
 const INTRO_PAN = 300;
-const FIRST_TARGET_WORLD_X = TARGET_SCREEN_X + INTRO_PAN;
+// measured off the WIDEST framing a round can take, so the opening roll keeps
+// its full pan whatever building round 1 draws
+const FIRST_TARGET_WORLD_X = TARGET_SCREEN_X_MAX + INTRO_PAN;
 const INTRO_ROLL_IN = 820;                 // tank starts this far back — fully off-screen left
-const TARGET_SPACING = 1150;
+/* Ground between neighbouring structures. This is pure world space — no
+   round's triangle touches it — so it is the one separation knob that costs
+   nothing but drive time, and TANK_MAX_SPEED below is lifted to match so the
+   longer haul still lands in about the same beat. */
+const TARGET_SPACING = 1450;
 const CULL_MARGIN = 320, DESPAWN_MARGIN = 120;
-const TANK_ACCEL = 650, TANK_MAX_SPEED = 470, TANK_DECEL = 700;
-const CAMERA_FOLLOW_STRENGTH = 8.5, CAMERA_LOOKAHEAD_MAX = 40;
+const TANK_ACCEL = 430, TANK_MAX_SPEED = 455, TANK_DECEL = 520;
+const CAMERA_FOLLOW_STRENGTH = 6.4, CAMERA_LOOKAHEAD_MAX = 52;
 const FINAL_ROLL_DISTANCE = 520;
-const DEFAULT_START_ANGLE = 15, PROJECTILE_SPEED = 850, HIT_PADDING = 18;
+/* ---- THE TABLE ------------------------------------------------------
+   Class 10 trigonometry is taught off five standard angles, and a student
+   answering from that table should never have to invent a number it cannot
+   produce. So the dock is a DIAL over exactly these values: + and - step
+   along the list, there is no way to land between them, and the gun can
+   only ever be laid to one of them.
+   0 and 90 are on the dial for the same reason they are in the table — they
+   are part of what a student has to know — but no round can ANSWER to them:
+   a right triangle with a 0 or 90 degree angle at the gun has no target to
+   stand anywhere. They are the table's two honest distractors. */
+const ANGLE_CHOICES = [0, 30, 45, 60, 90];
+const DEFAULT_START_ANGLE = 0;   // the dial starts where the gun already rests
+const PROJECTILE_SPEED = 620, HIT_PADDING = 18;
 /* ---------- CHOREOGRAPHY ----------
    The gun rests level while the student works. The barrel only swings once
    FIRE commits an answer, so the angle has to come from the triangle instead
-   of from nudging the barrel until it looks about right. */
+   of from nudging the barrel until it looks about right.
+
+   PACING. One rule governs every duration in this file:
+
+       the RESPONSE to an input is instant; the CONSEQUENCE of it breathes.
+
+   So the press physics, the stepper's hold-repeat and the angle field are
+   left alone — a control that lags its own finger feels broken, not weighty.
+   Everything downstream of the press is deliberately unhurried, because a
+   beat the player can watch is a beat they can read: the gun lays over,
+   holds, THEN fires; the shell crosses the hypotenuse slowly enough to see
+   it ride the line the guides just drew; the knockdown tumbles instead of
+   snapping. The teaching beat — the briefing below — gets the most room of
+   all, and it is skippable (click, Enter or Space) so a replay never pays
+   for it twice. */
 const BARREL_REST_ANGLE = 0;
-const LAY_BASE = .30, LAY_PER_DEG = .013, LAY_MAX = .95;   // time to lay the gun over
-const LAY_HOLD = .16;                                      // beat of stillness before the shot
+const LAY_BASE = .46, LAY_PER_DEG = .019, LAY_MAX = 1.40;  // time to lay the gun over
+const LAY_HOLD = .32;                                      // beat of stillness before the shot
 /* The briefing score: one cue per element, in the order it earns attention.
-   Tuning the whole rhythm means editing this table and nothing else. */
+   Tuning the whole rhythm means editing this table and nothing else.
+
+   Each cue now finishes drawing BEFORE the next one starts, and the gap
+   after it is deliberate: that pause is the only moment the player has to
+   take the new side in on its own, against the ones already up. Run them
+   overlapping and the triangle merely appears; run them spaced and it gets
+   built, one named part at a time. The note per cue rises with the phrase,
+   so the ear counts the parts too. */
 const CUES = [
-  {key:'adj',   at:.18, dur:.50, note:588},   // horizontal, gun → under the target
-  {key:'opp',   at:.62, dur:.42, note:699},   // vertical, up to the target
-  {key:'hyp',   at:1.06,dur:.56, note:831},   // the line of fire
-  {key:'theta', at:1.68,dur:.52, note:988},   // θ sweeps open at the gun
-  {key:'chipA', at:2.10,dur:.30, note:1175},  // the two given lengths
-  {key:'chipO', at:2.26,dur:.30, note:1319}
+  {key:'adj',   at:.22, dur:.62, note:588},   // horizontal, gun → under the target
+  {key:'opp',   at:.92, dur:.54, note:699},   // vertical, up to the target
+  {key:'hyp',   at:1.56,dur:.70, note:831},   // the line of fire
+  {key:'theta', at:2.42,dur:.66, note:988},   // θ sweeps open at the gun
+  {key:'chipA', at:3.16,dur:.34, note:1175},  // the two given lengths
+  {key:'chipO', at:3.40,dur:.34, note:1319}
 ];
-const BRIEF_END = 2.70;
+const BRIEF_END = 3.95;
 const REVEAL_KEYS = CUES.map(c=>c.key);
 const clamp01 = v => v<0 ? 0 : v>1 ? 1 : v;
 const cv = document.getElementById('game'), ctx = cv.getContext('2d');
@@ -502,7 +930,16 @@ const IMGS = {}, MANIFEST = {
   zombie:'assets/Zombie2.webp',      // SHAMBLER — 8 poses in a row, 4 is the alarm
   zkill:'assets/killZombie2.webp',   // …and its 8-frame knockdown
   zsprite:'assets/ZombieSprite.webp',// RUNNER — 4x3 grid: walk cycle, alarm, knockout
-  zombie3:'assets/Zombie3.png',      // BRUISER — 8 poses in a row, 4 is the alarm
+  /* BRUISER — the 8 standing poses, REPACKED. On the original sheet the
+     alarm's raised fist and the next pose's reaching hand share fourteen
+     columns at different heights, so no rectangle could hold one without
+     the other: the idle loop drew a severed fist beside him one frame in
+     seven, and the alarm wore that pose's fingers on its shoulder. Cutting
+     the rects tighter only trades one chopped hand for another, so the
+     frames were lifted out, the foreign ink erased from each, and the set
+     repacked with gaps. Regenerating it: crop each rect, drop any detached
+     blob that runs off a frame edge, lay them out in order. */
+  zombie3:'assets/Zombie3.look.png',
   zkill3:'assets/ZombieSprite3.png', // …and its 8-frame knockdown (name is the artist's)
   tank:'assets/tankSheet.webp',
   shot:'assets/TankShot.webp',
@@ -576,7 +1013,13 @@ const SP = {
    sheet's common ground line instead of cropped to the body, so plain
    bottom-anchoring reproduces the airborne beat the artist drew.
 
-   All five sheets face LEFT — toward the tank — so nothing is mirrored.
+   FACING: the tank is always to the LEFT of the roof, so every zombie has
+   to look down the barrel at it. The Zombie2 and Zombie3 sheets are drawn
+   three-quarter to camera and already read that way; the ZombieSprite sheet
+   is a right-facing profile, so its type sets `facesRight` and drawZombie
+   mirrors it — look, alarm and knockdown together, so the flip survives the
+   hit (and the tumble now carries AWAY from the gun, which is where a shell
+   from the left would actually send it).
 
    FAIRNESS: the types differ in silhouette, palette and cadence but
    NOT in how hard they are to hit. zombieHitbox() is one fixed box
@@ -592,20 +1035,30 @@ const ZOMBIE_TYPES = {
     look:{sheet:'zombie', bodyPx:167, fps:0,
       idle:[[16,106,67,167]],
       alert:[359,103,82,170]},
-    fall:{sheet:'zkill', bodyPx:311, fps:9,
+    fall:{sheet:'zkill', bodyPx:311, fps:6,
+      /* pose 5 was cut to x=1290 where the next pose begins, and picked up
+         nine columns of it — a fragment sitting clear of its own body, so
+         narrowing to the thinnest column between them costs nothing. */
       poses:[[17,342,163,311],[186,332,194,321],[380,359,222,295],[602,428,204,223],
-             [824,500,210,168],[1047,551,243,116],[1290,517,229,152],[1519,514,140,147]]}
+             [824,500,210,168],[1047,551,234,116],[1290,517,229,152],[1519,514,140,147]]}
   },
-  /* ZombieSprite — tie and sneakers, and the restless one: a 4-frame
-     shuffle on the spot. Its walk frames are packed on a shared ground
-     line at the cell's bottom edge, so the whole 256 cell is the pose
-     and the rig is fixed by construction — no per-frame anchors. */
+  /* ZombieSprite — tie and sneakers. The sheet's top row is a four-frame
+     walk cycle, but this one is a SENTRY, not a patrol: he is standing on a
+     roof waiting for the tank, so he holds the planted first pose and only
+     breathes (fps:0 hands him the shambler's sole-anchored squash). Running
+     the cycle made him march on the spot, which read as him walking away.
+     The frames are packed on a shared ground line at the cell's bottom edge,
+     so the whole 256 cell is the pose — no per-frame anchors. */
   runner:{
-    name:'Runner', height:170,
-    look:{sheet:'zsprite', bodyPx:250, fps:6,
-      idle:[[0,0,256,256],[256,0,256,256],[512,0,256,256],[768,0,256,256]],
-      alert:[768,256,256,256]},
-    fall:{sheet:'zsprite', bodyPx:250, fps:6,
+    name:'Runner', height:170, facesRight:true,
+    look:{sheet:'zsprite', bodyPx:250, fps:0,
+      // the 5th number is the pose's own centre-line, measured across the
+      // BOOTS: the alarm pose plants its feet 14px right of the cell centre,
+      // and without that the mirrored sentry would hop sideways the instant
+      // the gun laid over. Anchoring both poses on the stance holds him still.
+      idle:[[0,0,256,256,126]],
+      alert:[768,256,256,256,142]},
+    fall:{sheet:'zsprite', bodyPx:250, fps:4.5,
       poses:[[35,512,221,231],[256,512,234,229],[519,517,225,234],[784,523,225,220]]}
   },
   /* Zombie3 — the feral one: yellow eyes, ragged trousers. Its eight
@@ -613,12 +1066,13 @@ const ZOMBIE_TYPES = {
      so the idle loop runs 0-3 then 5-7 and keeps 4 for the alarm. */
   bruiser:{
     name:'Bruiser', height:176,
-    look:{sheet:'zombie3', bodyPx:383, fps:5,
-      idle:[[22,299,160,383,82],  [209,300,184,382,104], [403,300,207,382,126],
-            [631,296,215,386,109],[1060,302,204,380,124],[1290,301,181,381,102],
-            [1497,301,160,381,82]],
-      alert:[844,270,230,412,102]},
-    fall:{sheet:'zkill3', bodyPx:397, fps:9,
+    look:{sheet:'zombie3', bodyPx:383, fps:3.6,
+      // sizes and centre-lines are the originals — only the packing moved
+      idle:[[0,0,160,383,82],    [170,0,184,382,104], [364,0,207,382,126],
+            [581,0,215,386,109], [806,0,204,380,124], [1020,0,181,381,102],
+            [1211,0,160,381,82]],
+      alert:[1381,0,230,412,102]},
+    fall:{sheet:'zkill3', bodyPx:397, fps:6,
       poses:[[3,160,228,413],[231,160,280,413],[511,235,287,338],[798,325,273,248],
              [1091,382,276,191],[1375,403,269,170],[1651,420,286,153],[1951,313,212,260]]}
   }
@@ -626,7 +1080,15 @@ const ZOMBIE_TYPES = {
 // the trig anchor (z.y) sits at mid-body on every type, so the soles are
 // this fraction of the body below it — measured once off the shambler
 const Z_ANCHOR = 82/165;
-Object.values(ZOMBIE_TYPES).forEach(t=>{ t.feetOffset = t.height*Z_ANCHOR; });
+Object.values(ZOMBIE_TYPES).forEach(t=>{
+  t.feetOffset = t.height*Z_ANCHOR;
+  /* the crown of the tallest pose this type can strike while it is STANDING —
+     the alarm, on all three, because that is the one with the arms up. It is
+     what the load-time ceiling check measures against, so a type that grows a
+     taller pose re-prices what the level table is allowed to ask for. */
+  const poses = t.look.idle.concat([t.look.alert]);
+  t.tallest = t.height * Math.max(...poses.map(p=>p[3])) / t.look.bodyPx;
+});
 const zombieTypeOf = z => ZOMBIE_TYPES[z && z.type] || ZOMBIE_TYPES.shambler;
 
 /* ---------- buildings: one complete structure per file ----------
@@ -646,17 +1108,11 @@ const BUILDINGS = [
   {img:'b8', box:[77,69,1009,1300],  deck:71,  deckCx:475}    // boiler — crown rim
 ];
 // Each building scales as one piece, so it keeps its native aspect — which
-// makes WIDTH the real constraint: the squat shapes (b1 garage, b6 substation)
-// balloon past 500px once a late round's deck gets tall, so they're kept to
-// the early rounds, and the very slender b7 mast to the late ones. Everything
-// else reads fine at any height. One pick per round, no repeats in a run.
-const LEVEL_BUILDING_POOL = [
-  [0,5,1,7],      // short deck — the wide shapes are still compact here
-  [0,5,1,7,2],
-  [1,7,2,4,3],
-  [2,4,3,6,7],
-  [2,4,3,6,1]     // tall deck — slender shapes only
-];
+// makes WIDTH the real constraint, and specifically how far a shape reaches
+// LEFT of its deck, because that edge is what closes on the tank. Which
+// shapes clear which rounds is no longer a list kept by hand: stagingFits()
+// asks the geometry, so a round's pool follows its angle automatically and a
+// new skin joins the rotation by existing. See pickBuilding().
 
 // each type's soles sit t.feetOffset px below its trig anchor (z.y); sink
 // them Z_SINK px into the deck so the shoes grip the roof, never graze it
@@ -669,21 +1125,101 @@ const Z_SINK = 3;
 /* `zombie` names the type from ZOMBIE_TYPES that mans this roof. The run
    tours all three and never repeats one two rounds running, so each level
    reads as a fresh target; the finale draws the tallest silhouette. */
+/* Every round is one ratio question: two sides given, theta unknown, and the
+   answer is always a value off the table. Which two sides are given is what
+   makes the round a tan / sin / cos question, so the run tours all three
+   instead of drilling tan five times.
+
+   `show` is what the triangle LABELS, written the way the textbook writes it.
+   The standard angles are irrational everywhere except tan 45, so a round
+   that gives 8.7 m has already done the recognising for the student and left
+   them a division; a round that gives 5 root 3 m is the actual exercise.
+   The numbers underneath are exact, so the drawn triangle is exact too.
+
+   Only 30 and 45 appear as answers, and that is a staging limit rather than
+   a teaching choice — see the note above CAMERA_FOLLOW_X. */
+const R2 = Math.SQRT2, R3 = Math.sqrt(3);
+/* reads a drawn label — "10", "6√3", "9√2" — back to the number it claims */
+const SURD_LABEL = /^(\d+(?:\.\d+)?)(?:√(\d+))?$/;
+function labelValue(txt){
+  const m = SURD_LABEL.exec(String(txt).trim());
+  return m ? parseFloat(m[1]) * (m[2] ? Math.sqrt(parseFloat(m[2])) : 1) : NaN;
+}
+/* Ordered by the size of the triangle, not by its angle: 5 m of opposite up
+   to 9 m, so every round is visibly bigger than the last. That reads as an
+   escalation ONLY because the ruler is fixed — it is the same fact the
+   numbers state, drawn. The three far 30-degree rounds come first and the two
+   near, steep 45-degree ones close the run, which is also the order that puts
+   the tightest staging last, where the player already knows the shape. */
 const LEVELS = [
-  {id:1, type:'tan', adjacent:10, opposite:4, structureType:'low-roof',     zombie:'shambler'},
-  {id:2, type:'tan', adjacent:11, opposite:5, structureType:'taller-roof',  zombie:'runner'},
-  {id:3, type:'tan', adjacent:12, opposite:6, structureType:'farther-roof', zombie:'bruiser'},
-  {id:4, type:'tan', adjacent:13, opposite:7, structureType:'high-roof',    zombie:'shambler'},
-  {id:5, type:'tan', adjacent:14, opposite:8, structureType:'final-roof',   zombie:'bruiser'}
-].map(level=>({
-  ...level,
-  h:level.opposite,
-  d:level.adjacent,
-  hyp:Math.hypot(level.adjacent, level.opposite),
-  ans:Math.atan2(level.opposite, level.adjacent)*180/Math.PI
-}));
+  {id:1, ans:30, type:'sin', h:5,     hyp:10,   show:['5','10'],    zombie:'shambler'},
+  {id:2, ans:30, type:'tan', h:6,     d:6*R3,   show:['6√3','6'],   zombie:'runner'},
+  {id:3, ans:30, type:'cos', d:7*R3,  hyp:14,   show:['7√3','14'],  zombie:'shambler'},
+  {id:4, ans:45, type:'tan', d:8,     h:8,      show:['8','8'],     zombie:'runner'},
+  {id:5, ans:45, type:'sin', h:9,     hyp:9*R2, show:['9','9√2'],   zombie:'bruiser'}
+].map(L=>{
+  // the third side is never given, but the triangle still has to be drawn
+  const t = L.ans*Math.PI/180;
+  const d   = L.d   !== undefined ? L.d   : (L.hyp!==undefined ? L.hyp*Math.cos(t) : L.h/Math.tan(t));
+  const h   = L.h   !== undefined ? L.h   : (L.hyp!==undefined ? L.hyp*Math.sin(t) : L.d*Math.tan(t));
+  const hyp = L.hyp !== undefined ? L.hyp : Math.hypot(d,h);
+  return {...L, d, h, hyp, adjacent:d, opposite:h};
+});
+/* Which two sides a round hands over, in the order `show` lists them. */
+const GIVEN_SIDES = {tan:['adj','opp'], sin:['opp','hyp'], cos:['adj','hyp']};
+/* ...and which of them is over which in the ratio itself. The two orders are
+   NOT the same — a tan round is given adjacent-then-opposite but written
+   opposite OVER adjacent — so keeping them apart is what stops a hint from
+   quietly teaching the ratio upside down. */
+const RATIO_OVER = {tan:['opp','adj'], sin:['opp','hyp'], cos:['adj','hyp']};
+const SIDE_WORD  = {adj:'ADJACENT', opp:'OPPOSITE', hyp:'HYPOTENUSE'};
+const givenValues = L => {
+  const v = {}; GIVEN_SIDES[L.type].forEach((side,i)=>{ v[side] = L.show[i]; }); return v;
+};
+/* Two rungs, and the first one is the one that teaches: naming the pair of
+   sides you were handed is the whole decision a class-10 student is making,
+   and the substitution after it is only arithmetic. A hint that opens on the
+   ratio would hand over the step worth practising. Neither rung gives the
+   angle — the table is still theirs to read. */
+function hintFor(L, stage){
+  const [a,b] = GIVEN_SIDES[L.type];
+  if(stage <= 0) return `You're given the ${SIDE_WORD[a]} and the ${SIDE_WORD[b]} — that pair is ${L.type} θ`;
+  const v = givenValues(L), [over, under] = RATIO_OVER[L.type];
+  return `${L.type} θ = ${v[over]} ÷ ${v[under]}`;
+}
+/* The level table is data, and data that lies is worse than none: a round
+   whose numbers do not actually make its stated angle would teach the wrong
+   ratio and still look right on screen. So it is checked, once, at load. */
+LEVELS.forEach(L=>{
+  if(!ANGLE_CHOICES.includes(L.ans))
+    throw new Error(`level ${L.id}: ${L.ans}° is not on the class-10 table`);
+  const given = {tan:L.h/L.d, sin:L.h/L.hyp, cos:L.d/L.hyp}[L.type];
+  const table = {tan:Math.tan, sin:Math.sin, cos:Math.cos}[L.type](L.ans*Math.PI/180);
+  if(!(Math.abs(given-table) < 1e-9))
+    throw new Error(`level ${L.id}: ${L.type} of ${L.ans}° is ${table.toFixed(4)}, but its sides give ${given.toFixed(4)}`);
+  if(L.show.length !== 2) throw new Error(`level ${L.id}: needs a label for each given side`);
+  /* A label is data too, and one pinned to the wrong side is the worst kind
+     of wrong: the picture and the number disagree and both look
+     authoritative. The ratio check above cannot see it — 6 over 6√3 is the
+     same fraction whichever leg you write where — so each label is parsed
+     back and checked against the side it is actually drawn on. */
+  const SIDE_KEY = {adj:'d', opp:'h', hyp:'hyp'};
+  GIVEN_SIDES[L.type].forEach((side,i)=>{
+    const want = L[SIDE_KEY[side]], got = labelValue(L.show[i]);
+    if(!(Math.abs(got - want) < 1e-9))
+      throw new Error(`level ${L.id}: the ${side} side measures ${want.toFixed(2)} m, `
+        + `but the label drawn on it reads "${L.show[i]}" (${got.toFixed(2)} m)`);
+  });
+});
+/* Rounds used to draw their zombie smaller the later they came, on the
+   reasoning that each target stood further off than the last. The angle now
+   decides that instead, and it does not follow the round order: round 3 is a
+   45-degree round staged NEAR and round 4 a 30-degree one staged FAR, so a
+   ramp keyed to the round number would have drawn the near target smaller
+   than the far one. One size for every round is the only rule that cannot
+   contradict where the geometry actually put him. */
+
 if(LEVELS.length !== TOTAL_LEVELS) throw new Error('TOTAL_LEVELS must match LEVELS.length');
-const TOL = 2; // degrees of tolerance
 
 /* ============================================================
    AUDIO — everything synthesized with WebAudio (SFX + music)
@@ -827,7 +1363,7 @@ const AU = {
     const mel=[330,392,494,440, 494,523,494,440, 392,440,494,392, 349,330,311,330];
     const bass=[82,82,110,110, 87,87,98,98, 82,82,110,110, 98,98,82,82];
     let step=0, next=this.ctx.currentTime+.1;
-    const beat=.24;
+    const beat=.275;   // the loop paces the room; eased with the rest of the game
     this.musicTimer = setInterval(()=>{
       while(next < this.ctx.currentTime + .3){
         const i=step%16;
@@ -943,19 +1479,19 @@ function bakeCloud(){
 }
 
 /* ---------- tank geometry ---------- */
-const TANK = { w:308 };    // pivot lands ~19% across at rest, +10% scale
+const TANK = { w:288 };    // pivot lands ~19% across at rest
 TANK.h  = TANK.w * SP.hull[3]/SP.hull[2];           // hull draw height
 TANK.baseY = PLAY_SURFACE_Y - TANK.h + TANK_BOTTOM_PADDING;
 Object.defineProperties(TANK, {
   x:{get(){ return G.tankWorldX - G.cameraX; }},
   y:{get(){
-    const roll = G.drive ? Math.sin(G.time*22)*1.1*Math.min(1,Math.abs(G.tankVel)/260) : 0;
+    const roll = G.drive ? Math.sin(G.time*15)*1.2*Math.min(1,Math.abs(G.tankVel)/210) : 0;
     return TANK.baseY + roll;
   }}
 });
 // cannon pivot sits on the turret ring (tuned visually)
 TANK.pivot = ()=>({ x:TANK.x + TANK.w*0.44 - G.recoil*.6, y:TANK.y + TANK.h*0.10 });
-const BARREL_LEN = 185, BARREL_SC = BARREL_LEN/(SP.cannonTip[0]-SP.cannonPivot[0]);
+const BARREL_LEN = TANK.w*.6, BARREL_SC = BARREL_LEN/(SP.cannonTip[0]-SP.cannonPivot[0]);
 // spinning wheel overlay positions (fraction of hull rect) — measured off the
 // hull art's baked road-wheel discs so the overlays land exactly on them
 TANK.wheelFr = [[.195,.83],[.346,.83],[.499,.83],[.653,.83]];
@@ -969,6 +1505,13 @@ TANK.wheelR  = TANK.h*.195;
 function pivotFromTankScreen(tankScreenX){
   return {x:tankScreenX + TANK.w*.44, y:TANK.baseY + TANK.h*.10};
 }
+/* The bound TARGET_SET_BACK is chosen against, made executable: the right
+   angle is drawn where the gun's line meets the target's column, so the
+   target's foot line has to stay BELOW that line or the corner comes off the
+   building and floats over the field in front of it. */
+const CORNER_FOOTING = TARGET_BASE_Y - pivotFromTankScreen(0).y;
+if(CORNER_FOOTING < 12) throw new Error(
+  `TARGET_SET_BACK is ${Math.round(-CORNER_FOOTING+12)}px too deep — the triangle's right angle would fall off the building it belongs to`);
 function muzzlePos(angleDeg=G.angleShown){
   const p=TANK.pivot(), a=angleDeg*Math.PI/180;
   return { x:p.x + Math.cos(a)*BARREL_LEN, y:p.y - Math.sin(a)*BARREL_LEN };
@@ -984,50 +1527,155 @@ function calculateAimPath(angleDeg=G.angleShown){
   return {startX:start.x, startY:start.y, endX, endY, angle:a, screenAngle:Math.atan2(dy,dx), angleDeg, length, dirX:dx, dirY:dy};
 }
 
+/* ---- where a round lands, for one building at one framing -------------
+   The building scales as ONE piece so its flat deck passes exactly under the
+   zombie's soles, and slides sideways so the deck's centre (deckCx) sits at
+   the zombie's x — he stands on the flat spot, not the art's centre. Because
+   the scale is uniform, height drags width along with it, which is why
+   `reachLeft` (how far the shape spills LEFT of where it is pinned) is the
+   number that decides how close the building crowds the tank.
+   ONE source of truth: makeLevelNode places with this and stagingFits vets
+   with it, so what is checked is exactly what gets drawn. */
+function fitBuilding(level, bld){
+  const L = LEVELS[level];
+  /* Only the gun's HEIGHT matters here — where the tank stands across the
+     frame is decided afterwards, by frameRound(), and none of this depends
+     on it. Keeping the two apart is what lets the composition be centred
+     without the geometry moving. */
+  const gunY = pivotFromTankScreen(0).y;
+  /* Both legs come off the same ruler, so the drawn triangle carries the
+     level's own ratio by construction — h/d is tan(theta) whatever the
+     scale, and the load-time check already proved h/d is this round's angle. */
+  const zombieY = gunY - L.h * WORLD_SCALE;
+  const zType = ZOMBIE_TYPES[L.zombie] ? L.zombie : 'shambler';
+  const t = ZOMBIE_TYPES[zType], zScale = 1;
+  const [bsx,bsy,bsw,bsh] = bld.box;
+  const deckPlaneY = zombieY + t.feetOffset*zScale - Z_SINK;
+  const s = (TARGET_BASE_Y - deckPlaneY) / (bsy + bsh - bld.deck);
+  const reachLeft = (bld.deckCx - bsx) * s;
+  return {
+    zombieY, zType, zScale, reachLeft,
+    adjacentPx: L.d * WORLD_SCALE,                        // gun to the target's column
+    towerY: deckPlaneY - (bld.deck - bsy) * s,
+    w: bsw * s,
+    top: zombieY + (t.feetOffset - t.tallest) * zScale    // its zombie's crown
+  };
+}
+
+/* ---- CENTRING --------------------------------------------------------
+   The scene is the tank and the thing it is aiming at, and the frame should
+   hold that PAIR in the middle. It never did: the tank was pinned to a fixed
+   x near the left edge and everything else grew rightwards from it, so a
+   round's composition sat as far left as its triangle was short — the small
+   ones worst of all, which is most of them. What was left over was dead
+   grass on the right.
+   So the tank's resting x is derived, not fixed: measure the content from
+   the tank's own left edge to whichever reaches further right — the
+   structure's far wall or the zombie standing on it — and give the frame
+   equal margins either side. The tank now stands between roughly x=220 and
+   x=340 depending on the round, and each round arrives centred.
+   Note what this does NOT touch: clearance is a distance BETWEEN two things
+   that move together, so nothing about the staging changes — only where the
+   whole picture sits. */
+const ZOMBIE_HALF = 92;   // how far a pose spreads either side of its column
+function frameRound(level, bld){
+  const f = fitBuilding(level, bld);
+  const targetOff = TANK.w*.44 + f.adjacentPx;     // tank's left edge → target column
+  const contentW  = Math.max(targetOff - f.reachLeft + f.w, targetOff + ZOMBIE_HALF);
+  const tankScreenX = Math.round((W - contentW) / 2);
+  return Object.assign(f, {
+    tankScreenX,
+    screenX: tankScreenX + targetOff,
+    left:    tankScreenX + targetOff - f.reachLeft,
+    right:   tankScreenX + contentW
+  });
+}
+
+/* ---- how far right this round can stand its target ---------------------
+   Three things bound it, and the round is framed at the last x that keeps
+   all three: its zombie's tallest pose stays clear of the stage's ceiling,
+   its building stays whole inside the frame (these are complete
+   illustrations — a cropped one reads as a bug, not as depth), and the
+   OPPOSITE label keeps its own margin on the right.
+   The framing used to be searched for — the widest one the ceiling allowed.
+   That search is gone with the ruler: there is exactly one place a round's
+   target can stand, so what were bounds to search inside are now facts to
+   CHECK. A round that will not fit is a level-design error, and it is thrown
+   at load rather than quietly reframed into a lie about its own numbers. */
+
+/* Ground left open between the tank's nose and the structure's near wall.
+   Both sit on the same framing, so this is the same number wherever the
+   composition is centred — which is why centring cost the staging nothing. */
+function tankClearance(level, bld){
+  const f = fitBuilding(level, bld);
+  return f.adjacentPx + TANK.w*.44 - f.reachLeft - TANK.w;
+}
+/* Whether a shape can stand a round at all. A steep round pulls its target in
+   toward the gun while a tall deck pushes the shape's reach out, so the wide
+   ones simply run out of room — this is the question the hand-written pools
+   used to answer by eye, asked of the geometry instead. */
+function stagingFits(level, bld){
+  const f = frameRound(level, bld);
+  return f.tankScreenX >= TARGET_EDGE_MARGIN && tankClearance(level, bld) >= MIN_TANK_CLEARANCE;
+}
+
 function makeLevelNode(level, targetWorldX, bld){
   const L = LEVELS[level];
-  const restPivot = pivotFromTankScreen(CAMERA_FOLLOW_X);
-  const targetScreenX = TARGET_SCREEN_X;
-  const zombieY = restPivot.y - (targetScreenX-restPivot.x)*Math.tan(L.ans*Math.PI/180);
-  // the building scales as one piece so its flat deck passes exactly under
-  // the zombie's soles, and slides sideways so the deck's centre (deckCx)
-  // sits at the zombie's x — he stands ON the flat spot, not the art centre
-  const [bsx,bsy,bsw,bsh] = bld.box;
-  const zType = ZOMBIE_TYPES[L.zombie] ? L.zombie : 'shambler';
-  const deckPlaneY = zombieY + ZOMBIE_TYPES[zType].feetOffset - Z_SINK;
-  const s = (GROUND_Y - deckPlaneY) / (bsy + bsh - bld.deck);
-  const towerY = deckPlaneY - (bld.deck - bsy) * s;
-  const tw = bsw * s;
-  const buildingWorldX = targetWorldX - (bld.deckCx - bsx) * s;
+  const f = frameRound(level, bld);
+  const screenX = f.screenX;
+  const buildingWorldX = targetWorldX - f.reachLeft;
   const zombie = {
-    offsetX:(bld.deckCx - bsx) * s, offsetY:0,
-    worldX:targetWorldX, x:targetWorldX-G.cameraX, y:zombieY,
-    type:zType, frame:0, animT:0, mode:'idle', burstF:0, dead:false
+    offsetX:f.reachLeft, offsetY:0,
+    worldX:targetWorldX, x:targetWorldX-G.cameraX, y:f.zombieY,
+    type:f.zType, scale:1, frame:0, animT:0, mode:'idle', burstF:0, dead:false
   };
-  const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:towerY, w:tw, h:GROUND_Y-towerY, bld};
+  const tower = {worldX:buildingWorldX, x:buildingWorldX - G.cameraX, y:f.towerY, w:f.w, h:TARGET_BASE_Y-f.towerY, bld};
   return {
-    level, targetWorldX, worldX:buildingWorldX, tower, zombie,
+    level, screenX, tankScreenX:f.tankScreenX, targetWorldX, worldX:buildingWorldX, tower, zombie,
     targetHeight:tower.h, zombieOffsetX:zombie.offsetX, zombieOffsetY:zombie.offsetY,
     status:level===0 ? 'ACTIVE' : 'UPCOMING',
     data:{...L}
   };
 }
 
-// assign a building to each round from its height-suitability pool, never
-// repeating within one run — so every playthrough tours a fresh skyline
+/* One shape per round, no repeats inside a run, and never one that cannot
+   stand the round. The ORDER of the picking is the whole trick: a 45-degree
+   round pulls its target in close and only the slimmest shapes still clear
+   the tank there, while a 30-degree round can take anything. Let the roomy
+   rounds choose first and they strip the few shapes the tight rounds depend
+   on, and the run ends up drawing the same building twice. Fewest options
+   chooses first. */
 function assignBuildings(){
-  const used = new Set();
-  return LEVEL_BUILDING_POOL.map(pool=>{
-    const free = pool.filter(i=>!used.has(i));
-    const pick = free.length ? free[Math.floor(Math.random()*free.length)] : pool[0];
-    used.add(pick);
-    return BUILDINGS[pick];
+  const fits = LEVELS.map((L,level)=>BUILDINGS.filter(b=>stagingFits(level, b)));
+  const order = fits.map((f,level)=>level).sort((a,b)=>fits[a].length-fits[b].length);
+  const picks = new Array(TOTAL_LEVELS), used = new Set();
+  order.forEach(level=>{
+    const free = fits[level].filter(b=>!used.has(b));
+    const pool = free.length ? free : (fits[level].length ? fits[level] : BUILDINGS);
+    picks[level] = pool[Math.floor(Math.random()*pool.length)];
+    used.add(picks[level]);
   });
+  return picks;
 }
 function buildLevelNodes(){
   const picks = assignBuildings();
-  return Array.from({length:TOTAL_LEVELS}, (_,level)=>makeLevelNode(level, FIRST_TARGET_WORLD_X + level*TARGET_SPACING, picks[level]));
+  return picks.map((bld,level)=>
+    makeLevelNode(level, FIRST_TARGET_WORLD_X + level*TARGET_SPACING, bld));
 }
+/* With the ruler holding the framing still, a round either fits the stage or
+   it does not — there is no reframing it. Both ways it can fail are checked
+   at load, naming the number that caused it, because either one is a level
+   the player would otherwise meet as a cropped picture or a tower standing on
+   the tank. Loosen the level's metres or WORLD_SCALE; there is no third fix. */
+LEVELS.forEach((L,level)=>{
+  const f = fitBuilding(level, BUILDINGS[0]);
+  if(f.top < TARGET_TOP_MARGIN)
+    throw new Error(`level ${L.id}: ${L.h.toFixed(2)} m of opposite is ${Math.round(L.h*WORLD_SCALE)}px `
+      + `at ${WORLD_SCALE} px/m, which puts its zombie ${Math.round(TARGET_TOP_MARGIN-f.top)}px through the ceiling`);
+  if(!BUILDINGS.some(b=>stagingFits(level, b)))
+    throw new Error(`level ${L.id}: nothing in the set can stand it — at ${Math.round(f.adjacentPx)}px out `
+      + `every shape either overlaps the tank or is too wide for the frame`);
+});
 
 function currentNode(){
   return G.activeNode || G.levelNodes[G.level] || null;
@@ -1068,9 +1716,14 @@ function syncWorldPositions(){
 /* ============================================================
    LEVEL SETUP
    ============================================================ */
-function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='brief', fast=false}={}){
+function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='brief', fast=false, keepTries=false}={}){
   G.level = Math.max(0, Math.min(levelIndex, TOTAL_LEVELS-1));
-  G.tries = 0; G.shell=null; G.aimPath=null; G.hitDelay=0;
+  /* `keepTries` is what stops the restart key being a scoring exploit: a
+     round is worth 300 / 200 / 100 by attempt, so a restart that zeroed the
+     count would sell a first-try score after any number of misses. Restarting
+     replays the briefing; it does not un-fire the shells. */
+  if(!keepTries) G.tries = 0;
+  G.shell=null; G.aimPath=null; G.hitDelay=0;
   G.particles.length=0; G.floaters.length=0;
   G.drive=null; G.tankVel=0; G.dustT=0; G.lay=null; G.brief=null;
   G.angleShown = G.barrelTarget = BARREL_REST_ANGLE;
@@ -1085,6 +1738,7 @@ function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='bri
   }
 
   setAngle(DEFAULT_START_ANGLE);
+  if(!keepTries) resetHint();      // a NEW round starts the scaffolding over
   if(enter==='brief') beginBriefing({fast});
   else if(enter==='aim') enterAiming({instant:true});
   else { clearReveal(); G.guideAlpha=0; stowDock(true); updateControlsForState(); }
@@ -1130,7 +1784,11 @@ function beginBriefing(opts){
   clearReveal(); stowDock(true);
   setObjective(`Reading the target — ${zombieTypeOf(G.zombie).name}…`);
   setGameState(GameState.BRIEFING);
-  G.brief = {t:0, rate:fast ? 2.1 : (G.level===0 ? 1 : 1.32), fired:0};
+  /* Later rounds run a little quicker — the player already knows the shape
+     of the score by then — but only a little: this is the round's one
+     explanation, and outrunning it to save a second is a bad trade. A
+     retry is the exception; that player has seen this exact triangle. */
+  G.brief = {t:0, rate:fast ? 1.6 : (G.level===0 ? 1 : 1.12), fired:0};
   if(!ambientMotionAllowed()) finishBriefing();
 }
 function updateBriefing(dt){
@@ -1165,9 +1823,12 @@ function skipChoreo(){
 /* where the camera and the tank come to rest for a given round */
 function levelRestCamera(level){
   const node = G.levelNodes[level];
-  return node ? Math.max(0, node.targetWorldX - TARGET_SCREEN_X) : 0;
+  return node ? Math.max(0, node.targetWorldX - node.screenX) : 0;
 }
-function levelRestTankX(level){ return levelRestCamera(level) + CAMERA_FOLLOW_X; }
+function levelRestTankX(level){
+  const node = G.levelNodes[level];
+  return levelRestCamera(level) + (node ? node.tankScreenX : CAMERA_FOLLOW_X);
+}
 
 function resetWorld(){
   G.levelNodes = buildLevelNodes();
@@ -1183,15 +1844,157 @@ const angleInput = $('angleInput');
 /* The dock's number is the player's answer and nothing more — the barrel does
    NOT follow it. It only moves once FIRE commits the answer (see pressFire),
    which is what stops the level from being solvable by eye. */
+/* The dock holds a POSITION on the table, not a number: every value it can
+   show is one the student could have read off sin/cos/tan of 0, 30, 45, 60,
+   90. setAngle snaps anything else to the nearest of them, so no code path —
+   a debug command, a restored value, a future feature — can put the gun at
+   an angle the table cannot explain. */
+function angleIndex(v){
+  let best = 0;
+  ANGLE_CHOICES.forEach((a,i)=>{ if(Math.abs(a-v) < Math.abs(ANGLE_CHOICES[best]-v)) best = i; });
+  return best;
+}
 function setAngle(v){
-  v = Math.max(1, Math.min(89, Math.round(v)||1));
-  G.angleTarget = v; angleInput.value = v;
+  const a = ANGLE_CHOICES[angleIndex(v)];
+  G.angleTarget = a; angleInput.value = a;
 }
 function setControlsEnabled(enabled){
   $('downBtn').disabled=!enabled; $('upBtn').disabled=!enabled;
   angleInput.disabled=!enabled;
   $('fireBtn').disabled=!enabled;
+  $('hintBtn').disabled=!enabled; $('resetBtn').disabled=!enabled;
   $('controlDock').classList.toggle('is-busy', !enabled);
+}
+
+/* ---------- HINT ----------
+   Scaffolded, free, and never the answer. Free because this is a game for
+   learning a table: charging for help teaches a student to guess rather than
+   ask, which is the opposite of the habit worth building. */
+/* ---------- THE TABLE ----------
+   Six ratios across the five standard angles — 0 to 90, the first quadrant
+   and nothing past it. The reference chart carried 120/180/270/360 as well,
+   but they are angles this game's dial cannot hold and this syllabus does
+   not lean on, and every column that cannot be an answer is a column the
+   student's eye has to rule out. Cutting them also buys the five that matter
+   half again the width each.
+   It is DATA and not a picture for one reason: a picture of a table cannot
+   POINT, and pointing is the entire value of opening it mid-round.
+   Cells are either a plain string or a fraction, so they can be set the way
+   a textbook prints them — one over the other with a rule between — rather
+   than flattened to "1/2", which is the same ambiguity the vinculum fix
+   dealt with on the triangle's own labels. */
+const FR = (n,d) => ({n,d});
+const TRIG_ANGLES = [0, 30, 45, 60, 90];
+const TRIG_ROWS = [
+  {fn:'sin', label:'sin θ', cells:['0',      FR(1,2),      FR(1,'√2'), FR('√3',2), '1']},
+  {fn:'cos', label:'cos θ', cells:['1',      FR('√3',2),   FR(1,'√2'), FR(1,2),    '0']},
+  {fn:'tan', label:'tan θ', cells:['0',      FR(1,'√3'),   '1',        '√3',       '∞']},
+  {fn:'csc', label:'csc θ', cells:['∞',      '2',          '√2',       FR(2,'√3'), '1']},
+  {fn:'sec', label:'sec θ', cells:['1',      FR(2,'√3'),   '√2',       '2',        '∞']},
+  {fn:'cot', label:'cot θ', cells:['∞',      '√3',         '1',        FR(1,'√3'), '0']}
+];
+/* the table is the same every round, so it is built once and only re-pointed */
+let trigBuilt = false;
+function buildTrigTable(){
+  if(trigBuilt) return;
+  const t = $('trigTable'), mk = (tag,cls,txt)=>{
+    const n = document.createElement(tag); n.className = cls;
+    // our own data, never user text: the only markup added is the radical's bar
+    if(txt!==undefined) n.innerHTML = String(txt).replace(/√(\d+)/g,'√<span class="rad">$1</span>');
+    return n;
+  };
+  const head = document.createElement('tr'); head.className = 'headRow';
+  head.appendChild(mk('th','corner','ANGLE'));
+  TRIG_ANGLES.forEach((a,i)=>{ const th = mk('th','ang', a+'°'); th.dataset.col = i; head.appendChild(th); });
+  t.appendChild(head);
+  TRIG_ROWS.forEach(r=>{
+    const tr = document.createElement('tr'); tr.dataset.fn = r.fn;
+    tr.appendChild(mk('th','fn', r.label));
+    r.cells.forEach((c,i)=>{
+      const td = mk('td',''); td.dataset.col = i;
+      if(c && typeof c === 'object'){
+        const f = mk('span','frac');
+        f.appendChild(mk('span','num', String(c.n)));
+        f.appendChild(mk('span','den', String(c.d)));
+        td.appendChild(f);
+      } else td.textContent = c;
+      tr.appendChild(td);
+    });
+    t.appendChild(tr);
+  });
+  trigBuilt = true;
+}
+
+/* ---------- HINT ----------
+   Two rungs, and the sheet is where both of them land now.
+
+   RUNG ONE lights the round's ratio ROW and nothing else. That is deliberate:
+   the student is told which function this is and what its value works out to,
+   and is left to run their eye along the row and find the match. Reading a
+   value off a table is the skill the table exists to teach, and handing over
+   the column would spend it.
+   RUNG TWO — one button away, never withheld — lights the answer's column
+   and beats on the cell where the two cross.
+   Free at both rungs: charging for help teaches a student to guess instead
+   of ask, which is the opposite of the habit worth building. */
+let trigOpen = false, trigRevealed = false;
+function callHint(on){ $('hintBtn').classList.toggle('is-calling', !!on); }
+function resetHint(){ callHint(false); closeTrigSheet(); trigRevealed = false; }
+
+function openTrigSheet(){
+  const L = currentLevelData();
+  buildTrigTable();
+  const t = $('trigTable');
+  t.classList.add('is-pointing');
+  t.querySelectorAll('.row-on,.col-on,.is-answer')
+   .forEach(n=>n.classList.remove('row-on','col-on','is-answer'));
+  const row = t.querySelector(`tr[data-fn="${L.type}"]`);
+  if(row) row.classList.add('row-on');
+  $('trigReveal').hidden = false;
+  trigRevealed = false;
+  $('trigSheet').classList.remove('hidden');
+  trigOpen = true;
+  requestAnimationFrame(()=>$('trigReveal').focus({preventScroll:true}));
+}
+function revealTrigAnswer(){
+  if(!trigOpen || trigRevealed) return;
+  const L = currentLevelData(), t = $('trigTable');
+  const col = TRIG_ANGLES.indexOf(L.ans);
+  if(col >= 0){
+    t.querySelectorAll(`[data-col="${col}"]`).forEach(n=>n.classList.add('col-on'));
+    const cell = t.querySelector(`tr[data-fn="${L.type}"] td[data-col="${col}"]`);
+    if(cell) cell.classList.add('is-answer');
+  }
+  /* Nothing is written under the title: the sheet is a chart, not a worked
+     solution. What the round needs is said by the lit row, and on this second
+     ask by the lit column and the cell where they cross. */
+  $('trigReveal').hidden = true;
+  trigRevealed = true;
+  AU.blip(988);
+  $('trigClose').focus({preventScroll:true});
+}
+function closeTrigSheet(){
+  if(!trigOpen) return;
+  $('trigSheet').classList.add('hidden');
+  trigOpen = false;
+  $('hintBtn').focus({preventScroll:true});
+}
+function pressHint(){
+  if(G.state!==GameState.AIMING) return;
+  AU.click(); callHint(false);
+  if(!trigOpen) openTrigSheet();
+  else if(!trigRevealed) revealTrigAnswer();
+  else closeTrigSheet();
+}
+/* ---------- RESTART THE ROUND ----------
+   Replays the briefing so the triangle draws itself again — the round's one
+   explanation, and the thing a stuck player actually wants a second look at.
+   Hearts, score and attempt count all carry over: this is a re-read, not a
+   do-over, and it cannot be used to walk back a miss. */
+function pressReset(){
+  if(G.state!==GameState.AIMING || trigOpen) return;
+  AU.click(); hideMsg(); callHint(false);
+  initializeLevel(G.level, {resetHearts:false, keepTries:true, revive:true, enter:'brief', fast:true});
 }
 function updateControlsForState(){
   setControlsEnabled(G.state===GameState.AIMING);
@@ -1205,9 +2008,15 @@ function setGameState(newState){
 function setObjective(txt){
   $('objText').textContent = txt;
 }
+/* + and - walk the table one entry at a time and stop at its ends. They do
+   NOT wrap: 90 rolling round to 0 would read as the dial breaking, and the
+   two ends are exactly the values a student most needs to see are the ends. */
 function nudge(d){
-  if(G.state!==GameState.AIMING) return;
-  AU.tick(); setAngle((parseInt(angleInput.value)||0)+d);
+  if(G.state!==GameState.AIMING || trigOpen) return;
+  const i = angleIndex(G.angleTarget);
+  const next = Math.max(0, Math.min(ANGLE_CHOICES.length-1, i+d));
+  if(next === i){ AU.tick(); return; }
+  AU.tick(); setAngle(ANGLE_CHOICES[next]);
 }
 
 let holdT=null, holdI=null;
@@ -1220,22 +2029,30 @@ function bindHold(btn, d){
 }
 bindHold($('upBtn'),1); bindHold($('downBtn'),-1);
 
-angleInput.addEventListener('input', ()=>{
-  if(G.state!==GameState.AIMING) return;
-  const v = parseInt(angleInput.value.replace(/\D/g,''));
-  if(!isNaN(v)) setAngle(Math.max(1,Math.min(89,v)));
-});
-angleInput.addEventListener('blur', ()=>{
-  if(G.state===GameState.AIMING) setAngle(parseInt(angleInput.value)||G.angleTarget);
-  else angleInput.value = G.angleTarget;
-});
+/* Typing is gone: the field is the dial's read-out. Leaving it editable
+   would have re-opened the whole 1-89 range through the keyboard, which is
+   the one thing this rework exists to close. It stays an <input> so it keeps
+   its focus ring and is still announced, and the arrow keys still drive it. */
+angleInput.addEventListener('beforeinput', e=>e.preventDefault());
+angleInput.addEventListener('blur', ()=>{ angleInput.value = G.angleTarget; });
 
 addEventListener('keydown', e=>{
+  /* while the table is up it owns the keyboard — otherwise Enter would fire
+     the gun through it, at whatever angle the dial happened to be holding */
+  if(trigOpen){
+    if(e.key==='Escape'){ e.preventDefault(); AU.click(); closeTrigSheet(); }
+    else if(e.key==='Enter' || e.key===' '){ e.preventDefault(); AU.click();
+      trigRevealed ? closeTrigSheet() : revealTrigAnswer(); }
+    else if(e.key==='h' || e.key==='H'){ e.preventDefault(); pressHint(); }
+    return;
+  }
   if(inChoreo() && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); skipChoreo(); return; }
   if(G.state===GameState.AIMING){
     if(e.key==='ArrowUp'){ nudge(1); flashPress($('upBtn')); e.preventDefault(); }
     if(e.key==='ArrowDown'){ nudge(-1); flashPress($('downBtn')); e.preventDefault(); }
     if(e.key==='Enter'){ flashPress($('fireBtn')); pressFire(); }
+    if(e.key==='h' || e.key==='H'){ flashPress($('hintBtn')); pressHint(); }
+    if(e.key==='r' || e.key==='R'){ flashPress($('resetBtn')); pressReset(); }
   } else if(G.state===GameState.PREGAME && e.key==='Enter'){
     const play = $('playBtn');
     if(!play || !play.disabled){ e.preventDefault(); startGame(); }
@@ -1284,6 +2101,14 @@ addEventListener('pointerdown', e=>{
 }, true);
 
 $('fireBtn').addEventListener('click', pressFire);
+$('hintBtn').addEventListener('click', pressHint);
+$('trigReveal').addEventListener('click', ()=>{ AU.click(); revealTrigAnswer(); });
+$('trigClose').addEventListener('click', ()=>{ AU.click(); closeTrigSheet(); });
+// clicking the darkened game behind the panel dismisses it, as a sheet should
+$('trigSheet').addEventListener('pointerdown', e=>{
+  if(e.target === $('trigSheet')){ AU.click(); closeTrigSheet(); }
+});
+$('resetBtn').addEventListener('click', pressReset);
 /* tapping the world fast-forwards the roll-in / briefing */
 cv.addEventListener('pointerdown', ()=>{ if(inChoreo()){ AU.click(); skipChoreo(); } });
 const BEST_SCORE_KEY = 'tankVsZombieAngleAcademyBest';
@@ -1357,7 +2182,7 @@ function startGame(){
     resetWorld();
     initializeLevel(0, {resetHearts:true, revive:true, enter:'none'});
     beginIntro();
-    showMsg('Mission start!', 1200);
+    showMsg('Mission start!', 1500);
     startingMission = false;
   }, 420);
 }
@@ -1385,7 +2210,7 @@ function showTitle(){
 
 let msgTimer=null;
 function showMsg(txt, ms=2600){
-  $('msg').textContent = txt; $('msg').style.opacity=1;
+  $('msgText').textContent = txt; $('msg').style.opacity=1;
   clearTimeout(msgTimer);
   if(ms) msgTimer=setTimeout(hideMsg, ms);
 }
@@ -1398,14 +2223,9 @@ function hideMsg(){ $('msg').style.opacity=0; }
    player typed, holds one beat, and only then shoots. Three separate moments
    the player can read — decide, aim, boom — instead of one instant event. */
 function pressFire(){
-  if(G.state!==GameState.AIMING) return;
-  const v = parseInt(angleInput.value);
-  if(isNaN(v)||v<1||v>89){
-    angleInput.classList.remove('shakeX'); void angleInput.offsetWidth;
-    angleInput.classList.add('shakeX'); AU.wrong();
-    showMsg('Type an angle from 1° to 89°!'); return;
-  }
-  setAngle(v); hideMsg();
+  if(G.state!==GameState.AIMING || trigOpen) return;   // the sheet has the floor
+  const v = G.angleTarget;      // the dial cannot hold anything else
+  hideMsg();
   setGameState(GameState.LAYING);
   const from = G.angleShown;
   const dur = ambientMotionAllowed()
@@ -1431,17 +2251,23 @@ function launchShell(){
   setObjective('Shell away!');
   G.tries++;
   G.angleShown = G.angleTarget;
+  /* The round is answered or it is not. The zombie stands ON the answer ray,
+     so the right angle already flies through him — but the shot is gated on
+     the ANSWER rather than on the sprite it happens to graze, so no amount of
+     hitbox padding can ever hand a round to a wrong table value. */
+  G.shotIsAnswer = G.angleTarget === currentLevelData().ans;
   const aimPath = calculateAimPath(G.angleTarget);
   G.aimPath = aimPath;
   G.shell = { x:aimPath.startX, y:aimPath.startY, a:aimPath.screenAngle, path:aimPath, travelled:0, minDz:1e9 };
   G.recoil = 14; G.flash = .13; G.shake = 5;
-  AU.fire(); AU.whoosh(1.6);
+  AU.fire(); AU.whoosh(aimPath.length/PROJECTILE_SPEED);
   if(G.zombie){ G.zombie.mode='alert'; AU.zombieUhOh(); }
   spawnSmoke(aimPath.startX, aimPath.startY, 8);
 }
 
 function resolveHit(){
   if(G.activeNode) G.activeNode.status='CLEARED';
+  callHint(false);
   G.zombie.mode='burst'; G.zombie.burstF=0; G.zombie.animT=0;
   AU.explode(true); AU.zombiePop();
   G.shake=14;
@@ -1449,27 +2275,29 @@ function resolveHit(){
   G.score+=pts;
   spawnStars(G.zombie.x, G.zombie.y, 16);
   G.floaters.push({x:G.zombie.x, y:G.zombie.y-50, txt:'+'+pts, t:0});
-  showMsg(G.tries===1 ? `💥 PERFECT! θ = ${G.angleTarget}°` : `💥 BOOM! θ = ${G.angleTarget}°`, 3000);
+  showMsg(G.tries===1 ? `💥 PERFECT! θ = ${G.angleTarget}°` : `💥 BOOM! θ = ${G.angleTarget}°`, 3400);
   setObjective(G.level===TOTAL_LEVELS-1 ? 'Final target cleared!' : 'Target cleared - moving forward!');
-  setTimeout(()=>AU.success(), 350);
+  setTimeout(()=>AU.success(), 480);
   setGameState(GameState.HIT_REACTION);
 }
 
-function resolveMiss(near){
+function resolveMiss(){
   AU.explode(false);
   G.shake=5; G.hearts--;
   G.zombie.mode='idle';
   const L=currentLevelData(), v=G.angleTarget;
-  let hint = (near?'SO close! ':'') +
-    (v > L.ans+TOL ? 'Too steep — aim lower ⬇' : 'Too shallow — aim higher ⬆');
-  if(G.hearts===1){
-    const n = {tan:`tan θ = ${L.h} ÷ ${L.d}`, sin:`sin θ = ${L.h} ÷ ${L.hyp}`, cos:`cos θ = ${L.d} ÷ ${L.hyp}`}[L.type];
-    hint += `  💡 ${n}`;
-  }
+  /* "near" is now a step on the DIAL, not a distance in pixels — with the
+     table 15 degrees apart at its tightest, a miss by one entry is the only
+     kind of close there is. */
+  const steps = Math.abs(angleIndex(v) - angleIndex(L.ans));
+  let hint = (steps===1 ? 'One off! ' : '') +
+    (v > L.ans ? 'Too steep — step down ⬇' : 'Too shallow — step up ⬆');
+  if(G.hearts===1) hint += `  💡 ${hintFor(L, 1)}`;   // the last life buys the ratio
   AU.wrong();
+  closeTrigSheet(); callHint(true);
   if(G.hearts<=0){
-    showMsg(`The answer was ${Math.round(L.ans)}°!`, 4000);
-    setTimeout(gameOver, 1400);
+    showMsg(`The answer was ${L.ans}°!`, 4000);
+    setTimeout(gameOver, 1900);
   } else {
     showMsg(hint, 4200);
     G.barrelTarget = BARREL_REST_ANGLE;     // gun settles back down for another lay
@@ -1514,13 +2342,13 @@ window.playAgain = ()=>{
 function spawnSmoke(x,y,n){
   for(let i=0;i<n;i++) G.particles.push({
     x,y, vx:(Math.random()-.3)*60, vy:-Math.random()*50-10,
-    r:6+Math.random()*10, t:0, life:.6+Math.random()*.5, kind:'smoke'});
+    r:6+Math.random()*10, t:0, life:.8+Math.random()*.6, kind:'smoke'});
 }
 function spawnBoom(x,y){
   for(let i=0;i<18;i++){
     const a=Math.random()*Math.PI*2, sp=60+Math.random()*220;
     G.particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-60,
-      r:4+Math.random()*8,t:0,life:.4+Math.random()*.5,kind:'fire'});
+      r:4+Math.random()*8,t:0,life:.5+Math.random()*.6,kind:'fire'});
   }
   spawnSmoke(x,y,10);
 }
@@ -1528,7 +2356,7 @@ function spawnStars(x,y,n){
   for(let i=0;i<n;i++){
     const a=Math.random()*Math.PI*2, sp=90+Math.random()*260;
     G.particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-120,
-      r:8+Math.random()*9,t:0,life:.9+Math.random()*.6,kind:'star',
+      r:8+Math.random()*9,t:0,life:1.1+Math.random()*.7,kind:'star',
       rot:Math.random()*6, vr:(Math.random()-.5)*8});
   }
 }
@@ -1566,7 +2394,7 @@ function updateZombies(dt){
         z.animT=0; z.burstF++;
         if(z.burstF>=t.fall.poses.length){
           z.dead=true; z.mode='gone';
-          if(node===G.activeNode) G.hitDelay=.45;
+          if(node===G.activeNode) G.hitDelay=.78;   // the stars and the +score get to land
         }
       }
     } else if(z.mode==='idle' && t.look.fps>0 && z.animT > 1/t.look.fps){
@@ -1607,12 +2435,11 @@ function updateProjectile(dt){
 
   const dz = Math.hypot(s.x-z.x, s.y-z.y);
   s.minDz = Math.min(s.minDz, dz);
-  if(!z.dead && z.mode!=='burst' && pointInBox(s.x, s.y, zombieHitbox(z))){
+  if(G.shotIsAnswer && !z.dead && z.mode!=='burst' && pointInBox(s.x, s.y, zombieHitbox(z))){
     spawnBoom(s.x,s.y); G.shell=null; resolveHit();
   } else if(u>=1){
-    const near=s.minDz<90;
     if(s.x>-80 && s.x<W+100 && s.y>-100 && s.y<H+80) spawnBoom(s.x,s.y);
-    G.shell=null; resolveMiss(near);
+    G.shell=null; resolveMiss();
   }
 }
 
@@ -1631,7 +2458,7 @@ function finishDrive(){
     return;
   }
   initializeLevel(d.nextLevel, {resetHearts:false, revive:false});
-  showMsg('Level '+(G.level+1)+'!', 1200);
+  showMsg('Level '+(G.level+1)+'!', 1600);
 }
 
 function updateDrive(dt){
@@ -1662,7 +2489,7 @@ function updateDrive(dt){
   G.dustT -= dt;
   if(G.dustT<=0 && Math.abs(G.tankVel)>55){
     spawnDriveDust();
-    G.dustT = .11 + Math.random()*.08;
+    G.dustT = .14 + Math.random()*.09;
   }
   syncWorldPositions();
   updateNodeStatuses();
@@ -1681,13 +2508,13 @@ function update(dt){
   // the barrel is driven by the laying tween while a shot is being committed,
   // and otherwise eases toward its rest / travel angle
   if(G.lay) updateLay(dt);
-  else G.angleShown += (G.barrelTarget-G.angleShown)*Math.min(1,dt*9);
+  else G.angleShown += (G.barrelTarget-G.angleShown)*Math.min(1,dt*6.5);
   const guidesUp = G.state===GameState.BRIEFING || G.state===GameState.AIMING || G.state===GameState.LAYING;
   const guideTarget = guidesUp ? 1 : (G.state===GameState.PROJECTILE_FLYING ? .6 : 0);
-  G.guideAlpha += (guideTarget-G.guideAlpha)*Math.min(1,dt*12);
-  if(G.recoil>0) G.recoil=Math.max(0,G.recoil-dt*60);
+  G.guideAlpha += (guideTarget-G.guideAlpha)*Math.min(1,dt*8);
+  if(G.recoil>0) G.recoil=Math.max(0,G.recoil-dt*46);   // the gun rides back out, not snaps
   if(G.flash>0) G.flash-=dt;
-  if(G.shake>0) G.shake=Math.max(0,G.shake-dt*26);
+  if(G.shake>0) G.shake=Math.max(0,G.shake-dt*21);
 
   if(G.state===GameState.BRIEFING) updateBriefing(dt);
 
@@ -1714,15 +2541,15 @@ function update(dt){
   for(let i=G.particles.length-1;i>=0;i--){
     const p=G.particles[i]; p.t+=dt;
     p.x+=p.vx*dt; p.y+=p.vy*dt;
-    if(p.kind==='star'){ p.vy+=380*dt; p.rot+=p.vr*dt; }
-    if(p.kind==='fire') p.vy+=140*dt;
-    if(p.kind==='smoke') p.r+=14*dt;
-    if(p.kind==='dust'){ p.r+=10*dt; p.vy-=4*dt; }
+    if(p.kind==='star'){ p.vy+=300*dt; p.rot+=p.vr*dt; }
+    if(p.kind==='fire') p.vy+=115*dt;
+    if(p.kind==='smoke') p.r+=11*dt;
+    if(p.kind==='dust'){ p.r+=8*dt; p.vy-=4*dt; }
     if(p.t>p.life) G.particles.splice(i,1);
   }
   for(let i=G.floaters.length-1;i>=0;i--){
-    const f=G.floaters[i]; f.t+=dt; f.y-=40*dt;
-    if(f.t>1.4) G.floaters.splice(i,1);
+    const f=G.floaters[i]; f.t+=dt; f.y-=30*dt;   // the +score hangs long enough to read
+    if(f.t>2) G.floaters.splice(i,1);
   }
 }
 
@@ -1733,8 +2560,9 @@ function prepareDrive(){
   stowDock(true);
   if(G.activeNode && G.activeNode.status==='ACTIVE') G.activeNode.status='CLEARED';
   const nextNode = G.levelNodes[G.level+1] || null;
-  const cameraEnd = nextNode ? nextNode.targetWorldX - TARGET_SCREEN_X : G.cameraX + FINAL_ROLL_DISTANCE;
-  const tankEnd = cameraEnd + CAMERA_FOLLOW_X;
+  const cameraEnd = nextNode ? levelRestCamera(nextNode.level) : G.cameraX + FINAL_ROLL_DISTANCE;
+  // the next round has its own resting x — the drive has to land the tank on it
+  const tankEnd = nextNode ? levelRestTankX(nextNode.level) : cameraEnd + CAMERA_FOLLOW_X;
   G.drive = {
     t:0,
     nextLevel:nextNode ? nextNode.level : null,
@@ -1778,13 +2606,13 @@ function startDrive(){
    clock, so retiming the sequence means editing this table only.
    ============================================================ */
 const TR = {
-  land:  .46,   // bomb reaches centre frame
-  lit:   .64,   // it has stopped wobbling; the fuse catches
-  bang: 1.16,   // the spark reaches the casing
-  pop:   .26,   // how long the burst takes to spring open
-  out:  1.88,   // panel lifts and the win card comes up behind it
-  outDur:.36,
-  total:2.24
+  land:  .62,   // bomb reaches centre frame
+  lit:   .92,   // it has stopped wobbling; the fuse catches
+  bang: 1.80,   // the spark reaches the casing
+  pop:   .34,   // how long the burst takes to spring open
+  out:  2.72,   // panel lifts and the win card comes up behind it
+  outDur:.46,
+  total:3.24
 };
 const BOOM_CX = W/2, BOOM_CY = H*.47;
 const BOMB_R = 58;      // the finale's centrepiece — sized to be read, not spotted
@@ -1953,7 +2781,7 @@ function drawFinaleBomb(t){
   }
   if(alight){
     const s = fusePoint(burn);
-    const fl = .78 + Math.sin(G.time*46)*.22;
+    const fl = .78 + Math.sin(G.time*32)*.22;
     const ig = 1-clamp01((t-TR.lit)/.16);            // the flare of it catching
     ctx.globalAlpha = .5;
     ctx.fillStyle='#ff9a2e'; ctx.beginPath(); ctx.arc(s.x,s.y,BOMB_R*.44*fl,0,7); ctx.fill();
@@ -1967,7 +2795,7 @@ function drawFinaleBomb(t){
       ctx.globalAlpha = 1;
     }
     for(let i=0;i<4;i++){                            // sparks flicking off the burn
-      const a = G.time*9 + i*2.3, d = BOMB_R*(.3+((i*7+Math.floor(G.time*22))%9)*.02);
+      const a = G.time*6.5 + i*2.3, d = BOMB_R*(.3+((i*7+Math.floor(G.time*15))%9)*.02);
       ctx.globalAlpha = .55;
       ctx.fillStyle='#ffd23f';
       ctx.beginPath(); ctx.arc(s.x+Math.cos(a)*d, s.y+Math.sin(a)*d*.7, BOMB_R*.055, 0, 7); ctx.fill();
@@ -1979,7 +2807,7 @@ function drawFinaleBomb(t){
 /* ---------- the blast ---------- */
 function drawBoomBackdrop(a, t){
   ctx.save(); ctx.globalAlpha *= clamp01(a);
-  ctx.translate(BOOM_CX, H/2); ctx.rotate((t-TR.bang)*.30);
+  ctx.translate(BOOM_CX, H/2); ctx.rotate((t-TR.bang)*.22);
   ctx.drawImage(BOOM_BG, -BOOM_BG.width/2, -BOOM_BG.height/2);
   ctx.restore();
 }
@@ -2184,7 +3012,7 @@ function drawTitleBurst(){
   const b = TITLE_BURST;
   ctx.save();
   ctx.translate(b.x, b.y);
-  ctx.rotate(G.time*0.075);
+  ctx.rotate(G.time*0.055);
   ctx.scale(1, b.ry/b.rx);
   const fade = ctx.createRadialGradient(0,0,18, 0,0,b.rx);
   // the pill covers the bright core, so the alpha is held out to ~80% of the
@@ -2273,15 +3101,20 @@ function visibleLevelNodes(){
    level's opposite side needs — no sliced or repeated sections --- */
 function drawTower(tower=G.tower){
   const b=tower; if(!b) return;
-  // contact shadow at the base
-  const cs=ctx.createRadialGradient(b.x+b.w/2, GROUND_Y, 0, b.x+b.w/2, GROUND_Y, b.w*.7);
+  // contact shadow on the lane it actually stands on — the shadow is what
+  // plants a set-back structure in the field instead of floating it
+  const footY = b.y + b.h;
+  const cs=ctx.createRadialGradient(b.x+b.w/2, footY, 0, b.x+b.w/2, footY, b.w*.7);
   cs.addColorStop(0,'rgba(20,35,20,.4)'); cs.addColorStop(1,'rgba(20,35,20,0)');
   ctx.fillStyle=cs;
-  ctx.beginPath(); ctx.ellipse(b.x+b.w/2, GROUND_Y, b.w*.7, 14, 0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(b.x+b.w/2, footY, b.w*.7, 12, 0,0,7); ctx.fill();
   // one complete structure, scaled as a single piece — no stacked slices
   const [sx,sy,sw,sh] = b.bld.box;
   ctx.drawImage(IMGS[b.bld.img], sx,sy,sw,sh, b.x, b.y, b.w, b.h);
 }
+/* Still solid all the way down to the tank's own ground line, not just to
+   its foot line: nothing can reach the strip behind it anyway (every shot
+   leaves the muzzle climbing), and a wall is the safer answer than a gap. */
 function hitTower(x,y){
   const b=G.tower;
   return b && x>b.x-4 && x<b.x+b.w+4 && y>b.y+6 && y<GROUND_Y;
@@ -2290,21 +3123,25 @@ function hitTower(x,y){
 function drawZombie(z=G.zombie){
   if(!z || z.dead) return;
   const t = zombieTypeOf(z);
-  const feetY = z.y + t.feetOffset;      // soles rest on the building's deck
+  const k = z.scale || 1;                // the round's perspective scale
+  const feetY = z.y + t.feetOffset*k;    // soles rest on the building's deck
   const set = z.mode==='burst' ? t.fall : t.look;
   const f   = z.mode==='burst' ? set.poses[Math.min(z.burstF, set.poses.length-1)]
             : z.mode==='alert' ? set.alert
             : set.idle[z.frame % set.idle.length];
-  const sc = t.height/set.bodyPx;
+  const sc = t.height*k/set.bodyPx;
   const w = f[2]*sc, h = f[3]*sc;
   const ax = (f[4]!==undefined ? f[4] : f[2]/2)*sc;   // the body's centre-line
   // every pose hangs off (z.x, feetY), so a knockdown staggers, falls and
   // crumples ON the roof whatever shape its frame happens to be
   ctx.save();
   ctx.translate(z.x, feetY);
+  // a right-facing sheet is mirrored about the pose's own centre-line, so the
+  // flip costs nothing in placement: the anchor still lands on (z.x, feetY)
+  if(t.facesRight) ctx.scale(-1, 1);
   // a type with no idle loop breathes instead: a squash anchored at the soles,
   // so the torso rises and falls while the feet stay glued to the deck
-  if(z.mode==='idle' && set.fps===0) ctx.scale(1, 1 + Math.sin(G.time*3)*.018);
+  if(z.mode==='idle' && set.fps===0) ctx.scale(1, 1 + Math.sin(G.time*2.1)*.022);
   ctx.drawImage(IMGS[set.sheet], f[0],f[1],f[2],f[3], -ax, -h, w, h);
   ctx.restore();
 }
@@ -2340,7 +3177,7 @@ function meters(v){
    The bloom breathes slowly, which is what makes the sides read as LIT rather
    than merely drawn; held still when the player asked for reduced motion. */
 function glowStroke(path, {w=3.4, halo=7.5, core=GUIDE_INK, bloom=GUIDE_BLOOM, blur=1, cap='round'}={}){
-  const pulse = ambientMotionAllowed() ? 1 + Math.sin(G.time*2.4)*.14 : 1;
+  const pulse = ambientMotionAllowed() ? 1 + Math.sin(G.time*1.6)*.16 : 1;
   ctx.save();
   ctx.lineCap=cap; ctx.lineJoin='round';
   ctx.strokeStyle=GUIDE_HALO; ctx.lineWidth=halo; path(); ctx.stroke();
@@ -2362,6 +3199,33 @@ function guideText(txt,x,y,{size=21,weight=800,fill=GUIDE_VALUE,align='center'}=
   ctx.lineJoin='round'; ctx.lineWidth=Math.max(4,size*.34);
   ctx.strokeStyle='rgba(38,14,4,.72)'; ctx.strokeText(txt,x,y);
   ctx.fillStyle=fill; ctx.fillText(txt,x,y);
+  vinculum(txt,x,y,size,align,fill);
+}
+/* A radical whose bar you cannot see is a division sign, and "8√2 m" read as
+   "8/2 m" is 4 metres instead of 11.3 — in a maths game that is not a
+   cosmetic bug. The display face has no radical of its own, and the fallback
+   glyph's vinculum is thinner than the dark outline every value is stroked
+   with, so it disappears. The bar is drawn as a real rule instead, over
+   exactly the radicand, in the same two passes as the text it belongs to. */
+function vinculum(txt,x,y,size,align,fill){
+  const i = txt.indexOf('√');
+  if(i < 0) return;
+  const w = ctx.measureText(txt).width;
+  const left = align==='center' ? x - w/2 : align==='right' ? x - w : x;
+  const from = left + ctx.measureText(txt.slice(0,i+1)).width - 1;
+  const stop = txt.indexOf(' ', i);          // the radicand ends at the unit
+  const to   = left + ctx.measureText(txt.slice(0, stop<0 ? txt.length : stop)).width + 1;
+  /* measured off the radicand's own ink, not guessed from the point size —
+     with textBaseline 'middle' the ascent is relative to y, and a fixed
+     fraction put the rule straight through the digits */
+  const digits = ctx.measureText(txt.slice(i+1, stop<0 ? txt.length : stop));
+  const yBar = y - (digits.actualBoundingBoxAscent || size*.36) - Math.max(3, size*.13);
+  ctx.save(); ctx.lineCap='butt';
+  ctx.strokeStyle='rgba(38,14,4,.72)'; ctx.lineWidth=Math.max(3.4,size*.26);
+  ctx.beginPath(); ctx.moveTo(from,yBar); ctx.lineTo(to,yBar); ctx.stroke();
+  ctx.strokeStyle=fill; ctx.lineWidth=Math.max(1.8,size*.10);
+  ctx.beginPath(); ctx.moveTo(from,yBar); ctx.lineTo(to,yBar); ctx.stroke();
+  ctx.restore();
 }
 /* a given length: small caption over a big number, so it reads as data */
 function guideValue(x,y,caption,value,u,align='center'){
@@ -2369,7 +3233,9 @@ function guideValue(x,y,caption,value,u,align='center'){
   ctx.save();
   ctx.globalAlpha *= clamp01(u);
   const rise = (1-u)*10;
-  guideText(caption, x, y-15+rise, {size:12, weight:700, fill:GUIDE_CAPTION, align});
+  // a surd's rule stands above the digits, in the room the caption was using
+  const lift = value.indexOf('√') >= 0 ? 7 : 0;
+  guideText(caption, x, y-15-lift+rise, {size:12, weight:700, fill:GUIDE_CAPTION, align});
   guideText(value,   x, y+5+rise,  {size:22, weight:800, align});
   ctx.restore();
 }
@@ -2417,8 +3283,21 @@ function drawGuides(){
   }
 
   ctx.save(); ctx.globalAlpha *= G.guideAlpha;
-  guideValue((t.ax+t.bx)/2, t.by+36, 'ADJACENT', meters(L.adjacent), G.reveal.chipA);
-  guideValue(t.bx+24, (t.by+t.cy)/2, 'OPPOSITE', meters(L.opposite), G.reveal.chipO, 'left');
+  /* A round labels the two sides it GIVES and leaves the third blank — which
+     is what makes it a tan, a sin or a cos question rather than five of the
+     same. The two chips arrive on the same two beats whichever sides they
+     land on, so the briefing's rhythm is unchanged. */
+  const given = GIVEN_SIDES[L.type] || ['adj','opp'];
+  const SIDE = {
+    adj: {x:(t.ax+t.bx)/2,      y:t.by+36,             cap:'ADJACENT',   align:'center'},
+    opp: {x:t.bx+24,            y:(t.by+t.cy)/2,       cap:'OPPOSITE',   align:'left'},
+    hyp: {x:(t.ax+t.cx)/2 - 34, y:(t.ay+t.cy)/2 - 30,  cap:'HYPOTENUSE', align:'right'}
+  };
+  [G.reveal.chipA, G.reveal.chipO].forEach((u,i)=>{
+    const p = SIDE[given[i]]; if(!p) return;
+    const shown = (L.show && L.show[i]) ? `${L.show[i]} m` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
+    guideValue(p.x, p.y, p.cap, shown, u, p.align);
+  });
   ctx.restore();
 
   if(G.state===GameState.LAYING || G.state===GameState.PROJECTILE_FLYING){
