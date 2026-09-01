@@ -135,6 +135,10 @@ canvas{position:absolute;inset:0;display:block}
   font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
   font-size:17px;letter-spacing:.6px}
 #objBanner svg{flex:none;width:17px;height:17px;position:relative;z-index:1}
+/* an empty plate is worse than no plate: the banner speaks only when there is
+   something the player must do, and gets out of the way the rest of the time */
+#objBanner{transition:opacity .25s}
+#objBanner.is-off{opacity:0}
 #objBanner span,#msgText{position:relative;z-index:1}
 
 #msg{position:absolute;left:18px;top:78px;
@@ -731,13 +735,13 @@ canvas{position:absolute;inset:0;display:block}
   <canvas id="game" width="1280" height="720" aria-hidden="true"></canvas>
 
   <div id="hud">
-    <div class="gemPlate" id="objBanner">
+    <div class="gemPlate is-off" id="objBanner">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="8" stroke="#4a2409" stroke-width="2.4"/>
         <circle cx="12" cy="12" r="2.4" fill="#4a2409"/>
         <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#4a2409" stroke-width="2.4" stroke-linecap="round"/>
       </svg>
-      <span id="objText">Hit the zombie using trigonometry</span>
+      <span id="objText"></span>
     </div>
 
     <div id="msg" class="gemPlate" role="status" aria-live="polite"><span id="msgText"></span></div>
@@ -1832,7 +1836,7 @@ function beginIntro(){
   G.guideAlpha = 0; clearReveal(); stowDock(true);
   G.angleShown = G.barrelTarget = BARREL_REST_ANGLE;
   syncWorldPositions();
-  setObjective('Rolling into position…');
+  setObjective('');
   setGameState(GameState.INTRO);
   G.drive = {t:0, nextLevel:null, tankStart:G.tankWorldX, tankEnd:restTank,
              cameraStart:G.cameraX, cameraEnd:restCam, onArrive:beginBriefing};
@@ -1843,7 +1847,7 @@ function beginBriefing(opts){
   const fast = !!(opts && opts.fast);
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   clearReveal(); stowDock(true);
-  setObjective(`Reading the target — ${zombieTypeOf(G.zombie).name}…`);
+  setObjective('');
   setGameState(GameState.BRIEFING);
   /* Later rounds run a little quicker — the player already knows the shape
      of the score by then — but only a little: this is the round's one
@@ -1866,7 +1870,7 @@ function enterAiming({instant=false}={}){
   revealAll(); stowDock(false);
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   if(instant){ G.guideAlpha = 1; G.angleShown = BARREL_REST_ANGLE; }
-  setObjective('Solve for θ — then FIRE');
+  setObjective('Solve for θ');
   setGameState(GameState.AIMING);
   angleInput.value = G.angleTarget;
 }
@@ -2067,7 +2071,8 @@ function setGameState(newState){
   updateControlsForState();
 }
 function setObjective(txt){
-  $('objText').textContent = txt;
+  $('objText').textContent = txt || '';
+  $('objBanner').classList.toggle('is-off', !txt);
 }
 /* + and - walk the table one entry at a time and stop at its ends. They do
    NOT wrap: 90 rolling round to 0 would read as the dial breaking, and the
@@ -2243,7 +2248,6 @@ function startGame(){
     resetWorld();
     initializeLevel(0, {resetHearts:true, revive:true, enter:'none'});
     beginIntro();
-    showMsg('Mission start!', 1500);
     startingMission = false;
   }, 420);
 }
@@ -2294,7 +2298,7 @@ function pressFire(){
     : .001;
   G.lay = {from, to:v, t:0, dur, hold:LAY_HOLD, laid:false};
   G.barrelTarget = v;                      // stays laid until the shot resolves
-  setObjective(`Laying the gun to ${v}°…`);
+  setObjective('');
   AU.servo(dur);
 }
 function updateLay(dt){
@@ -2309,7 +2313,6 @@ function updateLay(dt){
 }
 function launchShell(){
   setGameState(GameState.PROJECTILE_FLYING);
-  setObjective('Shell away!');
   G.tries++;
   G.angleShown = G.angleTarget;
   /* The round is answered or it is not. The zombie stands ON the answer ray,
@@ -2336,8 +2339,8 @@ function resolveHit(){
   G.score+=pts;
   spawnStars(G.zombie.x, G.zombie.y, 16);
   G.floaters.push({x:G.zombie.x, y:G.zombie.y-50, txt:'+'+pts, t:0});
-  showMsg(G.tries===1 ? `💥 PERFECT! θ = ${G.angleTarget}°` : `💥 BOOM! θ = ${G.angleTarget}°`, 3400);
-  setObjective(G.level===TOTAL_LEVELS-1 ? 'Final target cleared!' : 'Target cleared - moving forward!');
+  showMsg(G.tries===1 ? 'PERFECT!' : 'BOOM!', 2200);
+  setObjective('');                        // the round is answered; nothing left to ask
   setTimeout(()=>AU.success(), 480);
   setGameState(GameState.HIT_REACTION);
 }
@@ -2347,31 +2350,27 @@ function resolveMiss(){
   G.shake=5; G.hearts--;
   G.zombie.mode='idle';
   const L=currentLevelData(), v=G.angleTarget;
-  /* "near" is now a step on the DIAL, not a distance in pixels — with the
-     table 15 degrees apart at its tightest, a miss by one entry is the only
-     kind of close there is. */
-  const steps = Math.abs(angleIndex(v) - angleIndex(L.ans));
-  let hint = (steps===1 ? 'One off! ' : '') +
-    (v > L.ans ? 'Too steep — step down ⬇' : 'Too shallow — step up ⬆');
+  /* the correction points at the DIAL, not at pixels: too steep or too
+     shallow is the only thing a stepped answer can be wrong by. */
+  let hint = v > L.ans ? 'Too steep ⬇' : 'Too shallow ⬆';
   if(G.hearts===1) hint += `  💡 ${hintFor(L, 1)}`;   // the last life buys the ratio
   AU.wrong();
   closeTrigSheet(); callHint(true);
   if(G.hearts<=0){
-    showMsg(`The answer was ${L.ans}°!`, 4000);
+    showMsg(`Answer: ${L.ans}°`, 3200);
     setTimeout(gameOver, 1900);
   } else {
     showMsg(hint, 4200);
     G.barrelTarget = BARREL_REST_ANGLE;     // gun settles back down for another lay
-    setObjective('Try again — solve for θ');
+    setObjective('Solve for θ');
     setGameState(GameState.AIMING);
   }
 }
 
 function gameOver(){
   setGameState(GameState.GAME_OVER);
-  showCard(`<h2>💀 OUT OF SHELLS!</h2>
-    <p>The zombie is doing a happy dance…<br>but you'll get it next time!</p>
-    <p>⭐ Score: <b>${G.score}</b></p>
+  showCard(`<h2>OUT OF SHELLS</h2>
+    <p>⭐ ${G.score}</p>
     <button type="button" class="bigBtn" onclick="retryLevel()">TRY AGAIN</button>`);
 }
 window.retryLevel = ()=>{
@@ -2383,10 +2382,9 @@ function winGame(){
   setGameState(GameState.GAME_COMPLETE); AU.fanfare();
   saveBestScore(G.score);
   const s = G.score>=1200?'⭐⭐⭐' : G.score>=800?'⭐⭐☆':'⭐☆☆';
-  showCard(`<h1>🏆 MISSION COMPLETE! 🏆</h1>
+  showCard(`<h1>MISSION COMPLETE</h1>
     <div class="stars">${s}</div>
-    <p>All ${TOTAL_LEVELS} targets cleared with the power of <b>trigonometry</b>!</p>
-    <p>⭐ Final score: <b>${G.score}</b></p>
+    <p>⭐ ${G.score}</p>
     <button type="button" class="bigBtn" onclick="playAgain()">PLAY AGAIN</button>`);
 }
 window.playAgain = ()=>{
@@ -2518,7 +2516,6 @@ function finishDrive(){
     return;
   }
   initializeLevel(d.nextLevel, {resetHearts:false, revive:false});
-  showMsg('Level '+(G.level+1)+'!', 1600);
 }
 
 function updateDrive(dt){
@@ -2621,7 +2618,7 @@ function update(dt){
 }
 
 function prepareDrive(){
-  setObjective('Target cleared — moving up!');
+  setObjective('');
   G.guideAlpha = 0;
   G.barrelTarget = BARREL_REST_ANGLE;    // gun back to travel position
   stowDock(true);
