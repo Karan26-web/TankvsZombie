@@ -153,7 +153,7 @@ canvas{position:absolute;inset:0;display:block}
 /* Both keys are painted plates, so both are artBtns: the art carries its own
    bevel, ring and lighting and all the CSS owes it is honest press physics.
    THE TWO FILES ARE FRAMED DIFFERENTLY and that is the only fiddly part —
-   resetBtn.svg is trimmed to its plate, while hintbtn.png carries a wide
+   resetBtn.svg is trimmed to its plate, while hintbtn.webp carries a wide
    transparent halo and its plaque fills just 66% of the file. Sized to their
    BOXES the bulb would come out a third smaller than the arrow, so the hint
    is given the larger box its halo needs and then pulled back by the halo's
@@ -163,7 +163,7 @@ canvas{position:absolute;inset:0;display:block}
   filter:drop-shadow(0 4px 4px rgba(38,10,2,.42))}
 #hintBtn{width:84px;height:84px;--sink:5px;
   margin:-12px -15px -15px -14px;      /* the halo, taken back out of layout */
-  background-image:url(assets/hintbtn.png);
+  background-image:url(assets/hintbtn.webp);
   filter:drop-shadow(0 4px 4px rgba(38,10,2,.42))}
 #resetBtn:hover,#hintBtn:hover{filter:drop-shadow(0 6px 6px rgba(38,10,2,.38)) brightness(1.06)}
 #resetBtn:active,#resetBtn.is-pressed,
@@ -981,11 +981,11 @@ const IMGS = {}, MANIFEST = {
      frames were lifted out, the foreign ink erased from each, and the set
      repacked with gaps. Regenerating it: crop each rect, drop any detached
      blob that runs off a frame edge, lay them out in order. */
-  zombie3:'assets/Zombie3.look.png',
-  zkill3:'assets/ZombieSprite3.png', // …and its 8-frame knockdown (name is the artist's)
+  zombie3:'assets/Zombie3.look.webp',
+  zkill3:'assets/ZombieSprite3.webp', // …and its 8-frame knockdown (name is the artist's)
   tank:'assets/tankSheet.webp',
   shot:'assets/TankShot.webp',
-  pre:'assets/preLBD.png',          // the painted title plate — wordmark and all
+  pre:'assets/preLBD.webp',          // the painted title plate — wordmark and all
   scene:'assets/bgm4.webp',         // complete 16:9 illustrated background plate
   scene2:'assets/bgm2.webp', scene3:'assets/bgm1.webp',
   scene4:'assets/bgm3.webp', scene5:'assets/bgm.webp',
@@ -1023,7 +1023,7 @@ const SP = {
   // the only point a wheel may spin about — is stored per cell (measured off
   // the sheet). Spinning about the box centre instead made them orbit.
   wheelPivot: [[143,116.5],[130.5,116.5],[119,116.5],[106,116.5]],
-  // TankShot.png
+  // TankShot.webp
   shellFlame:[95,275,830,155],
   blast:  [350,450,350,275]
 };
@@ -1519,11 +1519,11 @@ function buildLayers(){
   bakeBoomLayers();
 }
 
-/* cloud.png is a 1254² plate that is ~59% empty padding, and no cloud ever
+/* cloud.webp is a 1254² plate that is ~59% empty padding, and no cloud ever
    draws wider than ~330px. Bake the tight crop down once into a right-sized
    offscreen canvas: the per-frame draws then sample a small texture instead
    of a 6MB one, and the downscale is filtered once instead of every frame. */
-const CLOUD_SRC = [40,352,1174,553];      // measured content box in cloud.png
+const CLOUD_SRC = [40,352,1174,553];      // measured content box in cloud.webp
 function bakeCloud(){
   const [sx,sy,sw,sh] = CLOUD_SRC;
   const bw = 512, bh = Math.round(bw*sh/sw);
@@ -2945,7 +2945,7 @@ function drawBG(){
 
 /* ---------- sky clouds — the background plates are painted clean of
    clouds, so every cloud on screen is this drifting layer, cut from the
-   one painted cloud.png. With a single source sprite the trick is to stop
+   one painted cloud.webp. With a single source sprite the trick is to stop
    it reading as copy-paste: each cloud gets a DEPTH, and size, opacity,
    parallax and wind speed are all derived from that one number, so far
    clouds are small, pale and slow while near ones are big, solid and
@@ -3002,7 +3002,7 @@ function drawSkyClouds(){
 
 /* ============================================================
    TITLE SCENE
-   The attract screen is the painted key-art plate: preLBD.png is a
+   The attract screen is the painted key-art plate: preLBD.webp is a
    finished 16:9 illustration — wordmark, valley, ruins, hedgerow —
    so this draws exactly two things over it. A burst of light thrown
    from behind the wordmark, and then the plate's own wordmark
@@ -3020,7 +3020,7 @@ function drawSkyClouds(){
    Two live layers get painted over the plate and then partly covered by
    the plate again: the burst goes behind the wordmark, and the zombie
    line-up stands inside the hedgerow. Both are the same move — re-blit a
-   rectangle of preLBD.png on top — and both need the same care.
+   rectangle of preLBD.webp on top — and both need the same care.
 
    A HARD-edged re-blit is the trap. It cuts every ray, and every zombie
    leg, along one straight line, which reads as a seam the moment the
@@ -3056,7 +3056,7 @@ function bakePlatePatch(rect, feather){
   g.globalCompositeOperation = 'source-over';
   return {cv:c, at:[(sx-coverSx)*sc, (sy-coverSy)*sc, dw, dh]};
 }
-/* Rects are in preLBD.png's own 1672x941 pixels. The hedge rect runs to the
+/* Rects are in preLBD.webp's own 1672x941 pixels. The hedge rect runs to the
    plate's exact right and bottom edges, so only its top and left are cut —
    and its top sits DEEP inside the plate's own leaf mass (stage y ~686,
    where the plate is bushes above and below alike). That is what lets the
