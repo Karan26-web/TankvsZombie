@@ -75,7 +75,7 @@
    ============================================================ */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none}
 html,body{width:100%;height:100%;overflow:hidden;background:#050d12;
-  font-family:'Chakra Petch','Trebuchet MS',sans-serif}
+  font-family:'Chakra Petch','Trebuchet MS','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',sans-serif}
 #stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;aspect-ratio:16/9;
   transform-origin:center center;border-radius:16px;overflow:hidden;
   box-shadow:0 24px 70px rgba(0,0,0,.7)}
@@ -132,7 +132,7 @@ canvas{position:absolute;inset:0;display:block}
 #objBanner{position:absolute;left:18px;top:14px;
   padding:8px 22px 10px;gap:10px;white-space:nowrap;
   display:flex;align-items:center;
-  font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-weight:400;
   font-size:17px;letter-spacing:.6px}
 #objBanner svg{flex:none;width:17px;height:17px;position:relative;z-index:1}
 /* an empty plate is worse than no plate: the banner speaks only when there is
@@ -143,7 +143,7 @@ canvas{position:absolute;inset:0;display:block}
 
 #msg{position:absolute;left:18px;top:78px;
   padding:7px 22px 9px;border-radius:16px;opacity:0;
-  font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-weight:400;
   font-size:19px;letter-spacing:.7px;
   transition:opacity .34s;white-space:nowrap}
 
@@ -452,14 +452,14 @@ canvas{position:absolute;inset:0;display:block}
    nothing — the air above the sign is the panel's own padding-top instead,
    and that is the number to turn. */
 .trigTitle{display:block;width:fit-content;margin:0 auto 18px;padding:13px 46px 15px;
-  font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:27px;letter-spacing:2px;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-size:27px;letter-spacing:2px;
   color:var(--board-cream,#fcebc5);text-shadow:0 3px 0 rgba(60,16,40,.55);
   background:url(assets/board.svg) 0 0/100% 100% no-repeat;
   filter:drop-shadow(0 5px 6px rgba(20,6,10,.45))}
 .trigScroll{overflow-x:auto;overflow-y:hidden}
 
 #trigTable{border-collapse:separate;border-spacing:5px;margin:0 auto;
-  font-family:'Chakra Petch','Trebuchet MS',sans-serif}
+  font-family:'Chakra Petch','Trebuchet MS','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',sans-serif}
 #trigTable th,#trigTable td{
   padding:7px 6px;min-width:112px;height:56px;border-radius:10px;
   font-size:23px;font-weight:800;text-align:center;vertical-align:middle;
@@ -526,7 +526,7 @@ canvas{position:absolute;inset:0;display:block}
 .trigFoot{display:flex;gap:14px;justify-content:center;margin-top:22px}
 .sheetBtn{cursor:pointer;height:52px;padding:0 30px 3px;border-radius:18px;
   border:4px solid var(--plate-ring);color:var(--plate-ink);
-  font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:21px;letter-spacing:1.5px;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-size:21px;letter-spacing:1.5px;
   background:
     linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 34%),
     linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
@@ -586,7 +586,7 @@ canvas{position:absolute;inset:0;display:block}
   border:2px solid rgba(107,58,20,.16)}
 /* the heading is a plate in its own right — the pill, holding a title */
 .card h1,.card h2{position:relative;display:inline-block;
-  font-family:'Luckiest Guy','Chakra Petch',cursive;font-weight:400;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-weight:400;
   color:var(--plate-ink);letter-spacing:1.5px;line-height:1.14;
   padding:12px 30px 15px;border-radius:20px;border:4px solid var(--plate-ring);
   background:
@@ -612,7 +612,7 @@ canvas{position:absolute;inset:0;display:block}
 .bigBtn{--depth:8px;
   --rim:var(--plate-ring);--btn-rim-dark:var(--plate-case);--stud:var(--plate-case-deep);
   margin-top:22px;height:68px;padding:0 46px 4px;border-radius:24px;border-width:5px;
-  font-family:'Luckiest Guy','Chakra Petch',cursive;font-size:28px;font-weight:400;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-size:28px;font-weight:400;
   letter-spacing:2.5px;white-space:nowrap;color:var(--plate-ink);
   background:
     linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 34%),
@@ -636,6 +636,21 @@ canvas{position:absolute;inset:0;display:block}
     0 4px 10px rgba(0,0,0,.45)}
 .stars{font-size:50px;letter-spacing:10px;margin-top:14px;
   text-shadow:0 3px 0 rgba(120,80,20,.28)}
+/* the celebration card carries two keys now — CONTINUE hands the child back
+   to the platform, PLAY AGAIN keeps them here — so they need a row to sit in */
+.cardActions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
+.cardActions .bigBtn{margin-top:22px}
+.bigBtn.is-quiet{height:56px;padding:0 30px 4px;font-size:21px;--depth:6px;filter:saturate(.55);
+  opacity:.9}
+/* Indic scripts are unicase and their conjuncts sit tight: UPPERCASE is a
+   no-op and tracking only pulls the clusters apart, so both come off for
+   every language but English. */
+html:not([lang="en"]) .card h1,
+html:not([lang="en"]) .card h2,
+html:not([lang="en"]) .bigBtn,
+html:not([lang="en"]) .playTitleBtn,
+html:not([lang="en"]) .trigTitle,
+html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
 
 /* ============================================================
    TITLE SCREEN
@@ -663,7 +678,7 @@ canvas{position:absolute;inset:0;display:block}
   width:318px;height:84px;padding:0 0 4px;border-radius:22px;
   border:5px solid #f0c063;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Luckiest Guy','Chakra Petch',cursive;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;
   font-size:40px;letter-spacing:3px;font-weight:400;color:#3d3005;
   background:
     linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 34%),
@@ -731,6 +746,293 @@ canvas{position:absolute;inset:0;display:block}
 </style>
 </head>
 <body>
+<!-- ============================================================
+     LANGUAGE PACK (inline mirror of i18n/strings.json)
+     i18n/strings.json stays the source of truth for translators and is
+     what the game fetches when it is served over http. But a raw file://
+     open has no origin, so that fetch is refused and every string would
+     fall back to its English key. This inline copy is the fallback that
+     makes ?lan= work straight off disk too.
+     After editing i18n/strings.json, re-mirror it here.
+     ============================================================ -->
+<script type="application/json" id="i18nStrings">
+{
+ "strings": {
+  "Tank vs Zombie — Angle Academy": {
+   "en": "Tank vs Zombie — Angle Academy",
+   "hi": "टैंक बनाम ज़ॉम्बी — कोण अकादमी",
+   "mr": "टँक विरुद्ध झोंबी — कोन अकादमी",
+   "te": "ట్యాంక్ vs జాంబీ — కోణం అకాడమీ",
+   "or": "ଟ୍ୟାଙ୍କ ବନାମ ଜୋମ୍ବି — କୋଣ ଏକାଡେମୀ",
+   "gu": "ટેન્ક વિરુદ્ધ ઝોમ્બી — ખૂણા અકાદમી"
+  },
+  "PLAY GAME": {
+   "en": "PLAY GAME",
+   "hi": "खेल शुरू करें",
+   "mr": "खेळ सुरू करा",
+   "te": "ఆట మొదలుపెట్టండి",
+   "or": "ଖେଳ ଆରମ୍ଭ କରନ୍ତୁ",
+   "gu": "રમત શરૂ કરો"
+  },
+  "LOADING": {
+   "en": "LOADING",
+   "hi": "लोड हो रहा है",
+   "mr": "लोड होत आहे",
+   "te": "లోడ్ అవుతోంది",
+   "or": "ଲୋଡ୍ ହେଉଛି",
+   "gu": "લોડ થઈ રહ્યું છે"
+  },
+  "Play — or press Enter": {
+   "en": "Play — or press Enter",
+   "hi": "खेलें — या Enter दबाएँ",
+   "mr": "खेळा — किंवा Enter दाबा",
+   "te": "ఆడండి — లేదా Enter నొక్కండి",
+   "or": "ଖେଳନ୍ତୁ — କିମ୍ବା Enter ଦବାନ୍ତୁ",
+   "gu": "રમો — અથવા Enter દબાવો"
+  },
+  "Solve for θ": {
+   "en": "Solve for θ",
+   "hi": "θ ज्ञात कीजिए",
+   "mr": "θ शोधा",
+   "te": "θ కనుగొనండి",
+   "or": "θ ନିର୍ଣ୍ଣୟ କରନ୍ତୁ",
+   "gu": "θ શોધો"
+  },
+  "Hint — which ratio is this?": {
+   "en": "Hint — which ratio is this?",
+   "hi": "संकेत — यह कौन-सा अनुपात है?",
+   "mr": "सूचना — हे कोणते गुणोत्तर आहे?",
+   "te": "సూచన — ఇది ఏ నిష్పత్తి?",
+   "or": "ସୂଚନା — ଏହା କେଉଁ ଅନୁପାତ?",
+   "gu": "સંકેત — આ કયો ગુણોત્તર છે?"
+  },
+  "Hint": {
+   "en": "Hint",
+   "hi": "संकेत",
+   "mr": "सूचना",
+   "te": "సూచన",
+   "or": "ସୂଚନା",
+   "gu": "સંકેત"
+  },
+  "Start this round again": {
+   "en": "Start this round again",
+   "hi": "यह चरण फिर से शुरू करें",
+   "mr": "ही फेरी पुन्हा सुरू करा",
+   "te": "ఈ రౌండ్‌ను మళ్ళీ ప్రారంభించండి",
+   "or": "ଏହି ରାଉଣ୍ଡ ପୁନର୍ବାର ଆରମ୍ଭ କରନ୍ତୁ",
+   "gu": "આ રાઉન્ડ ફરીથી શરૂ કરો"
+  },
+  "Decrease angle": {
+   "en": "Decrease angle",
+   "hi": "कोण घटाएँ",
+   "mr": "कोन कमी करा",
+   "te": "కోణం తగ్గించండి",
+   "or": "କୋଣ କମାନ୍ତୁ",
+   "gu": "ખૂણો ઘટાડો"
+  },
+  "Increase angle": {
+   "en": "Increase angle",
+   "hi": "कोण बढ़ाएँ",
+   "mr": "कोन वाढवा",
+   "te": "కోణం పెంచండి",
+   "or": "କୋଣ ବଢ଼ାନ୍ତୁ",
+   "gu": "ખૂણો વધારો"
+  },
+  "Angle — step it with + and −": {
+   "en": "Angle — step it with + and −",
+   "hi": "कोण — + और − से बदलें",
+   "mr": "कोन — + आणि − ने बदला",
+   "te": "కోణం — + మరియు − తో మార్చండి",
+   "or": "କୋଣ — + ଓ − ଦ୍ୱାରା ବଦଳାନ୍ତୁ",
+   "gu": "ખૂણો — + અને − થી બદલો"
+  },
+  "Angle in degrees, chosen from 0, 30, 45, 60 and 90": {
+   "en": "Angle in degrees, chosen from 0, 30, 45, 60 and 90",
+   "hi": "डिग्री में कोण, 0, 30, 45, 60 और 90 में से चुना गया",
+   "mr": "अंशांमधील कोन, 0, 30, 45, 60 आणि 90 मधून निवडलेला",
+   "te": "డిగ్రీలలో కోణం, 0, 30, 45, 60 మరియు 90 నుండి ఎంచుకున్నది",
+   "or": "ଡିଗ୍ରୀରେ କୋଣ, 0, 30, 45, 60 ଏବଂ 90 ମଧ୍ୟରୁ ବଛା",
+   "gu": "ડિગ્રીમાં ખૂણો, 0, 30, 45, 60 અને 90 માંથી પસંદ કરેલો"
+  },
+  "Fire": {
+   "en": "Fire",
+   "hi": "फ़ायर",
+   "mr": "फायर",
+   "te": "కాల్చండి",
+   "or": "ଫାୟାର",
+   "gu": "ફાયર"
+  },
+  "Trigonometric table": {
+   "en": "Trigonometric table",
+   "hi": "त्रिकोणमितीय सारणी",
+   "mr": "त्रिकोणमितीय कोष्टक",
+   "te": "త్రికోణమితి పట్టిక",
+   "or": "ତ୍ରିକୋଣମିତି ସାରଣୀ",
+   "gu": "ત્રિકોણમિતિ કોષ્ટક"
+  },
+  "TRIGONOMETRIC TABLE": {
+   "en": "TRIGONOMETRIC TABLE",
+   "hi": "त्रिकोणमितीय सारणी",
+   "mr": "त्रिकोणमितीय कोष्टक",
+   "te": "త్రికోణమితి పట్టిక",
+   "or": "ତ୍ରିକୋଣମିତି ସାରଣୀ",
+   "gu": "ત્રિકોણમિતિ કોષ્ટક"
+  },
+  "SHOW ME THE ANGLE": {
+   "en": "SHOW ME THE ANGLE",
+   "hi": "कोण दिखाइए",
+   "mr": "कोन दाखवा",
+   "te": "కోణం చూపించండి",
+   "or": "କୋଣ ଦେଖାନ୍ତୁ",
+   "gu": "ખૂણો બતાવો"
+  },
+  "CLOSE": {
+   "en": "CLOSE",
+   "hi": "बंद करें",
+   "mr": "बंद करा",
+   "te": "మూసివేయండి",
+   "or": "ବନ୍ଦ କରନ୍ତୁ",
+   "gu": "બંધ કરો"
+  },
+  "ANGLE": {
+   "en": "ANGLE",
+   "hi": "कोण",
+   "mr": "कोन",
+   "te": "కోణం",
+   "or": "କୋଣ",
+   "gu": "ખૂણો"
+  },
+  "ADJACENT": {
+   "en": "ADJACENT",
+   "hi": "आधार",
+   "mr": "आधार",
+   "te": "ఆసన్న భుజం",
+   "or": "ଆଧାର",
+   "gu": "આધાર"
+  },
+  "OPPOSITE": {
+   "en": "OPPOSITE",
+   "hi": "लम्ब",
+   "mr": "लंब",
+   "te": "ఎదుటి భుజం",
+   "or": "ଲମ୍ବ",
+   "gu": "લંબ"
+  },
+  "HYPOTENUSE": {
+   "en": "HYPOTENUSE",
+   "hi": "कर्ण",
+   "mr": "कर्ण",
+   "te": "కర్ణం",
+   "or": "କର୍ଣ୍ଣ",
+   "gu": "કર્ણ"
+  },
+  "m": {
+   "en": "m",
+   "hi": "मी",
+   "mr": "मी",
+   "te": "మీ",
+   "or": "ମି",
+   "gu": "મી"
+  },
+  "You're given the {a} and the {b} — that pair is {fn} θ": {
+   "en": "You're given the {a} and the {b} — that pair is {fn} θ",
+   "hi": "आपको {a} और {b} दी गई है — यह जोड़ी {fn} θ है",
+   "mr": "तुम्हाला {a} आणि {b} दिली आहे — ही जोडी {fn} θ आहे",
+   "te": "మీకు {a} మరియు {b} ఇవ్వబడ్డాయి — ఆ జత {fn} θ",
+   "or": "ଆପଣଙ୍କୁ {a} ଏବଂ {b} ଦିଆଯାଇଛି — ଏହି ଯୋଡ଼ି {fn} θ",
+   "gu": "તમને {a} અને {b} આપેલ છે — આ જોડી {fn} θ છે"
+  },
+  "{fn} θ = {over} ÷ {under}": {
+   "en": "{fn} θ = {over} ÷ {under}",
+   "hi": "{fn} θ = {over} ÷ {under}",
+   "mr": "{fn} θ = {over} ÷ {under}",
+   "te": "{fn} θ = {over} ÷ {under}",
+   "or": "{fn} θ = {over} ÷ {under}",
+   "gu": "{fn} θ = {over} ÷ {under}"
+  },
+  "PERFECT!": {
+   "en": "PERFECT!",
+   "hi": "एकदम सही!",
+   "mr": "अगदी बरोबर!",
+   "te": "అద్భుతం!",
+   "or": "ଏକଦମ ଠିକ୍!",
+   "gu": "એકદમ સાચું!"
+  },
+  "BOOM!": {
+   "en": "BOOM!",
+   "hi": "धमाका!",
+   "mr": "धमाका!",
+   "te": "బూమ్!",
+   "or": "ଧମାକା!",
+   "gu": "ધડામ!"
+  },
+  "Too steep ⬇": {
+   "en": "Too steep ⬇",
+   "hi": "बहुत खड़ा ⬇",
+   "mr": "खूप उंच ⬇",
+   "te": "చాలా నిటారుగా ⬇",
+   "or": "ବହୁତ ଛିଡ଼ା ⬇",
+   "gu": "બહુ ઊભો ⬇"
+  },
+  "Too shallow ⬆": {
+   "en": "Too shallow ⬆",
+   "hi": "बहुत सपाट ⬆",
+   "mr": "खूप सपाट ⬆",
+   "te": "చాలా చదునుగా ⬆",
+   "or": "ବହୁତ ସମତଳ ⬆",
+   "gu": "બહુ સપાટ ⬆"
+  },
+  "Answer: {angle}°": {
+   "en": "Answer: {angle}°",
+   "hi": "उत्तर: {angle}°",
+   "mr": "उत्तर: {angle}°",
+   "te": "సమాధానం: {angle}°",
+   "or": "ଉତ୍ତର: {angle}°",
+   "gu": "જવાબ: {angle}°"
+  },
+  "OUT OF SHELLS": {
+   "en": "OUT OF SHELLS",
+   "hi": "गोले खत्म",
+   "mr": "गोळे संपले",
+   "te": "గుండ్లు అయిపోయాయి",
+   "or": "ଗୋଲା ଶେଷ",
+   "gu": "ગોળા ખતમ"
+  },
+  "TRY AGAIN": {
+   "en": "TRY AGAIN",
+   "hi": "फिर कोशिश करें",
+   "mr": "पुन्हा प्रयत्न करा",
+   "te": "మళ్ళీ ప్రయత్నించండి",
+   "or": "ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ",
+   "gu": "ફરી પ્રયાસ કરો"
+  },
+  "MISSION COMPLETE": {
+   "en": "MISSION COMPLETE",
+   "hi": "मिशन पूरा",
+   "mr": "मोहीम पूर्ण",
+   "te": "మిషన్ పూర్తయింది",
+   "or": "ମିଶନ ସମ୍ପୂର୍ଣ୍ଣ",
+   "gu": "મિશન પૂર્ણ"
+  },
+  "PLAY AGAIN": {
+   "en": "PLAY AGAIN",
+   "hi": "फिर से खेलें",
+   "mr": "पुन्हा खेळा",
+   "te": "మళ్ళీ ఆడండి",
+   "or": "ପୁଣି ଖେଳନ୍ତୁ",
+   "gu": "ફરી રમો"
+  },
+  "CONTINUE": {
+   "en": "CONTINUE",
+   "hi": "आगे बढ़ें",
+   "mr": "पुढे चला",
+   "te": "ముందుకు సాగండి",
+   "or": "ଆଗକୁ ବଢ଼ନ୍ତୁ",
+   "gu": "આગળ વધો"
+  }
+ }
+}
+</script>
 <div id="stage" class="is-pregame">
   <canvas id="game" width="1280" height="720" aria-hidden="true"></canvas>
 
@@ -747,35 +1049,42 @@ canvas{position:absolute;inset:0;display:block}
     <div id="msg" class="gemPlate" role="status" aria-live="polite"><span id="msgText"></span></div>
 
     <div id="utilBtns">
-      <button type="button" class="artBtn" id="hintBtn" title="Hint — which ratio is this?" aria-label="Hint"></button>
-      <button type="button" class="artBtn" id="resetBtn" title="Start this round again" aria-label="Start this round again"></button>
+      <button type="button" class="artBtn" id="hintBtn" title="Hint — which ratio is this?" aria-label="Hint"
+              data-i18n-title="Hint — which ratio is this?" data-i18n-aria="Hint"></button>
+      <button type="button" class="artBtn" id="resetBtn" title="Start this round again" aria-label="Start this round again"
+              data-i18n-title="Start this round again" data-i18n-aria="Start this round again"></button>
     </div>
 
     <div id="controlDock">
       <div class="stepperGroup">
-        <button type="button" class="stepBtn artBtn" id="downBtn" aria-label="Decrease angle"></button>
+        <button type="button" class="stepBtn artBtn" id="downBtn" aria-label="Decrease angle"
+                data-i18n-aria="Decrease angle"></button>
         <span class="thetaTag" aria-hidden="true">θ<i>=</i></span>
         <div class="valBox">
           <input id="angleInput" readonly value="0" autocomplete="off"
                  title="Angle — step it with + and −"
-                 aria-label="Angle in degrees, chosen from 0, 30, 45, 60 and 90">
+                 aria-label="Angle in degrees, chosen from 0, 30, 45, 60 and 90"
+                 data-i18n-title="Angle — step it with + and −"
+                 data-i18n-aria="Angle in degrees, chosen from 0, 30, 45, 60 and 90">
           <span class="deg" aria-hidden="true">°</span>
         </div>
-        <button type="button" class="stepBtn artBtn" id="upBtn" aria-label="Increase angle"></button>
+        <button type="button" class="stepBtn artBtn" id="upBtn" aria-label="Increase angle"
+                data-i18n-aria="Increase angle"></button>
       </div>
       <div class="dockDivider"></div>
-      <button type="button" class="artBtn" id="fireBtn" aria-label="Fire"></button>
+      <button type="button" class="artBtn" id="fireBtn" aria-label="Fire" data-i18n-aria="Fire"></button>
     </div>
   </div>
 
   <!-- the trig table: built in code so it can point at things (see TRIG_TABLE) -->
-  <div id="trigSheet" class="hidden" role="dialog" aria-modal="true" aria-label="Trigonometric table">
+  <div id="trigSheet" class="hidden" role="dialog" aria-modal="true" aria-label="Trigonometric table"
+       data-i18n-aria="Trigonometric table">
     <div class="trigPanel" role="document">
-      <div class="trigTitle">TRIGONOMETRIC TABLE</div>
+      <div class="trigTitle" data-i18n="TRIGONOMETRIC TABLE">TRIGONOMETRIC TABLE</div>
       <div class="trigScroll"><table id="trigTable"></table></div>
       <div class="trigFoot">
-        <button type="button" class="sheetBtn" id="trigReveal">SHOW ME THE ANGLE</button>
-        <button type="button" class="sheetBtn is-quiet" id="trigClose">CLOSE</button>
+        <button type="button" class="sheetBtn" id="trigReveal" data-i18n="SHOW ME THE ANGLE">SHOW ME THE ANGLE</button>
+        <button type="button" class="sheetBtn is-quiet" id="trigClose" data-i18n="CLOSE">CLOSE</button>
       </div>
     </div>
   </div>
@@ -957,9 +1266,206 @@ const REVEAL_KEYS = CUES.map(c=>c.key);
 const clamp01 = v => v<0 ? 0 : v>1 ? 1 : v;
 const cv = document.getElementById('game'), ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
-const FONT = '"Chakra Petch","Trebuchet MS",sans-serif';
+const FONT = '"Chakra Petch","Trebuchet MS","Noto Sans Devanagari","Noto Sans Gujarati",'
+           + '"Noto Sans Telugu","Noto Sans Oriya",sans-serif';
 const REDUCED_MOTION = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : {matches:false};
 const ambientMotionAllowed = () => !REDUCED_MOTION.matches;
+
+/* ============================================================
+   LAUNCH PARAMETERS
+   The host launches the book with a query string and everything below
+   reads from this one place: ?lan= picks the language, ?dev=1 opens the
+   raw signal firehose, and ?context_id / ?journey_id / ?medium are the
+   platform's own journey binding, echoed back into every statement.
+   ============================================================ */
+const QS = new URLSearchParams(location.search);
+
+/* ============================================================
+   LANGUAGE
+   Every line of screen text lives in i18n/strings.json, keyed by its
+   ENGLISH source line. That choice is what makes the fallback safe: if
+   the file cannot be fetched — opened straight off disk, say, where
+   fetch has no origin — t() hands back the key, and the key IS the
+   English line. The game loses its translations, never its text.
+   ============================================================ */
+const LANGS = ['en','hi','mr','te','or','gu'];
+const I18N = {
+  /* ?lan= is the documented switch; ?lang= is accepted because people type
+     it, and ?medium= (the platform's own field) is honoured last so a host
+     that only sets the medium still gets the right script on screen. */
+  lang: (v => LANGS.includes(v) ? v : 'en')(
+          String(QS.get('lan') || QS.get('lang') || QS.get('medium') || 'en').toLowerCase()),
+  strings: null,
+  /* The inline #i18nStrings block is read first so a file:// open is already
+     translated; the fetch then runs and wins if it succeeds, so a served
+     build always shows the latest i18n/strings.json without a rebuild. */
+  inline(){
+    const el = document.getElementById('i18nStrings');
+    if(!el) return null;
+    try { return JSON.parse(el.textContent).strings || null; }
+    catch(e){ return null; }
+  },
+  load(){
+    this.strings = this.inline();
+    return fetch('i18n/strings.json', {cache:'no-cache'})
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if(d && d.strings) this.strings = d.strings; })
+      .catch(() => {});   // keep the inline pack; English is already the key
+  },
+  t(key, vars){
+    const entry = this.strings && this.strings[key];
+    let out = (entry && (entry[this.lang] || entry.en)) || key;
+    if(vars) out = out.replace(/\{(\w+)\}/g, (m,k) => k in vars ? vars[k] : m);
+    return out;
+  }
+};
+const t = (key, vars) => I18N.t(key, vars);
+/* The markup carries its English inline (so a raw file:// open still reads),
+   and these three attributes name the msgid to swap it for. */
+function applyI18n(){
+  document.documentElement.lang = I18N.lang;
+  document.title = t('Tank vs Zombie — Angle Academy');
+  document.querySelectorAll('[data-i18n]')
+          .forEach(n => n.textContent = t(n.dataset.i18n));
+  document.querySelectorAll('[data-i18n-title]')
+          .forEach(n => n.title = t(n.dataset.i18nTitle));
+  document.querySelectorAll('[data-i18n-aria]')
+          .forEach(n => n.setAttribute('aria-label', t(n.dataset.i18nAria)));
+}
+
+/* ============================================================
+   PLATFORM BRIDGE — the outbound event stream (see XAPI_EVENTS.md)
+
+   Seven verbs, one shape: {verb, object, result, context}. They go out
+   through SwiftPAL.sendEvent when the platform bridge is present, and
+   fall back to a postMessage when it is not, so the same build runs
+   inside the app and on a bare dev server.
+
+   The 30-odd internal signals are a separate, DEV-ONLY channel
+   (GameBus.signal, ?dev=1). A production host sees the seven verbs and
+   nothing else.
+   ============================================================ */
+/* The stable content id of this book. It does NOT change per journey —
+   the journey binding arrives on the query string — so the same build can
+   be dropped into any course without colliding. ?skill_code= overrides it
+   for hosts that shelve the book under an id of their own. */
+const SKILL_CODE  = QS.get('skill_code') || 'MA10T01_L01_S01';
+const LO_CODE     = QS.get('lo_code') || SKILL_CODE.replace(/_S\d+$/, '');
+const MEDIUM      = QS.get('medium') || I18N.lang;
+const CONTEXT_ID  = QS.get('context_id') || null;
+const JOURNEY_ID  = QS.get('journey_id') || null;
+const DEV_SIGNALS = QS.get('dev') === '1';
+
+const GameBus = {
+  bootT: performance.now(),
+  runT: null,            // the tap on PLAY — what activity_completed's duration_ms measures from
+  running: false,        // false during the title screen and the #preview harnesses
+  completed: false,      // activity_completed fires once per run and only on the button
+  pendingQuestion: false,
+  answers: [],           // one row per question actually answered, first try recorded
+  current: null,
+
+  post(msg){
+    try{ (window.parent && window.parent !== window ? window.parent : window).postMessage(msg, '*'); }
+    catch(_){}
+  },
+  context(extra){
+    const c = {skill_code:SKILL_CODE, lo_code:LO_CODE, medium:MEDIUM,
+               session_ms: Math.round(performance.now() - this.bootT)};
+    if(extra) Object.assign(c, extra);
+    if(CONTEXT_ID) c.context_id = CONTEXT_ID;
+    if(JOURNEY_ID) c.journey_id = JOURNEY_ID;
+    return c;
+  },
+  send(verb, object, result, extra){
+    const statement = {verb, object};
+    if(result) statement.result = result;          // optional-by-verb: omitted, never null-stuffed
+    statement.context = this.context(extra);
+    try{
+      if(window.SwiftPAL && typeof window.SwiftPAL.sendEvent === 'function') window.SwiftPAL.sendEvent(statement);
+      else this.post({type:'swiftpal:xapi', statement});   // standalone dev, no bridge
+    }catch(_){}
+    if(DEV_SIGNALS) console.debug('[xapi]', verb, statement);
+    return statement;
+  },
+  /* the old firehose: still here, still useful for tuning, never shipped */
+  signal(name, data){
+    if(!DEV_SIGNALS) return;
+    this.post({type:'swiftpal:signal', name, data:data||null,
+               t:Math.round(performance.now() - this.bootT)});
+  },
+
+  /* every question-bearing statement carries the same five fields, so the
+     five rounds are told apart by context.template, not by new verbs */
+  questionCtx(){
+    const L = currentLevelData();
+    if(!L) return {phase:'practice'};
+    return {question_id:'L'+L.id, question_index:G.level,
+            template:'SOLVE_ANGLE_'+L.type.toUpperCase(),
+            question_format:'mcq', phase:'practice'};
+  },
+
+  launched(){
+    this.runT = performance.now();
+    this.running = true; this.completed = false;
+    this.answers = []; this.current = null;
+    this.send('activity_launched', {type:'activity', id:SKILL_CODE}, null, {phase:'intro'});
+  },
+  screen(id, phase){
+    this.send('screen_viewed', {type:'screen', id}, null, {phase: phase || 'practice'});
+  },
+  questionStarted(){
+    const L = currentLevelData(); if(!L) return;
+    const id = 'L'+L.id;
+    /* a round re-entered after a game over is answered again, not answered
+       twice — the old row goes so the final accuracy counts each question once */
+    this.answers = this.answers.filter(r => r.id !== id);
+    this.current = {id, index:G.level, first:null};
+    this.send('question_started', {type:'question', id}, null, this.questionCtx());
+  },
+  answered(correct){
+    /* the dial is a five-option MCQ that is never shuffled, so the position
+       shown and the position authored are the same index */
+    const idx = ANGLE_CHOICES.indexOf(G.angleTarget);
+    const attempt = G.tries;
+    if(this.current && this.current.first === null){
+      this.current.first = !!correct;
+      this.answers.push(this.current);
+    }
+    this.send('question_answered',
+      {type:'text', id:'opt_'+idx, text:G.angleTarget+'°', mediaUrl:null,
+       ui_index:idx, original_index:idx},
+      {score: (correct && attempt === 1) ? 1 : 0, attempt, is_correct: !!correct},
+      this.questionCtx());
+  },
+  hint(id){  this.send('hint_used',      {type:'hint',  id}, null, this.questionCtx()); },
+  audio(id){ this.send('audio_replayed', {type:'audio', id}, null, this.questionCtx()); },
+
+  /* first-try accuracy across everything answered — not the star score, and
+     emphatically not always 1 */
+  accuracy(){
+    if(!this.answers.length) return 0;
+    return Math.round(this.answers.filter(r => r.first).length / this.answers.length * 100) / 100;
+  },
+  /* Fires on the CONTINUE tap and nowhere else. The celebration screen
+     appearing is not completion: a host that redirects on this event will
+     always let the child watch the fireworks and choose to move on. */
+  complete(){
+    if(this.completed) return;
+    this.completed = true;
+    const score = this.accuracy();
+    const duration_ms = Math.round(performance.now() - (this.runT || this.bootT));
+    this.send('activity_completed', {type:'activity', id:SKILL_CODE},
+      {completed:true, progress:100, score, duration_ms}, {phase:'outro'});
+    this.post({type:'swiftpal:lesson_complete', report:{
+      skill_code:SKILL_CODE, lo_code:LO_CODE, score, duration_ms,
+      questions:this.answers.map(r => ({question_id:r.id, question_index:r.index,
+                                        first_try_correct:!!r.first}))
+    }});
+    this.post({type:'swiftpal:proceed'});     // the existing next-module message
+  }
+};
+window.GameBus = GameBus;
 
 /* ---------- responsive stage scaling ---------- */
 function fitStage(){
@@ -990,21 +1496,29 @@ const IMGS = {}, MANIFEST = {
   tank:'assets/tankSheet.webp',
   shot:'assets/TankShot.webp',
   pre:'assets/preLBD.webp',          // the painted title plate — wordmark and all
-  scene:'assets/bgm4.webp',         // complete 16:9 illustrated background plate
-  scene2:'assets/bgm2.webp', scene3:'assets/bgm1.webp',
-  scene4:'assets/bgm3.webp', scene5:'assets/bgm.webp',
-  cloud:'assets/cloud.webp',        // the one painted cloud every sky cloud is cut from
+  /* Five complete 16:9 plates of ONE moonlit swamp, cropped so all five put
+     their mossy lip on PLAY_SURFACE_Y. buildLayers() cross-fades them in this
+     order and then cycles, so what the order buys is spacing: the moon plate
+     recurs on a five-plate stride instead of on every screen. Each plate's
+     outer 360 stage px are deliberately generic — fog, reeds, plain wall — so
+     any tail dissolves into any head. */
+  scene:'assets/nbTrees.webp',      // drowned dead-tree cluster
+  scene2:'assets/nbMoon.webp',      // …the full moon, and the only plate that has it
+  scene3:'assets/nbGraves.webp',    // …a leaning graveyard on a fog-wrapped island
+  scene4:'assets/nbManor.webp',     // …the derelict manor, far back and candlelit
+  scene5:'assets/nbArch.webp',      // …a collapsed brick archway on the near bank
+  cloud:'assets/nbMist.webp',       // the one painted wisp every sky cloud is cut from
   // UI plates. btnPlus/btnMinus are both derived from the one painted plate
   // (its glyph inpainted out, then + / − drawn back on with the asset's own
   // stroke weight and shadow) and btnFire is the fire pill lifted off its
   // mockup background — so every button is the same artwork.
   btnPlus:'assets/btnPlus.webp', btnMinus:'assets/btnMinus.webp',
   btnFire:'assets/btnFire.webp',
-  // one complete structure per file — each round wears a different one
-  b1:'assets/building.webp',  b2:'assets/building2.webp',
-  b3:'assets/building3.webp', b4:'assets/building4.webp',
-  b5:'assets/building5.webp', b6:'assets/building6.webp',
-  b7:'assets/building7.webp', b8:'assets/building8.webp'
+  /* One complete ruin per file — each round wears a different one. Four
+     shapes for five rounds, so one repeats; assignBuildings() spends the
+     repeat on whichever round has the most choices. */
+  ruinCrypt:'assets/ruinCrypt.webp', ruinTower:'assets/ruinTower.webp',
+  ruinColumn:'assets/ruinColumn.webp'
 };
 function loadAll(cb){
   const keys = Object.keys(MANIFEST); let done = 0;
@@ -1142,16 +1656,26 @@ const zombieTypeOf = z => ZOMBIE_TYPES[z && z.type] || ZOMBIE_TYPES.shambler;
    deck   = y (image px) of the flat stand-surface on top
    deckCx = x (image px) at the centre of that flat spot — the whole
             building is positioned so this point sits under the zombie ---- */
+/* All three numbers are MEASURED off the file, never chosen: tools/fit_assets.py
+   reads the alpha box, then finds the widest level run along the silhouette's
+   top profile and takes its centre. That matters more here than it did for the
+   old skyline set, because these are ruins — their flat surface is not always
+   the highest thing in the file. The plinth's grass tufts stand 40px above the
+   slab a zombie stands on, and a deck read off the bounding box instead of the
+   profile would hang him in the air by that much.
+
+   THREE SHAPES, FIVE ROUNDS. assets/ruinPlinth.webp was drawn for this set and
+   is deliberately NOT in it: at 2.55:1 the slab reaches 1.25 of its own height
+   left of its deck, and a shape is pinned by its deck, so it would stand on the
+   tank in every round — stagingFits() rejects it five times out of five. The
+   number to design against is that ratio, not the silhouette: with a centred
+   deck it holds only while the shape is about as tall as it is wide (aspect
+   <= ~1.2), which is why a wide platform in this geometry needs a tall footing
+   under the slab rather than two stubby piers. */
 const BUILDINGS = [
-  // deck = first solid row at the stand column, measured off each file
-  {img:'b1', box:[23,276,1079,792],  deck:277, deckCx:557},   // garage — vent cap
-  {img:'b2', box:[56,140,998,1122],  deck:143, deckCx:550},   // house — flat slab roof
-  {img:'b3', box:[64,89,1042,1216],  deck:98,  deckCx:505},   // silo — yellow cap
-  {img:'b4', box:[67,15,988,1368],   deck:26,  deckCx:555},   // water tank — top cap
-  {img:'b5', box:[27,51,1034,1282],  deck:56,  deckCx:666},   // crane rig — drum top
-  {img:'b6', box:[19,135,1082,1095], deck:409, deckCx:695},   // substation — centre drum cap
-  {img:'b7', box:[175,38,851,1320],  deck:42,  deckCx:555},   // radio tower — top cap
-  {img:'b8', box:[77,69,1009,1300],  deck:71,  deckCx:475}    // boiler — crown rim
+  {img:'ruinCrypt',  box:[91,280,847,1010], deck:329, deckCx:491},  // mausoleum — flat slab lid
+  {img:'ruinTower',  box:[161,139,712,1267],deck:163, deckCx:447},  // snapped bell tower — broken top course
+  {img:'ruinColumn', box:[321,28,403,1484], deck:57,  deckCx:546}   // vine-wrapped column — flat capital
 ];
 // Each building scales as one piece, so it keeps its native aspect — which
 // makes WIDTH the real constraint, and specifically how far a shape reaches
@@ -1242,9 +1766,10 @@ const givenValues = L => {
    angle — the table is still theirs to read. */
 function hintFor(L, stage){
   const [a,b] = GIVEN_SIDES[L.type];
-  if(stage <= 0) return `You're given the ${SIDE_WORD[a]} and the ${SIDE_WORD[b]} — that pair is ${L.type} θ`;
+  if(stage <= 0) return t("You're given the {a} and the {b} — that pair is {fn} θ",
+                          {a:t(SIDE_WORD[a]), b:t(SIDE_WORD[b]), fn:L.type});
   const v = givenValues(L), [over, under] = RATIO_OVER[L.type];
-  return `${L.type} θ = ${v[over]} ÷ ${v[under]}`;
+  return t('{fn} θ = {over} ÷ {under}', {fn:L.type, over:v[over], under:v[under]});
 }
 /* The level table is data, and data that lies is worse than none: a round
    whose numbers do not actually make its stated angle would teach the wrong
@@ -1523,11 +2048,16 @@ function buildLayers(){
   bakeBoomLayers();
 }
 
-/* cloud.webp is a 1254² plate that is ~59% empty padding, and no cloud ever
-   draws wider than ~330px. Bake the tight crop down once into a right-sized
-   offscreen canvas: the per-frame draws then sample a small texture instead
-   of a 6MB one, and the downscale is filtered once instead of every frame. */
-const CLOUD_SRC = [40,352,1174,553];      // measured content box in cloud.webp
+/* nbMist.webp is a 1254² plate that is mostly empty padding, and no cloud
+   ever draws wider than ~330px. Bake the tight crop down once into a
+   right-sized offscreen canvas: the per-frame draws then sample a small
+   texture instead of a 6MB one, and the downscale is filtered once instead of
+   every frame.
+   The wisp is far flatter than the daytime cloud it replaces — 3.8:1 against
+   2.1:1 — so the same widths now draw a thread of ground fog rather than a
+   puff, which is what a night sky over a swamp wants. The sizes below are
+   unchanged on purpose. */
+const CLOUD_SRC = [38,465,1191,312];      // measured content box in nbMist.webp
 function bakeCloud(){
   const [sx,sy,sw,sh] = CLOUD_SRC;
   const bw = 512, bh = Math.round(bw*sh/sw);
@@ -1803,7 +2333,9 @@ function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='bri
   }
 
   setAngle(DEFAULT_START_ANGLE);
-  if(!keepTries) resetHint();      // a NEW round starts the scaffolding over
+  /* keepTries means the same question is being re-read, not a new one — the
+     restart key replays the briefing without re-mounting the question. */
+  if(!keepTries){ resetHint(); GameBus.pendingQuestion = true; }
   if(enter==='brief') beginBriefing({fast});
   else if(enter==='aim') enterAiming({instant:true});
   else { clearReveal(); G.guideAlpha=0; stowDock(true); updateControlsForState(); }
@@ -1838,6 +2370,7 @@ function beginIntro(){
   syncWorldPositions();
   setObjective('');
   setGameState(GameState.INTRO);
+  GameBus.screen('intro', 'intro');
   G.drive = {t:0, nextLevel:null, tankStart:G.tankWorldX, tankEnd:restTank,
              cameraStart:G.cameraX, cameraEnd:restCam, onArrive:beginBriefing};
   if(!ambientMotionAllowed()){ poseDriveAt(1); finishDrive(); }
@@ -1854,6 +2387,12 @@ function beginBriefing(opts){
      explanation, and outrunning it to save a second is a bad trade. A
      retry is the exception; that player has seen this exact triangle. */
   G.brief = {t:0, rate:fast ? 1.6 : (G.level===0 ? 1 : 1.12), fired:0};
+  /* the answerable screen is mounting: every route into a round — the intro
+     hand-off, the drive to the next tower, a retry — passes through here */
+  if(GameBus.running && GameBus.pendingQuestion){
+    GameBus.pendingQuestion = false;
+    GameBus.questionStarted();
+  }
   if(!ambientMotionAllowed()) finishBriefing();
 }
 function updateBriefing(dt){
@@ -1870,7 +2409,7 @@ function enterAiming({instant=false}={}){
   revealAll(); stowDock(false);
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   if(instant){ G.guideAlpha = 1; G.angleShown = BARREL_REST_ANGLE; }
-  setObjective('Solve for θ');
+  setObjective(t('Solve for θ'));
   setGameState(GameState.AIMING);
   angleInput.value = G.angleTarget;
 }
@@ -1962,16 +2501,16 @@ const TRIG_ROWS = [
 let trigBuilt = false;
 function buildTrigTable(){
   if(trigBuilt) return;
-  const t = $('trigTable'), mk = (tag,cls,txt)=>{
+  const tbl = $('trigTable'), mk = (tag,cls,txt)=>{
     const n = document.createElement(tag); n.className = cls;
     // our own data, never user text: the only markup added is the radical's bar
     if(txt!==undefined) n.innerHTML = String(txt).replace(/√(\d+)/g,'√<span class="rad">$1</span>');
     return n;
   };
   const head = document.createElement('tr'); head.className = 'headRow';
-  head.appendChild(mk('th','corner','ANGLE'));
+  head.appendChild(mk('th','corner', t('ANGLE')));
   TRIG_ANGLES.forEach((a,i)=>{ const th = mk('th','ang', a+'°'); th.dataset.col = i; head.appendChild(th); });
-  t.appendChild(head);
+  tbl.appendChild(head);
   TRIG_ROWS.forEach(r=>{
     const tr = document.createElement('tr'); tr.dataset.fn = r.fn;
     tr.appendChild(mk('th','fn', r.label));
@@ -1985,7 +2524,7 @@ function buildTrigTable(){
       } else td.textContent = c;
       tr.appendChild(td);
     });
-    t.appendChild(tr);
+    tbl.appendChild(tr);
   });
   trigBuilt = true;
 }
@@ -2019,6 +2558,10 @@ function openTrigSheet(){
   trigRevealed = false;
   $('trigSheet').classList.remove('hidden');
   trigOpen = true;
+  /* Two rungs, one verb: the rung is the object's id, never a new event name.
+     Emitted here rather than in pressHint because rung two has a button of
+     its own inside the sheet and never passes back through the bulb. */
+  GameBus.hint('bulb');
   requestAnimationFrame(()=>$('trigReveal').focus({preventScroll:true}));
 }
 function revealTrigAnswer(){
@@ -2035,6 +2578,7 @@ function revealTrigAnswer(){
      ask by the lit column and the cell where they cross. */
   $('trigReveal').hidden = true;
   trigRevealed = true;
+  GameBus.hint('bulb_reveal');
   AU.blip(988);
   $('trigClose').focus({preventScroll:true});
 }
@@ -2059,12 +2603,14 @@ function pressHint(){
 function pressReset(){
   if(G.state!==GameState.AIMING || trigOpen) return;
   AU.click(); hideMsg(); callHint(false);
+  GameBus.audio('briefing');    // the round's explanation, cue blips and all, played again
   initializeLevel(G.level, {resetHearts:false, keepTries:true, revive:true, enter:'brief', fast:true});
 }
 function updateControlsForState(){
   setControlsEnabled(G.state===GameState.AIMING);
 }
 function setGameState(newState){
+  GameBus.signal('state', {from:G.state, to:newState, level:G.level, tries:G.tries});
   G.state = newState;
   document.body.dataset.state = newState;
   $('stage').classList.toggle('is-pregame', newState===GameState.PREGAME);
@@ -2205,12 +2751,12 @@ function toggleSound(){
    the heading screen readers need.
    ============================================================ */
 function titleMarkup(ready=true){
-  return `<h1 class="srOnly">Tank vs Zombie — Angle Academy</h1>
+  return `<h1 class="srOnly">${t('Tank vs Zombie — Angle Academy')}</h1>
 
       <div class="titleCtas">
         ${ready ? '' : '<div id="loadBar"><div id="loadFill"></div></div>'}
         <button type="button" class="playTitleBtn" id="playBtn" ${ready?'':'disabled'}
-                title="Play — or press Enter">${ready?'PLAY GAME':'LOADING'}</button>
+                title="${t('Play — or press Enter')}">${ready?t('PLAY GAME'):t('LOADING')}</button>
       </div>`;
 }
 function wireTitleButtons(){
@@ -2228,7 +2774,7 @@ function setTitleReady(){
   }
   if(play){
     play.disabled = false;
-    play.textContent = 'PLAY GAME';
+    play.textContent = t('PLAY GAME');
   }
   wireTitleButtons();
 }
@@ -2238,6 +2784,7 @@ function startGame(){
   if(play && play.disabled) return;
   startingMission = true;
   AU.init(); AU.resume(); AU.click();
+  GameBus.launched();
   hideMsg();
   const overlay = $('overlay');
   overlay.classList.add('leaving');
@@ -2320,6 +2867,7 @@ function launchShell(){
      the ANSWER rather than on the sprite it happens to graze, so no amount of
      hitbox padding can ever hand a round to a wrong table value. */
   G.shotIsAnswer = G.angleTarget === currentLevelData().ans;
+  GameBus.signal('shot_fired', {angle:G.angleTarget, answer:currentLevelData().ans, attempt:G.tries});
   const aimPath = calculateAimPath(G.angleTarget);
   G.aimPath = aimPath;
   G.shell = { x:aimPath.startX, y:aimPath.startY, a:aimPath.screenAngle, path:aimPath, travelled:0, minDz:1e9 };
@@ -2330,6 +2878,7 @@ function launchShell(){
 }
 
 function resolveHit(){
+  GameBus.answered(true);
   if(G.activeNode) G.activeNode.status='CLEARED';
   callHint(false);
   G.zombie.mode='burst'; G.zombie.burstF=0; G.zombie.animT=0;
@@ -2339,39 +2888,41 @@ function resolveHit(){
   G.score+=pts;
   spawnStars(G.zombie.x, G.zombie.y, 16);
   G.floaters.push({x:G.zombie.x, y:G.zombie.y-50, txt:'+'+pts, t:0});
-  showMsg(G.tries===1 ? 'PERFECT!' : 'BOOM!', 2200);
+  showMsg(G.tries===1 ? t('PERFECT!') : t('BOOM!'), 2200);
   setObjective('');                        // the round is answered; nothing left to ask
   setTimeout(()=>AU.success(), 480);
   setGameState(GameState.HIT_REACTION);
 }
 
 function resolveMiss(){
+  GameBus.answered(false);
   AU.explode(false);
   G.shake=5; G.hearts--;
   G.zombie.mode='idle';
   const L=currentLevelData(), v=G.angleTarget;
   /* the correction points at the DIAL, not at pixels: too steep or too
      shallow is the only thing a stepped answer can be wrong by. */
-  let hint = v > L.ans ? 'Too steep ⬇' : 'Too shallow ⬆';
+  let hint = t(v > L.ans ? 'Too steep ⬇' : 'Too shallow ⬆');
   if(G.hearts===1) hint += `  💡 ${hintFor(L, 1)}`;   // the last life buys the ratio
   AU.wrong();
   closeTrigSheet(); callHint(true);
   if(G.hearts<=0){
-    showMsg(`Answer: ${L.ans}°`, 3200);
+    showMsg(t('Answer: {angle}°', {angle:L.ans}), 3200);
     setTimeout(gameOver, 1900);
   } else {
     showMsg(hint, 4200);
     G.barrelTarget = BARREL_REST_ANGLE;     // gun settles back down for another lay
-    setObjective('Solve for θ');
+    setObjective(t('Solve for θ'));
     setGameState(GameState.AIMING);
   }
 }
 
 function gameOver(){
   setGameState(GameState.GAME_OVER);
-  showCard(`<h2>OUT OF SHELLS</h2>
+  GameBus.screen('game_over', 'outro');
+  showCard(`<h2>${t('OUT OF SHELLS')}</h2>
     <p>⭐ ${G.score}</p>
-    <button type="button" class="bigBtn" onclick="retryLevel()">TRY AGAIN</button>`);
+    <button type="button" class="bigBtn" onclick="retryLevel()">${t('TRY AGAIN')}</button>`);
 }
 window.retryLevel = ()=>{
   AU.click(); $('overlay').classList.add('hidden');
@@ -2381,14 +2932,30 @@ window.retryLevel = ()=>{
 function winGame(){
   setGameState(GameState.GAME_COMPLETE); AU.fanfare();
   saveBestScore(G.score);
+  GameBus.screen('celebration', 'outro');
   const s = G.score>=1200?'⭐⭐⭐' : G.score>=800?'⭐⭐☆':'⭐☆☆';
-  showCard(`<h1>MISSION COMPLETE</h1>
+  /* CONTINUE is the only thing in the game that reports completion — see
+     proceedNext. PLAY AGAIN sits beside it so a child who wants another run
+     is not forced through the hand-off to get one. */
+  showCard(`<h1>${t('MISSION COMPLETE')}</h1>
     <div class="stars">${s}</div>
     <p>⭐ ${G.score}</p>
-    <button type="button" class="bigBtn" onclick="playAgain()">PLAY AGAIN</button>`);
+    <div class="cardActions">
+      <button type="button" class="bigBtn" id="proceedBtn" onclick="proceedNext()">${t('CONTINUE')}</button>
+      <button type="button" class="bigBtn is-quiet" onclick="playAgain()">${t('PLAY AGAIN')}</button>
+    </div>`);
 }
+/* The hand-off. activity_completed, the validator report and the existing
+   swiftpal:proceed message all hang off THIS tap and nothing earlier, so a
+   host that redirects on completion can never cut the celebration short. */
+window.proceedNext = ()=>{
+  AU.click();
+  const btn = $('proceedBtn'); if(btn) btn.disabled = true;
+  GameBus.complete();
+};
 window.playAgain = ()=>{
   AU.click(); $('overlay').classList.add('hidden');
+  GameBus.launched();          // a second run is a second activity, counted on its own
   G.level=0; G.score=0; G.hearts=3;
   resetWorld();
   initializeLevel(0, {resetHearts:true, revive:true, enter:'none'});
@@ -2903,12 +3470,13 @@ function drawBoomWord(s){
   ctx.font=`900 168px ${FONT}`;
   ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.lineJoin='round';
-  ctx.fillStyle='#160b05'; ctx.fillText('BOOM!', 13, 16);       // the comic's offset block
-  ctx.lineWidth=26; ctx.strokeStyle='#160b05'; ctx.strokeText('BOOM!',0,0);
+  const word = t('BOOM!');
+  ctx.fillStyle='#160b05'; ctx.fillText(word, 13, 16);          // the comic's offset block
+  ctx.lineWidth=26; ctx.strokeStyle='#160b05'; ctx.strokeText(word,0,0);
   const g = ctx.createLinearGradient(0,-80,0,80);
   g.addColorStop(0,'#f0483a'); g.addColorStop(1,'#bf1f16');
-  ctx.fillStyle=g; ctx.fillText('BOOM!',0,0);
-  ctx.lineWidth=4; ctx.strokeStyle='rgba(255,214,69,.75)'; ctx.strokeText('BOOM!',0,0);
+  ctx.fillStyle=g; ctx.fillText(word,0,0);
+  ctx.lineWidth=4; ctx.strokeStyle='rgba(255,214,69,.75)'; ctx.strokeText(word,0,0);
   ctx.restore();
 }
 /* Drawn outside the shake transform: this panel is the screen's whole
@@ -3232,7 +3800,8 @@ function trigTriangle(){
   return {ax, ay, bx:z.x, by:ay, cx:z.x, cy:z.y};
 }
 function meters(v){
-  return Math.abs(v-Math.round(v))<.05 ? `${Math.round(v)} m` : `${v.toFixed(1)} m`;
+  const n = Math.abs(v-Math.round(v))<.05 ? Math.round(v) : v.toFixed(1);
+  return `${n} ${t('m')}`;
 }
 /* Every measured mark is struck the same way, so the whole triangle reads as
    one filament of light: a faint dark halo (so it survives a bright wall), a
@@ -3421,9 +3990,9 @@ function drawTriangleLegs(){
    committed — where the barrel is actually pointing. */
 function drawGuides(){
   if(G.guideAlpha<=.01) return;
-  const t = trigTriangle(); if(!t) return;
+  const tri = trigTriangle(); if(!tri) return;
   const L = currentLevelData();
-  const inSign = Math.sign(t.ax-t.bx) || -1, upSign = Math.sign(t.cy-t.by) || -1;
+  const inSign = Math.sign(tri.ax-tri.bx) || -1, upSign = Math.sign(tri.cy-tri.by) || -1;
 
   const ru = clamp01((G.reveal.opp-.5)/.35);
   if(ru>0){
@@ -3432,19 +4001,19 @@ function drawGuides(){
     /* held `gap` off both legs: drawn flush it was a third stroke crossing
        the very junction it is meant to annotate, and the corner turned to
        mush. Butt caps for the same reason the legs have them. */
-    glowStroke(()=>elbowPath(t.bx+inSign*gap, t.by+upSign*gap, inSign*s, upSign*s),
+    glowStroke(()=>elbowPath(tri.bx+inSign*gap, tri.by+upSign*gap, inSign*s, upSign*s),
                {w:2.6, halo:5.4, blur:.8, cap:'butt'});
     ctx.restore();
   }
 
   if(G.reveal.theta>0){
-    const ans = Math.atan2(t.ay-t.cy, t.cx-t.ax);    // the unknown, straight off the geometry
+    const ans = Math.atan2(tri.ay-tri.cy, tri.cx-tri.ax);    // the unknown, straight off the geometry
     const u = G.reveal.theta, R = 104, swept = ans*u;
     ctx.save(); ctx.globalAlpha *= G.guideAlpha;
-    glowStroke(()=>{ ctx.beginPath(); ctx.arc(t.ax,t.ay,R,-swept,0); },
+    glowStroke(()=>{ ctx.beginPath(); ctx.arc(tri.ax,tri.ay,R,-swept,0); },
                {w:3.6, halo:7, cap:'butt'});
     const mid = swept*.5;
-    guideText('θ', t.ax+Math.cos(mid)*(R+32), t.ay-Math.sin(mid)*(R+32), {size:26+8*(1-u)});
+    guideText('θ', tri.ax+Math.cos(mid)*(R+32), tri.ay-Math.sin(mid)*(R+32), {size:26+8*(1-u)});
     ctx.restore();
   }
 
@@ -3461,15 +4030,15 @@ function drawGuides(){
      two are never near it. */
   const clearOfTank = TANK.x - G.recoil*.6 + TANK.w + 12;
   const SIDE = {
-    adj: {x:(t.ax+t.bx)/2,      y:t.by+50,             cap:'ADJACENT',   align:'center',
+    adj: {x:tri.ax+(tri.bx-tri.ax)/2, y:tri.by+50,                 cap:t('ADJACENT'),   align:'center',
           minLeft:clearOfTank},
-    opp: {x:t.bx+22,            y:(t.by+t.cy)/2,       cap:'OPPOSITE',   align:'left'},
-    hyp: {x:(t.ax+t.cx)/2 - 26, y:(t.ay+t.cy)/2 - 40,  cap:'HYPOTENUSE', align:'right'}
+    opp: {x:tri.bx+22,                y:(tri.by+tri.cy)/2,         cap:t('OPPOSITE'),   align:'left'},
+    hyp: {x:(tri.ax+tri.cx)/2 - 26,   y:(tri.ay+tri.cy)/2 - 40,    cap:t('HYPOTENUSE'), align:'right'}
   };
   [G.reveal.chipA, G.reveal.chipO].forEach((u0,i)=>{
     const u = u0 * G.chipAlpha;
     const p = SIDE[given[i]]; if(!p) return;
-    const shown = (L.show && L.show[i]) ? `${L.show[i]} m` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
+    const shown = (L.show && L.show[i]) ? `${L.show[i]} ${t('m')}` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
     guideCard(p.x, p.y, p.cap, shown, u, p.align, p.minLeft);
   });
   ctx.restore();
@@ -3631,12 +4200,10 @@ function render(){
 /* ============================================================
    BOOT
    ============================================================ */
-$('overlayCard').innerHTML = titleMarkup(false);
-wireTitleButtons();
-
-loadAll(()=>{
+function onAssetsReady(){
   buildLayers();
   setTitleReady();
+  GameBus.screen('start', 'intro');
   setupLevel({enter:'none'});               // so the title screen shows a live scene behind the start layer
   setGameState(GameState.PREGAME);
   const dp = location.hash.match(/^#previewdrive(\d{1,3})$/);
@@ -3701,6 +4268,17 @@ loadAll(()=>{
     if(pv[2]) setTimeout(()=>{ setAngle(Math.round(currentLevelData().ans)); pressFire(); }, 700);
   }
   requestAnimationFrame(loop);
+}
+
+/* The strings land before the first painted frame, so the loading bar and the
+   PLAY key are already in the child's language — there is no English flash to
+   swap out. If the file cannot be fetched, t() falls through to its keys and
+   the game boots in English rather than not at all. */
+I18N.load().then(()=>{
+  applyI18n();
+  $('overlayCard').innerHTML = titleMarkup(false);
+  wireTitleButtons();
+  loadAll(onAssetsReady);
 });
 </script>
 </body>

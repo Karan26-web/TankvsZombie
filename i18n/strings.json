@@ -1,0 +1,299 @@
+{
+  "meta": {
+    "note": "Every line of screen text in Tank vs Zombie — Angle Academy. The KEY is the English source line, so a missing translation degrades to readable English instead of a blank or a raw id.",
+    "param": "lan",
+    "example": "index.html?lan=gu",
+    "default": "en",
+    "placeholders": "Anything in {braces} is substituted at runtime and must survive translation unchanged.",
+    "untranslated": "sin / cos / tan, θ, the degree sign and the trig table's own numbers are mathematical notation and are deliberately NOT translated.",
+    "languages": {
+      "en": "English",
+      "hi": "हिन्दी",
+      "mr": "मराठी",
+      "te": "తెలుగు",
+      "or": "ଓଡ଼ିଆ",
+      "gu": "ગુજરાતી"
+    }
+  },
+
+  "strings": {
+    "Tank vs Zombie — Angle Academy": {
+      "en": "Tank vs Zombie — Angle Academy",
+      "hi": "टैंक बनाम ज़ॉम्बी — कोण अकादमी",
+      "mr": "टँक विरुद्ध झोंबी — कोन अकादमी",
+      "te": "ట్యాంక్ vs జాంబీ — కోణం అకాడమీ",
+      "or": "ଟ୍ୟାଙ୍କ ବନାମ ଜୋମ୍ବି — କୋଣ ଏକାଡେମୀ",
+      "gu": "ટેન્ક વિરુદ્ધ ઝોમ્બી — ખૂણા અકાદમી"
+    },
+    "PLAY GAME": {
+      "en": "PLAY GAME",
+      "hi": "खेल शुरू करें",
+      "mr": "खेळ सुरू करा",
+      "te": "ఆట మొదలుపెట్టండి",
+      "or": "ଖେଳ ଆରମ୍ଭ କରନ୍ତୁ",
+      "gu": "રમત શરૂ કરો"
+    },
+    "LOADING": {
+      "en": "LOADING",
+      "hi": "लोड हो रहा है",
+      "mr": "लोड होत आहे",
+      "te": "లోడ్ అవుతోంది",
+      "or": "ଲୋଡ୍ ହେଉଛି",
+      "gu": "લોડ થઈ રહ્યું છે"
+    },
+    "Play — or press Enter": {
+      "en": "Play — or press Enter",
+      "hi": "खेलें — या Enter दबाएँ",
+      "mr": "खेळा — किंवा Enter दाबा",
+      "te": "ఆడండి — లేదా Enter నొక్కండి",
+      "or": "ଖେଳନ୍ତୁ — କିମ୍ବା Enter ଦବାନ୍ତୁ",
+      "gu": "રમો — અથવા Enter દબાવો"
+    },
+
+    "Solve for θ": {
+      "en": "Solve for θ",
+      "hi": "θ ज्ञात कीजिए",
+      "mr": "θ शोधा",
+      "te": "θ కనుగొనండి",
+      "or": "θ ନିର୍ଣ୍ଣୟ କରନ୍ତୁ",
+      "gu": "θ શોધો"
+    },
+    "Hint — which ratio is this?": {
+      "en": "Hint — which ratio is this?",
+      "hi": "संकेत — यह कौन-सा अनुपात है?",
+      "mr": "सूचना — हे कोणते गुणोत्तर आहे?",
+      "te": "సూచన — ఇది ఏ నిష్పత్తి?",
+      "or": "ସୂଚନା — ଏହା କେଉଁ ଅନୁପାତ?",
+      "gu": "સંકેત — આ કયો ગુણોત્તર છે?"
+    },
+    "Hint": {
+      "en": "Hint",
+      "hi": "संकेत",
+      "mr": "सूचना",
+      "te": "సూచన",
+      "or": "ସୂଚନା",
+      "gu": "સંકેત"
+    },
+    "Start this round again": {
+      "en": "Start this round again",
+      "hi": "यह चरण फिर से शुरू करें",
+      "mr": "ही फेरी पुन्हा सुरू करा",
+      "te": "ఈ రౌండ్‌ను మళ్ళీ ప్రారంభించండి",
+      "or": "ଏହି ରାଉଣ୍ଡ ପୁନର୍ବାର ଆରମ୍ଭ କରନ୍ତୁ",
+      "gu": "આ રાઉન્ડ ફરીથી શરૂ કરો"
+    },
+    "Decrease angle": {
+      "en": "Decrease angle",
+      "hi": "कोण घटाएँ",
+      "mr": "कोन कमी करा",
+      "te": "కోణం తగ్గించండి",
+      "or": "କୋଣ କମାନ୍ତୁ",
+      "gu": "ખૂણો ઘટાડો"
+    },
+    "Increase angle": {
+      "en": "Increase angle",
+      "hi": "कोण बढ़ाएँ",
+      "mr": "कोन वाढवा",
+      "te": "కోణం పెంచండి",
+      "or": "କୋଣ ବଢ଼ାନ୍ତୁ",
+      "gu": "ખૂણો વધારો"
+    },
+    "Angle — step it with + and −": {
+      "en": "Angle — step it with + and −",
+      "hi": "कोण — + और − से बदलें",
+      "mr": "कोन — + आणि − ने बदला",
+      "te": "కోణం — + మరియు − తో మార్చండి",
+      "or": "କୋଣ — + ଓ − ଦ୍ୱାରା ବଦଳାନ୍ତୁ",
+      "gu": "ખૂણો — + અને − થી બદલો"
+    },
+    "Angle in degrees, chosen from 0, 30, 45, 60 and 90": {
+      "en": "Angle in degrees, chosen from 0, 30, 45, 60 and 90",
+      "hi": "डिग्री में कोण, 0, 30, 45, 60 और 90 में से चुना गया",
+      "mr": "अंशांमधील कोन, 0, 30, 45, 60 आणि 90 मधून निवडलेला",
+      "te": "డిగ్రీలలో కోణం, 0, 30, 45, 60 మరియు 90 నుండి ఎంచుకున్నది",
+      "or": "ଡିଗ୍ରୀରେ କୋଣ, 0, 30, 45, 60 ଏବଂ 90 ମଧ୍ୟରୁ ବଛା",
+      "gu": "ડિગ્રીમાં ખૂણો, 0, 30, 45, 60 અને 90 માંથી પસંદ કરેલો"
+    },
+    "Fire": {
+      "en": "Fire",
+      "hi": "फ़ायर",
+      "mr": "फायर",
+      "te": "కాల్చండి",
+      "or": "ଫାୟାର",
+      "gu": "ફાયર"
+    },
+
+    "Trigonometric table": {
+      "en": "Trigonometric table",
+      "hi": "त्रिकोणमितीय सारणी",
+      "mr": "त्रिकोणमितीय कोष्टक",
+      "te": "త్రికోణమితి పట్టిక",
+      "or": "ତ୍ରିକୋଣମିତି ସାରଣୀ",
+      "gu": "ત્રિકોણમિતિ કોષ્ટક"
+    },
+    "TRIGONOMETRIC TABLE": {
+      "en": "TRIGONOMETRIC TABLE",
+      "hi": "त्रिकोणमितीय सारणी",
+      "mr": "त्रिकोणमितीय कोष्टक",
+      "te": "త్రికోణమితి పట్టిక",
+      "or": "ତ୍ରିକୋଣମିତି ସାରଣୀ",
+      "gu": "ત્રિકોણમિતિ કોષ્ટક"
+    },
+    "SHOW ME THE ANGLE": {
+      "en": "SHOW ME THE ANGLE",
+      "hi": "कोण दिखाइए",
+      "mr": "कोन दाखवा",
+      "te": "కోణం చూపించండి",
+      "or": "କୋଣ ଦେଖାନ୍ତୁ",
+      "gu": "ખૂણો બતાવો"
+    },
+    "CLOSE": {
+      "en": "CLOSE",
+      "hi": "बंद करें",
+      "mr": "बंद करा",
+      "te": "మూసివేయండి",
+      "or": "ବନ୍ଦ କରନ୍ତୁ",
+      "gu": "બંધ કરો"
+    },
+    "ANGLE": {
+      "en": "ANGLE",
+      "hi": "कोण",
+      "mr": "कोन",
+      "te": "కోణం",
+      "or": "କୋଣ",
+      "gu": "ખૂણો"
+    },
+
+    "ADJACENT": {
+      "en": "ADJACENT",
+      "hi": "आधार",
+      "mr": "आधार",
+      "te": "ఆసన్న భుజం",
+      "or": "ଆଧାର",
+      "gu": "આધાર"
+    },
+    "OPPOSITE": {
+      "en": "OPPOSITE",
+      "hi": "लम्ब",
+      "mr": "लंब",
+      "te": "ఎదుటి భుజం",
+      "or": "ଲମ୍ବ",
+      "gu": "લંબ"
+    },
+    "HYPOTENUSE": {
+      "en": "HYPOTENUSE",
+      "hi": "कर्ण",
+      "mr": "कर्ण",
+      "te": "కర్ణం",
+      "or": "କର୍ଣ୍ଣ",
+      "gu": "કર્ણ"
+    },
+    "m": {
+      "en": "m",
+      "hi": "मी",
+      "mr": "मी",
+      "te": "మీ",
+      "or": "ମି",
+      "gu": "મી"
+    },
+
+    "You're given the {a} and the {b} — that pair is {fn} θ": {
+      "en": "You're given the {a} and the {b} — that pair is {fn} θ",
+      "hi": "आपको {a} और {b} दी गई है — यह जोड़ी {fn} θ है",
+      "mr": "तुम्हाला {a} आणि {b} दिली आहे — ही जोडी {fn} θ आहे",
+      "te": "మీకు {a} మరియు {b} ఇవ్వబడ్డాయి — ఆ జత {fn} θ",
+      "or": "ଆପଣଙ୍କୁ {a} ଏବଂ {b} ଦିଆଯାଇଛି — ଏହି ଯୋଡ଼ି {fn} θ",
+      "gu": "તમને {a} અને {b} આપેલ છે — આ જોડી {fn} θ છે"
+    },
+    "{fn} θ = {over} ÷ {under}": {
+      "en": "{fn} θ = {over} ÷ {under}",
+      "hi": "{fn} θ = {over} ÷ {under}",
+      "mr": "{fn} θ = {over} ÷ {under}",
+      "te": "{fn} θ = {over} ÷ {under}",
+      "or": "{fn} θ = {over} ÷ {under}",
+      "gu": "{fn} θ = {over} ÷ {under}"
+    },
+
+    "PERFECT!": {
+      "en": "PERFECT!",
+      "hi": "एकदम सही!",
+      "mr": "अगदी बरोबर!",
+      "te": "అద్భుతం!",
+      "or": "ଏକଦମ ଠିକ୍!",
+      "gu": "એકદમ સાચું!"
+    },
+    "BOOM!": {
+      "en": "BOOM!",
+      "hi": "धमाका!",
+      "mr": "धमाका!",
+      "te": "బూమ్!",
+      "or": "ଧମାକା!",
+      "gu": "ધડામ!"
+    },
+    "Too steep ⬇": {
+      "en": "Too steep ⬇",
+      "hi": "बहुत खड़ा ⬇",
+      "mr": "खूप उंच ⬇",
+      "te": "చాలా నిటారుగా ⬇",
+      "or": "ବହୁତ ଛିଡ଼ା ⬇",
+      "gu": "બહુ ઊભો ⬇"
+    },
+    "Too shallow ⬆": {
+      "en": "Too shallow ⬆",
+      "hi": "बहुत सपाट ⬆",
+      "mr": "खूप सपाट ⬆",
+      "te": "చాలా చదునుగా ⬆",
+      "or": "ବହୁତ ସମତଳ ⬆",
+      "gu": "બહુ સપાટ ⬆"
+    },
+    "Answer: {angle}°": {
+      "en": "Answer: {angle}°",
+      "hi": "उत्तर: {angle}°",
+      "mr": "उत्तर: {angle}°",
+      "te": "సమాధానం: {angle}°",
+      "or": "ଉତ୍ତର: {angle}°",
+      "gu": "જવાબ: {angle}°"
+    },
+
+    "OUT OF SHELLS": {
+      "en": "OUT OF SHELLS",
+      "hi": "गोले खत्म",
+      "mr": "गोळे संपले",
+      "te": "గుండ్లు అయిపోయాయి",
+      "or": "ଗୋଲା ଶେଷ",
+      "gu": "ગોળા ખતમ"
+    },
+    "TRY AGAIN": {
+      "en": "TRY AGAIN",
+      "hi": "फिर कोशिश करें",
+      "mr": "पुन्हा प्रयत्न करा",
+      "te": "మళ్ళీ ప్రయత్నించండి",
+      "or": "ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ",
+      "gu": "ફરી પ્રયાસ કરો"
+    },
+    "MISSION COMPLETE": {
+      "en": "MISSION COMPLETE",
+      "hi": "मिशन पूरा",
+      "mr": "मोहीम पूर्ण",
+      "te": "మిషన్ పూర్తయింది",
+      "or": "ମିଶନ ସମ୍ପୂର୍ଣ୍ଣ",
+      "gu": "મિશન પૂર્ણ"
+    },
+    "PLAY AGAIN": {
+      "en": "PLAY AGAIN",
+      "hi": "फिर से खेलें",
+      "mr": "पुन्हा खेळा",
+      "te": "మళ్ళీ ఆడండి",
+      "or": "ପୁଣି ଖେଳନ୍ତୁ",
+      "gu": "ફરી રમો"
+    },
+    "CONTINUE": {
+      "en": "CONTINUE",
+      "hi": "आगे बढ़ें",
+      "mr": "पुढे चला",
+      "te": "ముందుకు సాగండి",
+      "or": "ଆଗକୁ ବଢ଼ନ୍ତୁ",
+      "gu": "આગળ વધો"
+    }
+  }
+}
