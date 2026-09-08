@@ -26,20 +26,14 @@
   --panel-radius-sm:10px;
   --hud-shadow:0 6px 16px rgba(0,0,0,.35);
 
-  /* --- UI palette, sampled from the button art itself -----------------
-     btnPlate/btnPlus/btnMinus give the tan ring + rust casing + gem green,
-     btnFire gives the orange and the cream. Every panel is built from these,
-     so the chrome and the buttons read as one set of physical parts. */
-  --btn-rim:#f2ab4f;          /* the plates' tan ring        */
-  --btn-rim-dark:#8a3a18;     /* their rust outer casing     */
-  --btn-stud:#4b1c0b;         /* the block a key presses on  */
-  --btn-ink:#fef8dc;          /* the FIRE cream              */
-  /* the console-body and loose gem tokens that used to live here are gone:
-     the dock is timber now (see --board-* below) and every gem face comes
-     off the PLAY-PLATE kit, so nothing was reading them. A palette that
-     still lists colours nothing uses is a palette that lies about itself. */
-  --fire-orange:#fd8b06;
-  --fire-deep:#88200a;
+  /* --- UI palette -----------------------------------------------------
+     This block used to be sampled off the painted button files, and it
+     shrank every time one of them was replaced by CSS. Every key in the
+     game is now drawn by the CANDY-GEL BUTTON KIT and reskinned from the
+     --gel-* variables on that class, so the only survivor here is the ink
+     the trig table's function column still borrows. A palette that lists
+     colours nothing reads is a palette that lies about itself. */
+  --btn-ink:#fef8dc;          /* cream, on the trig table's fn column */
 
   /* --- BOARD — the dock is assets/board.svg now, so the timber palette it
      used to be painted with is gone. This one colour survives: the θ
@@ -86,7 +80,6 @@ button:focus-visible,#angleInput:focus-visible{
   filter:brightness(1.1);
 }
 #angleInput:focus-visible{border-radius:6px}
-.valBox:focus-within{border-color:var(--hud-border-bright)}
 
 /* ============================================================
    WORLD LAYERS (background/tank/target/trajectory are canvas-drawn;
@@ -125,21 +118,13 @@ canvas{position:absolute;inset:0;display:block}
   border-bottom-left-radius:60% 100%;border-bottom-right-radius:60% 100%;
   background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0))}
 
-/* Parked over the tank's own corner, not centred. A 45-degree round stands
-   its target at x~700 and high — dead behind a centred banner — while the
-   sky above the tank is empty in every round the geometry can produce, since
-   the nearest a structure ever comes to the gun is MIN_TANK_CLEARANCE. */
-#objBanner{position:absolute;left:18px;top:14px;
-  padding:8px 22px 10px;gap:10px;white-space:nowrap;
-  display:flex;align-items:center;
-  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-weight:400;
-  font-size:17px;letter-spacing:.6px}
-#objBanner svg{flex:none;width:17px;height:17px;position:relative;z-index:1}
-/* an empty plate is worse than no plate: the banner speaks only when there is
-   something the player must do, and gets out of the way the rest of the time */
-#objBanner{transition:opacity .25s}
-#objBanner.is-off{opacity:0}
-#objBanner span,#msgText{position:relative;z-index:1}
+/* THE OBJECTIVE PLATE IS GONE. It sat over the tank's corner and read
+   "Solve for θ" for the whole of every round — a standing instruction for a
+   thing the screen already says. The dock asks for an angle in θ's own name,
+   the arc marks the unknown, and the two numbers sit on the sides they
+   measure; the banner restated all three in words and cost a corner of sky
+   doing it. What replaced it is nothing, which is the point. */
+#msgText{position:relative;z-index:1}
 
 #msg{position:absolute;left:18px;top:78px;
   padding:7px 22px 9px;border-radius:16px;opacity:0;
@@ -154,245 +139,411 @@ canvas{position:absolute;inset:0;display:block}
    stays clear in every round. Same gem as everything else you can press. */
 #utilBtns{position:absolute;right:18px;top:14px;display:flex;gap:11px;
   align-items:flex-start;pointer-events:auto}
-/* Both keys are painted plates, so both are artBtns: the art carries its own
-   bevel, ring and lighting and all the CSS owes it is honest press physics.
-   THE TWO FILES ARE FRAMED DIFFERENTLY and that is the only fiddly part —
-   resetBtn.svg is trimmed to its plate, while hintbtn.webp carries a wide
-   transparent halo and its plaque fills just 66% of the file. Sized to their
-   BOXES the bulb would come out a third smaller than the arrow, so the hint
-   is given the larger box its halo needs and then pulled back by the halo's
-   own width. What lines up on screen is the timber, not the bounding box. */
-#resetBtn{width:56px;height:58px;--sink:5px;
-  background-image:url(assets/resetBtn.svg);
-  filter:drop-shadow(0 4px 4px rgba(38,10,2,.42))}
-#hintBtn{width:84px;height:84px;--sink:5px;
-  margin:-12px -15px -15px -14px;      /* the halo, taken back out of layout */
-  background-image:url(assets/hintbtn.webp);
-  filter:drop-shadow(0 4px 4px rgba(38,10,2,.42))}
-#resetBtn:hover,#hintBtn:hover{filter:drop-shadow(0 6px 6px rgba(38,10,2,.38)) brightness(1.06)}
-#resetBtn:active,#resetBtn.is-pressed,
-#hintBtn:active,#hintBtn.is-pressed{filter:drop-shadow(0 1px 2px rgba(38,10,2,.5)) brightness(.96)}
+/* Both keys were painted plates, in a rust-and-red palette that belonged to
+   nothing else left on screen — and each was framed differently inside its
+   file, so half the rule below used to be arithmetic undoing a transparent
+   halo. They are gel icon keys now: the corner matches the dock and the
+   cards, a reskin reaches them, and the glyphs are inline SVG, which is what
+   lets them take the shell's own ink colour. */
+#hintBtn,#resetBtn{--gel-h:58px}
+#hintBtn{--gel-top:#fff2b0;--gel-mid:#ffd033;--gel-bot:#f0a000}  /* the bulb runs hotter */
+
 /* A wrong answer is the moment help is worth offering, so the bulb asks to be
-   pressed instead of waiting to be found — and stops the instant it is. The
-   call is a GLOW around the plate's own silhouette, not a box-shadow: there
-   is no box here to cast one, only art on a transparent field. */
-/* The old call was a slow glow and it was easy to miss against a bright sky.
-   This one moves as well as glows — a small rise and settle on the same beat
-   — because motion is what the eye actually catches in peripheral vision,
-   and the bulb lives in a corner nobody is looking at. A halo ring behind it
-   carries the same pulse so the shape reads even where the sky is pale. */
+   pressed instead of waiting to be found — and stops the instant it is.
+   The call MOVES as well as glows: motion is what the eye catches in
+   peripheral vision, and the bulb lives in a corner nobody is looking at.
+   Now that the key is a real box it casts a real halo, so the ring rides its
+   own box-shadow with the shell's stack under it — the extra ::after element
+   the painted version needed is gone. */
 #hintBtn.is-calling{animation:hintCall 1.05s cubic-bezier(.4,0,.3,1) infinite}
-#hintBtn.is-calling::after{content:"";position:absolute;left:14px;right:15px;top:12px;bottom:15px;
-  border-radius:20%;pointer-events:none;z-index:-1;
-  animation:hintHalo 1.05s cubic-bezier(.4,0,.3,1) infinite}
+/* the same rule the other two pulses need: an animated box-shadow outranks a
+   static one, so the call stands down once the key is actually being pointed
+   at — which is also the moment it has done its job */
+#hintBtn.is-calling:hover,#hintBtn.is-calling:focus-visible{animation:none}
 @keyframes hintCall{
-  0%,100%{filter:drop-shadow(0 4px 4px rgba(38,10,2,.42)) drop-shadow(0 0 3px rgba(255,214,88,.35));
-          transform:translateY(0) scale(1)}
-  45%    {filter:drop-shadow(0 8px 7px rgba(38,10,2,.36)) drop-shadow(0 0 17px rgba(255,226,120,1))
-          brightness(1.12);
-          transform:translateY(-5px) scale(1.06)}
-}
-@keyframes hintHalo{
-  0%,100%{box-shadow:0 0 0 0 rgba(255,214,88,.5)}
-  45%    {box-shadow:0 0 0 11px rgba(255,214,88,0)}
+  0%,100%{transform:translateY(0) scale(1);
+          box-shadow:var(--gel-shadow),0 0 0 0 rgba(255,214,88,.55)}
+  45%    {transform:translateY(-5px) scale(1.06);
+          box-shadow:var(--gel-shadow),0 0 0 12px rgba(255,214,88,0),
+                     0 0 26px 6px rgba(255,226,120,.9)}
 }
 
 /* ============================================================
-   GAMIFIED BUTTON KIT
-   One toy-console language for every pressable thing:
-   candy shell (bright rim + dark casing) → gem face → stud depth.
-   Per-button custom props tune the recipe:
-     --face-a / --face-b : gem gradient (top → bottom)
-     --rim               : bright outer casing colour
-     --stud              : the 3D block the button sits on
-     --depth             : how tall that block is (px)
+   CANDY-GEL BUTTON KIT
+   ONE recipe for every pressable thing the CSS draws, cut to the
+   golden brass-and-ivory kit in the reference art: a thick creamy rim,
+   a thin brass line just inside it, a shell that runs yellow → amber →
+   orange top to bottom, dark-toffee ink, and two crisp gleams hugging
+   the top-left curve — a convex, inflated, glossy candy shell.
+
+   EVERY dimension derives from one knob, --gel-h. Set the height and the
+   radius, padding, border, gap, stud depth, gloss, ink size and all four
+   shadow layers follow, so a 52px sheet key and an 84px title pill are
+   the same object at two sizes instead of two hand-tuned drawings.
+
+   RESKIN by editing the variables below and nothing else:
+     --gel-h            master height — everything scales off it
+     --gel-r/--gel-pad  corner radius / horizontal padding
+     --gel-rim          the thick outer ring (creamy ivory)
+     --gel-line         the thin outline just inside that ring (brass)
+     --gel-top/mid/bot  the shell gradient, top → mid → bottom
+     --gel-shade        the shading along the lower inside edge
+     --gel-stud         the block the shell squashes onto when pressed
+     --gel-depth        how tall that block is
+     --gel-glow         the hover / focus halo
+     --gel-drop         the ground shadow
+     --gel-ink          label colour     --gel-ink-lift  its embossing edge
+
+   The gloss lives in the BACKGROUND stack, not in ::before/::after, and
+   that is deliberate: an absolutely-positioned pseudo-element paints ABOVE
+   an element's own text, and half these buttons carry a bare text node
+   with no span to lift back over it. Background layers paint under the
+   label by definition, so the gleam can never fog a letter — and the
+   mirrored variant is then a background-position swap, one line.
+
+   Variants at the foot of the block: .is-quiet, .gelBtn--icon,
+   .gelBtn--pill, .gelBtn--right (gleams mirrored to the top-right).
+   The gold gel no longer reaches the dock: the read-out, the arrow keys
+   and FIRE are the steel console kit further down.
    ============================================================ */
-.bigBtn,.playTitleBtn{
-  --face-a:#b8571f; --face-b:#5d2210;
-  --rim:var(--btn-rim); --stud:var(--btn-stud); --depth:6px;
-  position:relative;cursor:pointer;color:var(--btn-ink);font-family:inherit;
-  border:3px solid var(--rim);
-  background:linear-gradient(180deg,var(--face-a) 0%,var(--face-b) 100%);
-  box-shadow:
-    inset 0 3px 0 rgba(255,255,255,.3),
-    inset 0 -7px 0 rgba(0,0,0,.32),
-    0 0 0 3px var(--btn-rim-dark),
-    0 var(--depth) 0 var(--stud),
-    0 calc(var(--depth) + 7px) 16px rgba(0,0,0,.42);
-  text-shadow:0 3px 0 rgba(58,12,28,.62);
-  transition:transform .09s ease,filter .12s ease,box-shadow .09s ease;
-  -webkit-tap-highlight-color:transparent}
+.gelBtn,.bigBtn,.playTitleBtn,.sheetBtn{
+  /* --- the knob, and the palette it drives --------------------------- */
+  --gel-h:64px;
+  --gel-r:calc(var(--gel-h)*.30);
+  --gel-pad:calc(var(--gel-h)*.36);
+  --gel-rim:#f7ead0;
+  --gel-line:#eda512;
+  --gel-top:#ffdb4d;
+  --gel-mid:#ffb400;
+  --gel-bot:#f18a00;
+  --gel-shade:rgba(186,86,0,.45);
+  --gel-stud:#a8560a;
+  --gel-depth:calc(var(--gel-h)*.105);
+  --gel-glow:rgba(255,203,74,.55);
+  --gel-drop:rgba(95,40,10,.38);
+  --gel-ink:#5c2b06;
+  --gel-ink-lift:rgba(255,247,219,.55);
 
-/* glossy dome highlight — the thing that makes a button look moulded */
-.bigBtn::before,.playTitleBtn::before{
-  content:"";position:absolute;left:7%;right:7%;top:2px;height:34%;pointer-events:none;
-  border-radius:inherit;
-  border-bottom-left-radius:70% 100%;border-bottom-right-radius:70% 100%;
-  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.05) 60%,rgba(255,255,255,0))}
+  /* --- the four layers that make it look inflated rather than printed:
+     brass line hugging the rim → soft highlight along the top edge →
+     dark shading along the lower edge → the stud it stands on → ground. */
+  --gel-shadow:
+    inset 0 0 0 calc(var(--gel-h)*.025) var(--gel-line),
+    inset 0 calc(var(--gel-h)*.05) calc(var(--gel-h)*.075) rgba(255,255,255,.5),
+    inset 0 calc(var(--gel-h)*-.06) calc(var(--gel-h)*.09) var(--gel-shade),
+    0 var(--gel-depth) 0 var(--gel-stud),
+    0 calc(var(--gel-depth) + var(--gel-h)*.08) calc(var(--gel-h)*.17) var(--gel-drop);
+  /* pressed: the shell sits down ON the stud, so the stud goes to nothing,
+     the top highlight dims, and the ground shadow tightens under it */
+  --gel-shadow-in:
+    inset 0 0 0 calc(var(--gel-h)*.025) var(--gel-line),
+    inset 0 calc(var(--gel-h)*.045) calc(var(--gel-h)*.07) rgba(255,255,255,.3),
+    inset 0 calc(var(--gel-h)*-.04) calc(var(--gel-h)*.07) var(--gel-shade),
+    0 0 0 var(--gel-stud),
+    0 calc(var(--gel-h)*.03) calc(var(--gel-h)*.07) var(--gel-drop);
 
-/* press physics: shell squashes onto its stud */
-.bigBtn:hover,.playTitleBtn:hover{
-  filter:brightness(1.09) saturate(1.05);transform:translateY(-2px)}
-.bigBtn:active,.playTitleBtn:active,
-.bigBtn.is-pressed,.playTitleBtn.is-pressed{
-  transition:transform .045s ease-out,box-shadow .045s ease-out,filter .07s ease;
-  transform:translateY(calc(var(--depth) - 1px)) scale(.985);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -3px 0 rgba(0,0,0,.34),
-    0 0 0 3px var(--btn-rim-dark),
-    0 1px 0 var(--stud),
-    0 3px 9px rgba(0,0,0,.36)}
-.bigBtn:disabled,.playTitleBtn:disabled{
-  filter:grayscale(.7) brightness(.72);cursor:default;transform:none;animation:none}
-.playTitleBtn:disabled:hover{filter:grayscale(.7) brightness(.72);transform:none}
-
-/* ============================================================
-   ART BUTTONS — painted plates instead of CSS shells.
-   The art already carries the bevel, ring and lighting, so all the CSS
-   owes it is honest press physics: lift on hover, sink into a shorter
-   ground shadow on press, and no rectangle drawn anywhere near it.
-   ============================================================ */
-.artBtn{
-  --sink:7px;
-  position:relative;cursor:pointer;border:none;padding:0;background:none;
-  background-repeat:no-repeat;background-position:center;background-size:contain;
-  filter:drop-shadow(0 6px 5px rgba(38,10,2,.5));
-  transition:transform .17s cubic-bezier(.22,.9,.3,1.35),filter .12s ease;   /* release springs back */
+  position:relative;box-sizing:border-box;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:calc(var(--gel-h)*.16);
+  height:var(--gel-h);padding:0 var(--gel-pad);
+  border-radius:var(--gel-r);
+  border:calc(var(--gel-h)*.08) solid var(--gel-rim);
+  overflow:hidden;                    /* clips the sheen to the shell */
+  font-family:inherit;font-size:calc(var(--gel-h)*.42);line-height:1;
+  color:var(--gel-ink);
+  /* gloss, top layer down: small glint · main corner gleam · dome sheet · shell */
+  background-image:
+    radial-gradient(closest-side,rgba(255,255,255,.9) 55%,rgba(255,255,255,0) 100%),
+    radial-gradient(closest-side,rgba(255,255,255,.92) 60%,rgba(255,255,255,0) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.42) 0%,rgba(255,255,255,.07) 34%,rgba(255,255,255,0) 56%),
+    linear-gradient(180deg,var(--gel-top) 0%,var(--gel-mid) 52%,var(--gel-bot) 100%);
+  /* the gleams are sized and placed off --gel-h, never off the WIDTH: in
+     percent they stretched into a long smear the moment a button got wide
+     (PLAY GAME is 318px on an 84px shell). Anchored to the height they stay
+     the same small round catchlight at every width, which is what a gleam is. */
+  background-size:
+    calc(var(--gel-h)*.095) calc(var(--gel-h)*.08),
+    calc(var(--gel-h)*.22) calc(var(--gel-h)*.17),
+    100% 100%, 100% 100%;
+  background-position:
+    left calc(var(--gel-h)*.31) top calc(var(--gel-h)*.105),
+    left calc(var(--gel-h)*.10) top calc(var(--gel-h)*.13),
+    0 0, 0 0;
+  background-repeat:no-repeat;
+  box-shadow:var(--gel-shadow);
+  text-shadow:0 calc(var(--gel-h)*.028) 0 var(--gel-ink-lift);
+  transition:transform .14s ease,box-shadow .14s ease,filter .14s ease,opacity .25s;
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent}
-.artBtn:hover{transform:translateY(-2px);filter:drop-shadow(0 8px 7px rgba(38,10,2,.45)) brightness(1.06)}
-/* The press rides a CLASS, not :active alone — see armPress() for why.
-   Down is near-instant, up is the springy base transition above. */
-.artBtn:active,.artBtn.is-pressed{transform:translateY(var(--sink)) scale(.955);
-  transition:transform .045s ease-out,filter .07s ease;
-  filter:drop-shadow(0 1px 2px rgba(38,10,2,.6)) brightness(.95)}
-.artBtn:disabled{cursor:default;animation:none;
-  filter:grayscale(.72) brightness(.72) drop-shadow(0 4px 4px rgba(38,10,2,.4))}
-/* a key that disables itself on its own click still gets to finish the press */
-.artBtn:disabled:not(.is-pressed),
-.artBtn:disabled:hover:not(.is-pressed){transform:none}
-.artBtn:disabled:hover{filter:grayscale(.72) brightness(.72) drop-shadow(0 4px 4px rgba(38,10,2,.4))}
+
+/* the wet-glass sweep — parked off the left edge, crossing only on hover.
+   It is the one thing allowed over the label, because a highlight passing
+   across the letters is what glass does. */
+.gelBtn::after,.bigBtn::after,.playTitleBtn::after,.sheetBtn::after{
+  content:"";position:absolute;top:-40%;bottom:-40%;width:38%;left:-45%;
+  pointer-events:none;opacity:0;transform:skewX(-18deg);
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.42),rgba(255,255,255,0));
+  transition:left .5s cubic-bezier(.3,.7,.3,1),opacity .18s ease}
+.gelBtn:hover:not(:disabled)::after,.bigBtn:hover:not(:disabled)::after,
+.playTitleBtn:hover:not(:disabled)::after,.sheetBtn:hover:not(:disabled)::after{
+  left:112%;opacity:1}
+
+/* --- states ---------------------------------------------------------- */
+.gelBtn:hover:not(:disabled),.bigBtn:hover:not(:disabled),
+.playTitleBtn:hover:not(:disabled),.sheetBtn:hover:not(:disabled){
+  transform:translateY(calc(var(--gel-h)*-.045)) scale(1.03);
+  filter:brightness(1.05);
+  box-shadow:var(--gel-shadow),
+    0 0 calc(var(--gel-h)*.26) calc(var(--gel-h)*.05) var(--gel-glow)}
+
+/* the press rides a CLASS as well as :active — see armPress() for why */
+.gelBtn:active:not(:disabled),.gelBtn.is-pressed,
+.bigBtn:active:not(:disabled),.bigBtn.is-pressed,
+.playTitleBtn:active:not(:disabled),.playTitleBtn.is-pressed,
+.sheetBtn:active:not(:disabled),.sheetBtn.is-pressed{
+  transition:transform .05s ease-out,box-shadow .05s ease-out,filter .07s ease;
+  transform:translateY(var(--gel-depth)) scale(.985);
+  filter:none;animation:none;
+  box-shadow:var(--gel-shadow-in)}
+
+/* a gold outline on a gold shell is invisible — these get a white ring */
+.gelBtn:focus-visible,.bigBtn:focus-visible,
+.playTitleBtn:focus-visible,.sheetBtn:focus-visible{
+  outline:none;filter:none;
+  box-shadow:var(--gel-shadow),
+    0 0 0 calc(var(--gel-h)*.05) rgba(255,255,255,.8),
+    0 0 calc(var(--gel-h)*.30) calc(var(--gel-h)*.07) var(--gel-glow)}
+
+/* switched off, not muddied: the shell keeps its shape and its gloss and
+   loses only its colour, so a disabled key still reads as the same object */
+.gelBtn:disabled,.bigBtn:disabled,.playTitleBtn:disabled,.sheetBtn:disabled{
+  --gel-top:#dcd6cc; --gel-mid:#bcb4a8; --gel-bot:#a09789;
+  --gel-line:#9a9186; --gel-shade:rgba(70,62,52,.34);
+  --gel-stud:#7d7568; --gel-glow:transparent;
+  --gel-ink:#6e675d; --gel-ink-lift:rgba(255,255,255,.45);
+  cursor:default;transform:none;animation:none;opacity:.85}
+.gelBtn:disabled:hover,.bigBtn:disabled:hover,
+.playTitleBtn:disabled:hover,.sheetBtn:disabled:hover{
+  transform:none;filter:none;box-shadow:var(--gel-shadow)}
+
+/* --- variants -------------------------------------------------------- */
+/* the secondary key: a cream wafer, same shell, no shout */
+.gelBtn.is-quiet,.bigBtn.is-quiet,.sheetBtn.is-quiet{
+  --gel-top:#fff3d4; --gel-mid:#f2dda8; --gel-bot:#dcbe7f;
+  --gel-line:#c9a05a; --gel-shade:rgba(122,82,32,.34);
+  --gel-stud:#9a743c; --gel-glow:rgba(255,231,175,.5);
+  --gel-ink:#6a441a; --gel-ink-lift:rgba(255,255,255,.6)}
+.gelBtn--pill{--gel-r:999px}
+/* a key with no words: a square (or round) shell, padding gone, sized to
+   its glyph rather than to a label that is not there */
+.gelBtn--icon{--gel-pad:0;width:var(--gel-h);flex:0 0 auto}
+/* with no label to set the scale, the glyph takes the room the words would
+   have had — at label size an icon-only key reads as a mostly-empty shell */
+.gelBtn--icon svg{height:1.32em}
+/* the glyph is embossed the way the label is — one light edge underneath —
+   so an icon key and a word key are lit by the same lamp. currentColor means
+   a palette swap moves the icon with the ink, no second variable. */
+.gelBtn svg,.bigBtn svg,.playTitleBtn svg,.sheetBtn svg{
+  height:.98em;width:auto;display:block;flex:0 0 auto;
+  fill:currentColor;pointer-events:none;
+  filter:drop-shadow(0 calc(var(--gel-h)*.026) 0 var(--gel-ink-lift))}
+/* light coming from the other side: both gleams mirrored to the top-right */
+.gelBtn--right{background-position:
+  right calc(var(--gel-h)*.31) top calc(var(--gel-h)*.105),
+  right calc(var(--gel-h)*.10) top calc(var(--gel-h)*.13),
+  0 0, 0 0}
+
+/* --- optional behaviours, opt in by class ---------------------------- */
+.gelBtn.appear{animation:gelPop .32s cubic-bezier(.2,.8,.3,1) backwards}
+.gelBtn.hint{animation:gelHint 1.6s ease-in-out infinite}
+.gelBtn.picked{animation:gelPicked .4s ease}
+@keyframes gelPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes gelHint{
+  0%,100%{transform:scale(1);filter:brightness(1)}
+  50%{transform:scale(1.03);filter:brightness(1.09) drop-shadow(0 0 14px rgba(255,195,50,.55))}}
+@keyframes gelPicked{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
 
 /* ============================================================
-   BOTTOM CONTROLS — tank-console dock
+   BOTTOM CONTROLS — the mossy console dock
    ============================================================ */
-/* The dock is furniture, not scenery: it sits entirely inside the dirt band
-   BELOW the play surface (PLAY_SURFACE_Y = 600 of the 720-tall stage), so it
-   never covers ground the tank, the target or the triangle can occupy.
-   That invariant fixes the three numbers below —
-       visual top = 720 - bottom - height*dockScale
-   which must stay clear of 600. At 118/.79/10px that lands on 617, about
-   17px of dirt above the board — it used to clear by 6px, which read as the
-   board grazing the grass line. Retune all three together, and keep the
-   narrow-screen override below on the same rule.
+/* ONE painted console — assets/cpPanel.webp — with the read-out, the two
+   arrow keys and the FIRE key set into the four windows cut clean through it,
+   and the theta label painted on its left cheek. Everything the old plank
+   dock built out of gradients, chamfers and clip-paths is IN the art now, so
+   what is left here places parts and sets live text over them.
+   tools/cut_panel.py cuts the parts; re-run it if the sheet is redrawn.
 
-   The HEIGHT is set by the board rather than chosen: the timber in
-   board.svg fills 90% of the file's height (the rest is its baked shadow),
-   and the tallest thing standing on it is the 92px FIRE key — so the box
-   has to be at least 92/0.90 plus margin, or FIRE overhangs the plank it is
-   supposed to be bolted to. 118 also brings the dock's own aspect nearer the
-   art's, which drops the stretch from 2.2x anisotropic to 1.8x.
-   118 is a FLOOR, not a preference: the 92px FIRE key has to sit inside the
-   timber, which needs height >= 92/(0.905-0.5) = 114. Anything thinner than
-   that means shrinking FIRE first. So "thinner" is spent on the scale
-   instead, where it costs nothing structural. */
-#controlDock{position:absolute;left:50%;bottom:10px;--dockScale:.79;height:118px;
-  transform:translateX(-50%) translateY(var(--dockY,0)) scale(var(--dockScale,1));
+   HOW IT IS MEASURED. --u is one pixel of the artwork, so every box in this
+   block is written in the panel's own coordinates — the same numbers
+   cut_panel.py reads off the sheet's alpha and prints. The CSS and the cutter
+   therefore describe the same rectangles, and a redrawn sheet only has to
+   reprint the table. --dockW is the one real length here: change it and the
+   whole console scales as a rigid unit, the way #stage does.
+
+   TWO OF ITS WORDS ARE LIVE — the plaque's and the FIRE key's — and that is
+   the whole reason the sheet is repainted on its way through the cutter. The
+   artist lettered both in English and this game speaks six languages. */
+#controlDock{
+  --dockW:450px;                          /* the console's width on the stage */
+  --u:calc(var(--dockW)/1223);            /* …and one pixel of the sheet */
+  position:absolute;left:50%;bottom:-18px;
+  width:var(--dockW);height:calc(467*var(--u));
+  transform:translateX(-50%) translateY(var(--dockY,0));
   transform-origin:center bottom;
   transition:transform .60s cubic-bezier(.18,.86,.24,1),opacity .38s ease,filter .2s ease;
-  pointer-events:auto;display:flex;align-items:center;gap:13px;
-  padding:13px 26px;border:none;border-radius:0;
-  /* --- THE BOARD is the art, stretched ---------------------------------
-     assets/board.svg, drawn to the dock's whole box. It carries its own
-     frame, plank edges, knots, lit rim and shadow, so the CSS that used to
-     paint all of that in gradients is gone with it — none of it was ever
-     going to beat a painted board.
-     The stretch is ~3.1x across against ~1.4x down, and it survives because
-     of WHAT is being stretched: the art is loose and hand-drawn, its grain
-     already runs horizontally, and its two knots simply go elliptical —
-     which is what a knot looks like on a plank cut along the grain. There
-     is nothing in it with a circle that has to stay a circle.
-     It needs preserveAspectRatio="none" on the file to stretch at all; the
-     default maps a viewBox with "meet", which letterboxes instead. */
-  background:url(assets/board.svg) 0 0/100% 100% no-repeat;
-  filter:drop-shadow(0 9px 11px rgba(20,6,10,.42));
-  overflow:visible}
+  background:url(assets/cpPanel.webp) 0 0/100% 100% no-repeat;
+  filter:drop-shadow(0 6px 9px rgba(4,12,8,.55));
+  /* the box is a rectangle and the console inside it is not, so the frame
+     itself never takes a pointer — only the four things you can press do */
+  pointer-events:none}
+
+/* WHERE IT SITS, and why it is not the plank's rule any more. The old dock
+   fitted entirely inside the dirt band below PLAY_SURFACE_Y=600, and this
+   console cannot: the art is 2.62:1 where the plank was 5.2:1, so at any
+   width that leaves the read-out legible it stands 170-190px tall against a
+   120px band. Two things in the art make that affordable rather than a
+   regression, and the numbers above are set by them:
+     · the bottom sixth of the sheet is moss fringe and pipe ends hanging off
+       the console, so the box is dropped past the stage floor and #stage's
+       own overflow:hidden crops decoration rather than instrument;
+     · the top sixth is the name plaque — narrow, centred, and standing clear
+       of the frame — so the only thing that rises past the grass line is a
+       sign, which is what a sign is for.
+   450/-18 is the pair those two pull to, and it is measured, not chosen: the
+   console's body lands at y=598 with its plaque standing 17 stage-px proud
+   of it, and its last 50 SHEET-px of moss and pipe hang past the stage floor
+   and are cropped.
+   That is the part of the old invariant which was actually load-bearing —
+   the tank stands ON the grass line and keeps its tracks, its hull and its
+   gun, and the triangle never comes near, since its horizontal leg runs at
+   the gun's own height, y~523, and its right angle stands off at the target's
+   column. What the plaque does cross is the tank's front fender, and it reads
+   as what it is: a console bolted to the parapet in FRONT of the tank.
+   The two numbers move together. Widening the console at a fixed drop walks
+   its body up into the field — 2.62:1 turns 100px of width into 38px of
+   height — and dropping it further at a fixed width buys that back by
+   cropping more moss, of which there is only that ~50 sheet-px to spend. */
+
 /* stowed = below the deck (during the roll-in and the briefing);
    busy = present but not yours yet (a shot is in the air) */
-#controlDock.is-stowed{--dockY:165%;opacity:0;pointer-events:none}
-/* filter is not additive — a plain saturate() here would drop the board's
+#controlDock.is-stowed{--dockY:150%;opacity:0}
+/* filter is not additive — a plain saturate() here would drop the console's
    ground shadow the moment a shot was in the air */
-#controlDock.is-busy{filter:drop-shadow(0 9px 11px rgba(20,6,10,.42)) saturate(.82) brightness(.9)}
-/* no ::before chamfer and no ::after ground shadow any more — the painted
-   board already has both, and a second set drawn over it only muddies it */
-.stepperGroup{position:relative;display:flex;align-items:center;gap:12px;z-index:1}
-.dockDivider{position:relative;z-index:1;width:4px;height:70px;border-radius:2px;
-  background:linear-gradient(180deg,rgba(60,16,40,.62),rgba(60,16,40,.44) 50%,rgba(60,16,40,.62));
-  box-shadow:1.5px 0 0 rgba(255,214,158,.26),-1px 0 0 rgba(60,16,40,.35)}
+#controlDock.is-busy{filter:drop-shadow(0 6px 9px rgba(4,12,8,.55)) saturate(.72) brightness(.86)}
 
-/* the three keys: two painted plates and the painted FIRE pill */
-.stepBtn{width:74px;height:74px;z-index:1}
-#downBtn{background-image:url(assets/btnMinus.webp)}
-#upBtn{background-image:url(assets/btnPlus.webp)}
+/* Every part is placed by the same four numbers, in sheet pixels. The keys
+   and the read-out are set a little PROUD of the window they cover — the
+   sheet draws them with their own frames, and a frame that stops short of
+   the hole it sits in leaves the swamp showing through the corner. */
+#controlDock > *{position:absolute;
+  left:calc(var(--x)*var(--u));top:calc(var(--y)*var(--u));
+  width:calc(var(--w)*var(--u));height:calc(var(--h)*var(--u))}
+/*                          x    y    w    h   —  window it covers          */
+.cpTitle {--x:402;--y: 41;--w:366;--h: 45}   /* the plaque's flat interior  */
+.thetaTag{--x:155;--y:186;--w:129;--h:115}   /* the left cheek              */
+.valBox  {--x:289;--y:154;--w:273;--h:172}   /* readout  315,166,221x148    */
+#upBtn   {--x:601;--y:122;--w:111;--h:110}   /* up       608,132, 97x 90    */
+#downBtn {--x:600;--y:250;--w:112;--h:110}   /* down     608,260, 97x 90    */
+#fireBtn {--x:773;--y:119;--w:300;--h:238}   /* fire     801,135,244x207    */
 
-/* angle read-out: recessed slot, not a button */
-/* θ = is a LABEL, not part of the read-out, so it stands outside the slot —
-   the slot holds the answer and nothing else. It used to sit hunched in the
-   slot's top-left corner competing with the number for the same box. */
-/* Gold on timber is gold on gold — the label was the same family of warm
-   brown-orange as the plank behind it, so it sank into the grain. Everything
-   else on this board carries its own edge (the keys are painted with one,
-   the read-out has a tan ring), and this was the one mark relying on a drop
-   shadow alone. It gets a real outline: eight offsets of the board's own
-   saw-line colour, which is a ring rather than a shadow and so holds the
-   glyph at every angle instead of only from above. */
-.thetaTag{position:relative;z-index:1;display:flex;align-items:center;gap:7px;
-  padding-bottom:3px;font-size:37px;font-weight:800;line-height:1;color:#ffd487;
-  text-shadow:
-    -2px -2px 0 #4a1b28, 0 -2px 0 #4a1b28,  2px -2px 0 #4a1b28,
-    -2px  0    0 #4a1b28,                   2px  0    0 #4a1b28,
-    -2px  2px 0 #4a1b28, 0  2px 0 #4a1b28,  2px  2px 0 #4a1b28,
-    0 5px 0 rgba(40,10,22,.6),
-    0 0 15px rgba(255,190,110,.4)}
-.thetaTag i{font-style:normal;font-size:31px;color:#ffc978}
+/* --- the name plaque ---------------------------------------------------
+   Cut and healed back to bare metal, then lettered here. The type is sized
+   to the plaque rather than to the words: a translation that runs long is
+   held on one line and clipped by the plate's own edge, which reads as a
+   sign too small for its name — where wrapping would read as broken. */
+.cpTitle{display:flex;align-items:center;justify-content:center;overflow:hidden;
+  font-size:calc(38*var(--u));font-weight:700;letter-spacing:calc(2.5*var(--u));
+  line-height:1;white-space:nowrap;color:#c3b69f;
+  text-shadow:0 calc(1.5*var(--u)) 0 rgba(12,16,10,.85)}
+/* Devanagari, Telugu and Odia carry marks above and below the line, and the
+   plaque's interior is only 45 sheet-px tall — so they trade the size English
+   spends on a 91%-full plate for the vertical room those marks need. 33
+   leaves the widest of them (Telugu) at 58% of the plate and its matras
+   inside it; the Fire key's label is capped by the same script for the same
+   reason, and 52 is what keeps it off the neon ring. */
+html:not([lang="en"]) .cpTitle{font-size:calc(33*var(--u));letter-spacing:0}
 
-.valBox{position:relative;display:flex;align-items:center;justify-content:center;
-  width:126px;height:76px;border-radius:18px;border:4px solid var(--btn-rim);z-index:1;
-  background:linear-gradient(180deg,#3a1a0c 0%,#261006 58%,#160903 100%);
-  /* cut into the plank rather than screwed onto it: the board's own dark
-     edge rings it, and the shadow falls INWARD from the top */
-  box-shadow:
-    inset 0 5px 10px rgba(0,0,0,.7),
-    inset 0 0 0 2px rgba(255,216,136,.22),
-    0 0 0 3px var(--board-frame),
-    0 3px 0 rgba(255,200,140,.16),
-    0 8px 14px rgba(0,0,0,.34)}
-/* The number owns the middle of the slot. It is centred rather than pushed
-   right because the slot now holds ONE thing — with the unit lifted into the
-   corner, an off-centre number just looks off-centre. */
-#angleInput{width:100%;font-size:44px;font-weight:800;text-align:center;
-  border:none;background:transparent;color:var(--btn-ink);outline:none;font-family:inherit;
-  text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 14px rgba(255,226,178,.35)}
-/* the unit rides the corner, the way a form field carries its unit: present,
-   never competing with the value for the eye */
-/* the reference sets its unit in the same ink as the field's contents, not
-   as a second colour — at this size a gold speck in the corner read as dirt
-   on the glass rather than as a degree sign */
-.valBox .deg{position:absolute;top:6px;right:12px;line-height:1;
-  font-size:24px;font-weight:800;color:var(--btn-ink);
-  text-shadow:0 2px 0 rgba(0,0,0,.55)}
+/* --- theta: a LABEL, not part of the read-out, so it stands outside the
+   slot — the slot holds the answer and nothing else. It is the sheet's own
+   glyph, repainted by the cutter in the plaque's cream (see THETA_INK), and
+   the shadow under it is what lifts paint off metal. */
+.thetaTag{background:url(assets/cpTheta.webp) 0 0/100% 100% no-repeat;
+  filter:drop-shadow(0 calc(2*var(--u)) 0 rgba(10,14,8,.8))}
 
-/* FIRE: the painted pill itself, glowing on its own */
-#fireBtn{width:200px;height:92px;z-index:1;--sink:9px;
-  background-image:url(assets/btnFire.webp);
-  filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 16px rgba(253,139,6,.42));
+/* --- angle read-out: a lit slot, not a button --------------------------
+   This is the one thing on the console a child has to read at a glance, so
+   it gets the sheet's biggest numerals: the artist's own example plate sets
+   them at 52% of the plate's height, and that is what is matched here. The
+   colour and the bloom are sampled off that plate — pale lime on near-black,
+   lit from within, which is what makes it read as a display rather than a
+   painted number. */
+.valBox{background:url(assets/cpPlate.webp) 0 0/100% 100% no-repeat;
+  display:flex;align-items:center;justify-content:center;
+  padding:calc(12*var(--u)) calc(15*var(--u));
+  color:#eef7a4;pointer-events:auto}
+#angleInput,.valBox .deg{
+  font-family:inherit;font-weight:700;line-height:1;color:inherit;
+  text-shadow:0 0 calc(14*var(--u)) rgba(178,232,86,.85),
+              0 0 calc(34*var(--u)) rgba(140,206,52,.5)}
+/* The field sizes to its own content where the browser can do it, so 0 and
+   30 are both centred with the degree sign hard against them. `size` is the
+   fallback everywhere else — two digits wide, which is what four of the five
+   angles on the dial are. It stays an <input>, readonly and un-typeable, for
+   the reason it always was: it keeps a focus ring and is still announced. */
+#angleInput{width:auto;field-sizing:content;border:none;background:none;
+  outline:none;text-align:center;padding:0;font-size:calc(124*var(--u))}
+/* No gap and a measured drop: the sign belongs ON the numerals' shoulder,
+   which is where the sheet's own example plate puts it — a degree sign
+   floating off in the corner reads as a second thing on the display, and the
+   display holds one thing. */
+.valBox .deg{font-size:calc(70*var(--u));align-self:flex-start;
+  margin-top:calc(22*var(--u))}
+#angleInput:disabled{color:inherit;opacity:.55}
+
+/* --- the two step keys, and FIRE: painted plates, so all that is left is
+   the physics. A bitmap key cannot be re-lit with a gradient, so the press,
+   the hover and the switched-off state are brightness and travel — which is
+   what those states look like on a real steel key anyway. */
+.stepBtn,#fireBtn{border:none;padding:0;background:0 0/100% 100% no-repeat;
+  cursor:pointer;pointer-events:auto;
+  transition:transform .12s ease,filter .12s ease;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#upBtn{background-image:url(assets/cpUp.webp)}
+#downBtn{background-image:url(assets/cpDown.webp)}
+#fireBtn{background-image:url(assets/cpFire.webp);
   animation:firePulse 3.4s ease-in-out infinite}
-#fireBtn:hover{filter:drop-shadow(0 9px 8px rgba(38,10,2,.45)) drop-shadow(0 0 22px rgba(253,139,6,.6)) brightness(1.05)}
-#fireBtn:active{animation-play-state:paused;
-  filter:drop-shadow(0 2px 3px rgba(38,10,2,.55)) drop-shadow(0 0 10px rgba(253,139,6,.4))}
-#fireBtn:disabled{animation:none;
-  filter:grayscale(.72) brightness(.7) drop-shadow(0 4px 4px rgba(38,10,2,.4))}
+
+.stepBtn:hover:not(:disabled){filter:brightness(1.22)}
+/* White, where the rest of the game rings a focused button in gold: the two
+   keys here are a near-black plate and a bright red one, and gold reads as
+   part of the FIRE key's own palette on the second of those. The ring also
+   scales with the console instead of holding a fixed 3px, so it stays the
+   same weight relative to the key it is drawn around. */
+.stepBtn:focus-visible,#fireBtn:focus-visible{outline:calc(6*var(--u)) solid rgba(255,255,255,.9);
+  outline-offset:calc(4*var(--u))}
+/* the press rides a CLASS as well as :active — see armPress() for why */
+.stepBtn:active:not(:disabled),.stepBtn.is-pressed{
+  transform:translateY(calc(7*var(--u)));filter:brightness(.72)}
+/* switched off, not muddied: the key keeps its shape and loses its charge */
+.stepBtn:disabled,#fireBtn:disabled{cursor:default;filter:saturate(.25) brightness(.62)}
+
+/* FIRE carries a real LABEL instead of one baked into the plate, which is the
+   whole reason the sheet's own word was taken off: "FIRE" had been the last
+   string in the game that stayed English in every language. The span is set
+   over the key's LIT FACE rather than over its box — the hazard tape runs
+   down the left edge of the plate, so the two centres are not the same one. */
+#fireBtn span{position:absolute;left:21.7%;top:14.5%;width:64.9%;height:67.5%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:calc(88*var(--u));font-weight:700;line-height:1;white-space:nowrap;
+  color:#fdeb5d;
+  text-shadow:0 0 calc(16*var(--u)) rgba(255,150,40,.9),
+              0 0 calc(40*var(--u)) rgba(255,90,20,.6)}
+/* the Indic labels are longer and unicase — they get room instead of size */
+html:not([lang="en"]) #fireBtn span{font-size:calc(52*var(--u))}
+#fireBtn:hover:not(:disabled){animation:none;
+  filter:brightness(1.15) drop-shadow(0 0 calc(24*var(--u)) rgba(255,110,40,.8))}
+#fireBtn:active:not(:disabled),#fireBtn.is-pressed{animation:none;
+  transform:translateY(calc(9*var(--u)));filter:brightness(.78)}
 
 .shakeX{animation:shakeX .35s}
 @keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
@@ -401,13 +552,13 @@ canvas{position:absolute;inset:0;display:block}
 /* ============================================================
    ANIMATIONS
    ============================================================ */
+/* The idle heartbeat on FIRE. The plate is painted with its neon ring already
+   lit, so this does not light the key — it breathes the spill AROUND it, and
+   that is a drop-shadow because the key is a bitmap octagon and a box-shadow
+   would halo the rectangle it is drawn in. */
 @keyframes firePulse{
-  0%,100%{filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 14px rgba(253,139,6,.36))}
-  50%{filter:drop-shadow(0 7px 6px rgba(38,10,2,.5)) drop-shadow(0 0 30px rgba(255,176,58,.72))}
-}
-@keyframes fireSheen{
-  0%,72%{background-position:200% 0}
-  100%{background-position:-80% 0}
+  0%,100%{filter:drop-shadow(0 0 calc(6*var(--u)) rgba(255,96,28,.35))}
+  50%    {filter:drop-shadow(0 0 calc(26*var(--u)) rgba(255,138,58,.85))}
 }
 /* ============================================================
    THE TRIG TABLE
@@ -456,6 +607,13 @@ canvas{position:absolute;inset:0;display:block}
   color:var(--board-cream,#fcebc5);text-shadow:0 3px 0 rgba(60,16,40,.55);
   background:url(assets/board.svg) 0 0/100% 100% no-repeat;
   filter:drop-shadow(0 5px 6px rgba(20,6,10,.45))}
+.trigHint{max-width:640px;margin:-8px auto 18px;text-align:center;
+  font-family:'Chakra Petch','Trebuchet MS','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',sans-serif;
+  font-size:17px;font-weight:600;letter-spacing:.3px;line-height:1.45;
+  /* this line sits INSIDE the parchment panel, not on the night scene, so it
+     takes the sheet's own ink — the swamp palette has no business in here */
+  color:var(--parch-ink,#4a2b10)}
+.trigHint:empty{display:none}
 .trigScroll{overflow-x:auto;overflow-y:hidden}
 
 #trigTable{border-collapse:separate;border-spacing:5px;margin:0 auto;
@@ -524,24 +682,13 @@ canvas{position:absolute;inset:0;display:block}
 #trigTable th.ang.col-on{background:linear-gradient(180deg,#ffd05a 0%,#f7a222 55%,#e07f0d 100%)}
 
 .trigFoot{display:flex;gap:14px;justify-content:center;margin-top:22px}
-.sheetBtn{cursor:pointer;height:52px;padding:0 30px 3px;border-radius:18px;
-  border:4px solid var(--plate-ring);color:var(--plate-ink);
-  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-size:21px;letter-spacing:1.5px;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 34%),
-    linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
-  box-shadow:inset 0 3px 0 rgba(255,255,255,.5),inset 0 -6px 0 rgba(63,92,8,.45),
-    0 0 0 4px var(--plate-case),0 5px 0 var(--plate-case-deep),0 11px 16px rgba(0,0,0,.35);
-  text-shadow:0 2px 0 rgba(255,255,255,.4);
-  transition:transform .09s ease,filter .12s ease,box-shadow .09s ease}
-.sheetBtn.is-quiet{
-  background:linear-gradient(180deg,#f6e4b4 0%,#e2c489 100%);color:#5a3a17;
-  box-shadow:inset 0 3px 0 rgba(255,255,255,.7),0 0 0 4px var(--plate-case),
-    0 5px 0 var(--plate-case-deep),0 11px 16px rgba(0,0,0,.3)}
-.sheetBtn:hover{filter:brightness(1.07);transform:translateY(-2px)}
-.sheetBtn:active,.sheetBtn.is-pressed{transform:translateY(4px) scale(.985);
-  box-shadow:inset 0 3px 0 rgba(255,255,255,.35),0 0 0 4px var(--plate-case),
-    0 1px 0 var(--plate-case-deep),0 3px 8px rgba(0,0,0,.3)}
+/* The sheet's two keys are the gel shell at 52px. Only the knob, the
+   padding and the display face are set here — the material comes from
+   the kit, so these can never drift out of step with the card buttons. */
+.sheetBtn{--gel-h:52px;--gel-pad:30px;--gel-r:17px;
+  padding-bottom:3px;                       /* Luckiest Guy sits high in its box */
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;
+  font-size:21px;font-weight:400;letter-spacing:1.5px}
 .sheetBtn[hidden]{display:none}
 
 @media (max-width:900px){
@@ -609,39 +756,21 @@ canvas{position:absolute;inset:0;display:block}
 .card b{color:#4b7a0d}
 /* the card's action key IS the title pill, sized down — same gem, same
    casing, same ink, so "press this" looks identical wherever it appears */
-.bigBtn{--depth:8px;
-  --rim:var(--plate-ring);--btn-rim-dark:var(--plate-case);--stud:var(--plate-case-deep);
-  margin-top:22px;height:68px;padding:0 46px 4px;border-radius:24px;border-width:5px;
-  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;font-size:28px;font-weight:400;
-  letter-spacing:2.5px;white-space:nowrap;color:var(--plate-ink);
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 34%),
-    linear-gradient(180deg,var(--plate-a) 0%,var(--plate-b) 38%,var(--plate-c) 68%,var(--plate-d) 100%);
-  box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.5),
-    inset 0 -9px 0 rgba(63,92,8,.45),
-    0 0 0 5px var(--plate-case),
-    0 var(--depth) 0 var(--stud),
-    0 calc(var(--depth) + 10px) 22px rgba(0,0,0,.45),
-    0 0 30px rgba(190,236,86,.3);
-  text-shadow:0 2px 0 rgba(255,255,255,.4),0 -2px 0 rgba(74,58,6,.25)}
-/* the casing is 5px here, so the pressed state has to say 5px too —
-   otherwise the ring snaps thinner the instant the key goes down */
-.bigBtn:active,.bigBtn.is-pressed{
-  box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.35),
-    inset 0 -5px 0 rgba(63,92,8,.5),
-    0 0 0 5px var(--plate-case),
-    0 0 0 var(--stud),
-    0 4px 10px rgba(0,0,0,.45)}
+/* The card's action key IS the title pill, sized down — same shell, same
+   ring, same ink, so "press this" looks identical wherever it appears. */
+.bigBtn{--gel-h:68px;--gel-pad:46px;--gel-r:22px;
+  margin-top:22px;padding-bottom:4px;white-space:nowrap;
+  font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;
+  font-size:28px;font-weight:400;letter-spacing:2.5px}
 .stars{font-size:50px;letter-spacing:10px;margin-top:14px;
   text-shadow:0 3px 0 rgba(120,80,20,.28)}
 /* the celebration card carries two keys now — CONTINUE hands the child back
    to the platform, PLAY AGAIN keeps them here — so they need a row to sit in */
 .cardActions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
 .cardActions .bigBtn{margin-top:22px}
-.bigBtn.is-quiet{height:56px;padding:0 30px 4px;font-size:21px;--depth:6px;filter:saturate(.55);
-  opacity:.9}
+/* PLAY AGAIN next to CONTINUE: the cream wafer from the kit, one size down,
+   so the two keys are obviously the same part at two volumes */
+.bigBtn.is-quiet{--gel-h:56px;--gel-pad:30px;--gel-r:18px;font-size:21px}
 /* Indic scripts are unicase and their conjuncts sit tight: UPPERCASE is a
    no-op and tracking only pulls the clusters apart, so both come off for
    every language but English. */
@@ -669,73 +798,55 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
 .srOnly{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 
-/* --- PLAY GAME — the one pill, parked on the burst's centre -------------
-   top is derived, not guessed: the pill's own centre must land on
-   TITLE_BURST.y (548), so top = 548 - height/2 = 506. Move one, move both. */
-.titleCtas{position:absolute;left:50%;top:506px;transform:translateX(-50%);
+/* --- PLAY GAME — the one pill, standing in the light ---------------------
+   It used to be centred on TITLE_BURST, which pinned the burst 52px above the
+   wall and left its lower rays nowhere to go. The two are decoupled now: the
+   burst is up in the sky behind the title, and the pill sits below it in the
+   pool of light, clear of the wordmark and just above the wall's mossy lip. */
+.titleCtas{position:absolute;left:50%;top:524px;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:12px;z-index:3}
-.playTitleBtn{--depth:8px;
-  width:318px;height:84px;padding:0 0 4px;border-radius:22px;
-  border:5px solid #f0c063;
-  display:flex;align-items:center;justify-content:center;
+/* the biggest instance of the same shell: 84px tall, fixed width so the
+   pill's silhouette is identical in every language */
+.playTitleBtn{--gel-h:84px;--gel-r:26px;
+  width:318px;padding-bottom:4px;
   font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;
-  font-size:40px;letter-spacing:3px;font-weight:400;color:#3d3005;
-  background:
-    linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 34%),
-    linear-gradient(180deg,#dcf055 0%,#b4d833 38%,#8cb81e 68%,#6b9612 100%);
-  box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.5),
-    inset 0 -9px 0 rgba(63,92,8,.45),
-    0 0 0 5px #6b3a14,
-    0 var(--depth) 0 #4a2409,
-    0 calc(var(--depth) + 10px) 22px rgba(0,0,0,.5),
-    0 0 40px rgba(190,236,86,.35);
-  text-shadow:0 2px 0 rgba(255,255,255,.4),0 -2px 0 rgba(74,58,6,.25);
+  font-size:40px;font-weight:400;letter-spacing:3px;
   animation:playPulse 3.6s ease-in-out infinite}
-.playTitleBtn::before{left:8px;right:8px;top:6px;height:34%;border-radius:16px;
-  background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0))}
-.playTitleBtn:hover{transform:scale(1.035);filter:brightness(1.05) saturate(1.05)}
-.playTitleBtn:active,.playTitleBtn.is-pressed{animation:none;
-  transform:translateY(var(--depth));
-  box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.35),
-    inset 0 -5px 0 rgba(63,92,8,.5),
-    0 0 0 5px #6b3a14,
-    0 0 0 #4a2409,
-    0 4px 10px rgba(0,0,0,.45)}
-.playTitleBtn:disabled{animation:none;filter:grayscale(.55) brightness(.75)}
-.playTitleBtn:disabled:hover{transform:none;filter:grayscale(.55) brightness(.75)}
+/* an animated box-shadow outranks any static one, so the idle pulse has to
+   stand down for the hover halo and the focus ring to be seen at all */
+.playTitleBtn:hover:not(:disabled),.playTitleBtn:focus-visible{animation:none}
 #loadBar{position:absolute;left:50%;top:-30px;transform:translateX(-50%);
-  width:322px;height:12px;border-radius:7px;background:#12211f;
-  border:2px solid #6b3a14;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.45)}
+  width:322px;height:12px;border-radius:7px;background:#2a1607;
+  border:2px solid #8a5a1a;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.45)}
 #loadFill{height:100%;width:0%;
-  background:linear-gradient(90deg,#6b9612,#dcf055);
-  transition:width .2s;box-shadow:0 0 12px rgba(190,236,86,.75)}
+  background:linear-gradient(90deg,#f18a00,#ffdb4d);
+  transition:width .2s;box-shadow:0 0 12px rgba(255,196,64,.75)}
 #loadBar.ready{opacity:0;transform:scaleX(.86);transition:opacity .35s ease,transform .35s ease}
 
 @keyframes titleIn{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes titleOut{to{opacity:0;transform:translateY(-18px) scale(1.02)}}
 @keyframes playPulse{
-  0%,100%{box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.5),inset 0 -9px 0 rgba(63,92,8,.45),
-    0 0 0 5px #6b3a14,0 8px 0 #4a2409,
-    0 18px 22px rgba(0,0,0,.5),0 0 34px rgba(190,236,86,.3)}
-  50%{box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.62),inset 0 -9px 0 rgba(63,92,8,.45),
-    0 0 0 5px #6b3a14,0 8px 0 #4a2409,
-    0 18px 22px rgba(0,0,0,.5),0 0 60px rgba(214,247,120,.6)}
+  0%,100%{box-shadow:var(--gel-shadow),
+    0 0 calc(var(--gel-h)*.34) calc(var(--gel-h)*.02) rgba(255,196,64,.34)}
+  50%    {box-shadow:var(--gel-shadow),
+    0 0 calc(var(--gel-h)*.62) calc(var(--gel-h)*.08) rgba(255,218,104,.78)}
 }
 
 @media (prefers-reduced-motion: reduce){
   .titleScreenInner,.playTitleBtn,
-  #fireBtn,.shakeX,#hintBtn.is-calling,#hintBtn.is-calling::after,
+  #fireBtn,.shakeX,#hintBtn.is-calling,
   #trigSheet,.trigPanel,#trigTable td.is-answer{animation:none!important}
-  .playTitleBtn:hover,.artBtn:hover{transform:none}
+  .playTitleBtn:hover{transform:none}
+  .gelBtn,.bigBtn,.playTitleBtn,.sheetBtn{animation:none!important}
+  .gelBtn:hover,.bigBtn:hover,.sheetBtn:hover{transform:none}
+  .gelBtn::after,.bigBtn::after,.playTitleBtn::after,.sheetBtn::after{display:none}
   #hud,#msg,#loadFill,#loadBar.ready{transition:none}
   #controlDock{transition:opacity .2s ease}
 }
 @media (max-width:700px){
-  #controlDock{--dockScale:.75}     /* same invariant: top = 720-10-118*.75 = 622 */
+  /* A phone gets the console a little smaller and a little lower, which keeps
+     the same bargain the full-size numbers strike — see #controlDock. */
+  #controlDock{--dockW:414px;bottom:-12px}
 }
 
 /* ============================================================
@@ -853,6 +964,14 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "te": "డిగ్రీలలో కోణం, 0, 30, 45, 60 మరియు 90 నుండి ఎంచుకున్నది",
    "or": "ଡିଗ୍ରୀରେ କୋଣ, 0, 30, 45, 60 ଏବଂ 90 ମଧ୍ୟରୁ ବଛା",
    "gu": "ડિગ્રીમાં ખૂણો, 0, 30, 45, 60 અને 90 માંથી પસંદ કરેલો"
+  },
+  "CONTROL PANEL": {
+   "en": "CONTROL PANEL",
+   "hi": "नियंत्रण पैनल",
+   "mr": "नियंत्रण पॅनेल",
+   "te": "కంట్రోల్ ప్యానెల్",
+   "or": "ନିୟନ୍ତ୍ରଣ ପ୍ୟାନେଲ",
+   "gu": "કંટ્રોલ પેનલ"
   },
   "Fire": {
    "en": "Fire",
@@ -1037,42 +1156,45 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
   <canvas id="game" width="1280" height="720" aria-hidden="true"></canvas>
 
   <div id="hud">
-    <div class="gemPlate is-off" id="objBanner">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="8" stroke="#4a2409" stroke-width="2.4"/>
-        <circle cx="12" cy="12" r="2.4" fill="#4a2409"/>
-        <path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="#4a2409" stroke-width="2.4" stroke-linecap="round"/>
-      </svg>
-      <span id="objText"></span>
-    </div>
-
     <div id="msg" class="gemPlate" role="status" aria-live="polite"><span id="msgText"></span></div>
 
     <div id="utilBtns">
-      <button type="button" class="artBtn" id="hintBtn" title="Hint — which ratio is this?" aria-label="Hint"
-              data-i18n-title="Hint — which ratio is this?" data-i18n-aria="Hint"></button>
-      <button type="button" class="artBtn" id="resetBtn" title="Start this round again" aria-label="Start this round again"
-              data-i18n-title="Start this round again" data-i18n-aria="Start this round again"></button>
+      <button type="button" class="gelBtn gelBtn--icon" id="hintBtn" title="Hint — which ratio is this?" aria-label="Hint"
+              data-i18n-title="Hint — which ratio is this?" data-i18n-aria="Hint">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-4 12.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3A7 7 0 0 0 12 2Zm-2 18h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2Z"/></svg>
+      </button>
+      <button type="button" class="gelBtn gelBtn--icon" id="resetBtn" title="Start this round again" aria-label="Start this round again"
+              data-i18n-title="Start this round again" data-i18n-aria="Start this round again">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2.2a.6.6 0 0 0-1-.44L6.6 5.3a.6.6 0 0 0 0 .92L11 9.76a.6.6 0 0 0 1-.44V6.9a5.1 5.1 0 1 1-5.1 5.1 1 1 0 1 0-2 0A7.1 7.1 0 1 0 12 5Z"/></svg>
+      </button>
     </div>
 
+    <!-- The console is ONE picture with four windows in it; every child here
+         is set over one of those windows in the sheet's own coordinates. See
+         the box table in the CSS, and tools/cut_panel.py for where it is
+         measured. Nothing is stacked or flowed — the artwork is the layout. -->
     <div id="controlDock">
-      <div class="stepperGroup">
-        <button type="button" class="stepBtn artBtn" id="downBtn" aria-label="Decrease angle"
-                data-i18n-aria="Decrease angle"></button>
-        <span class="thetaTag" aria-hidden="true">θ<i>=</i></span>
-        <div class="valBox">
-          <input id="angleInput" readonly value="0" autocomplete="off"
-                 title="Angle — step it with + and −"
-                 aria-label="Angle in degrees, chosen from 0, 30, 45, 60 and 90"
-                 data-i18n-title="Angle — step it with + and −"
-                 data-i18n-aria="Angle in degrees, chosen from 0, 30, 45, 60 and 90">
-          <span class="deg" aria-hidden="true">°</span>
-        </div>
-        <button type="button" class="stepBtn artBtn" id="upBtn" aria-label="Increase angle"
-                data-i18n-aria="Increase angle"></button>
+      <div class="cpTitle" data-i18n="CONTROL PANEL">CONTROL PANEL</div>
+      <!-- the sheet's own theta, repainted legible by the cutter -->
+      <span class="thetaTag" aria-hidden="true"></span>
+      <div class="valBox">
+        <input id="angleInput" readonly value="0" size="2" autocomplete="off"
+               title="Angle — step it with + and −"
+               aria-label="Angle in degrees, chosen from 0, 30, 45, 60 and 90"
+               data-i18n-title="Angle — step it with + and −"
+               data-i18n-aria="Angle in degrees, chosen from 0, 30, 45, 60 and 90">
+        <span class="deg" aria-hidden="true">°</span>
       </div>
-      <div class="dockDivider"></div>
-      <button type="button" class="artBtn" id="fireBtn" aria-label="Fire" data-i18n-aria="Fire"></button>
+      <!-- up over down, the way the sheet cuts them: one instrument bolted to
+           the slot it drives, not a pair bracketing it. The arrows are painted
+           on the keys, so there is no glyph to draw here. -->
+      <button type="button" class="stepBtn" id="upBtn" aria-label="Increase angle"
+              data-i18n-aria="Increase angle"></button>
+      <button type="button" class="stepBtn" id="downBtn" aria-label="Decrease angle"
+              data-i18n-aria="Decrease angle"></button>
+      <button type="button" id="fireBtn" aria-label="Fire" data-i18n-aria="Fire">
+        <span data-i18n="Fire">Fire</span>
+      </button>
     </div>
   </div>
 
@@ -1081,6 +1203,11 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
        data-i18n-aria="Trigonometric table">
     <div class="trigPanel" role="document">
       <div class="trigTitle" data-i18n="TRIGONOMETRIC TABLE">TRIGONOMETRIC TABLE</div>
+      <!-- Names the pair of sides this round handed over. It used to ride in
+           on a miss, unasked; it lives here now because the triangle no longer
+           captions its own sides, so this is the one place those words are
+           said — and it is said only to a player who pressed for help. -->
+      <div class="trigHint" id="trigHint"></div>
       <div class="trigScroll"><table id="trigTable"></table></div>
       <div class="trigFoot">
         <button type="button" class="sheetBtn" id="trigReveal" data-i18n="SHOW ME THE ANGLE">SHOW ME THE ANGLE</button>
@@ -1495,7 +1622,8 @@ const IMGS = {}, MANIFEST = {
   zkill3:'assets/ZombieSprite3.webp', // …and its 8-frame knockdown (name is the artist's)
   tank:'assets/tankSheet.webp',
   shot:'assets/TankShot.webp',
-  pre:'assets/preLBD.webp',          // the painted title plate — wordmark and all
+  pre:'assets/nbTitle.webp',         // the painted title plate — landscape only
+  word:'assets/nbWord.webp',         // …and the wordmark over it, halo and all
   /* Five complete 16:9 plates of ONE moonlit swamp, cropped so all five put
      their mossy lip on PLAY_SURFACE_Y. buildLayers() cross-fades them in this
      order and then cycles, so what the order buys is spacing: the moon plate
@@ -1508,12 +1636,10 @@ const IMGS = {}, MANIFEST = {
   scene4:'assets/nbManor.webp',     // …the derelict manor, far back and candlelit
   scene5:'assets/nbArch.webp',      // …a collapsed brick archway on the near bank
   cloud:'assets/nbMist.webp',       // the one painted wisp every sky cloud is cut from
-  // UI plates. btnPlus/btnMinus are both derived from the one painted plate
-  // (its glyph inpainted out, then + / − drawn back on with the asset's own
-  // stroke weight and shadow) and btnFire is the fire pill lifted off its
-  // mockup background — so every button is the same artwork.
-  btnPlus:'assets/btnPlus.webp', btnMinus:'assets/btnMinus.webp',
-  btnFire:'assets/btnFire.webp',
+  // The three painted key plates (btnPlus/btnMinus/btnFire) came out of this
+  // manifest with the CSS that drew them: every key is a gel shell now, so
+  // preloading them only made the title screen's bar wait on bytes no frame
+  // would ever draw. The files are still in assets/ if the art is wanted back.
   /* One complete ruin per file — each round wears a different one. Four
      shapes for five rounds, so one repeats; assignBuildings() spends the
      repeat on whichever round has the most choices. */
@@ -2008,13 +2134,6 @@ function drawCover(g,img,x,y,w,h){
   const sx = (img.width-sw)/2, sy = (img.height-sh)/2;
   g.drawImage(img, sx, sy, sw, sh, x, y, w, h);
 }
-function drawCoverSlice(g,img,sx,sy,sw,sh,x,y,w,h){
-  const sc = Math.max(w/img.width, h/img.height);
-  const coverSw = w/sc, coverSh = h/sc;
-  const coverSx = (img.width-coverSw)/2, coverSy = (img.height-coverSh)/2;
-  g.drawImage(img, sx, sy, sw, sh,
-    x + (sx-coverSx)*sc, y + (sy-coverSy)*sc, sw*sc, sh*sc);
-}
 function buildLayers(){
   const baseScenes = ['scene','scene2','scene3','scene4','scene5'].map(k=>{
     const c = makeCv(W,H), g = c.getContext('2d');
@@ -2044,7 +2163,6 @@ function buildLayers(){
     wg.drawImage(blend, x, 0);
   }
   bakeCloud();
-  bakeTitlePatches();
   bakeBoomLayers();
 }
 
@@ -2368,7 +2486,6 @@ function beginIntro(){
   G.guideAlpha = 0; clearReveal(); stowDock(true);
   G.angleShown = G.barrelTarget = BARREL_REST_ANGLE;
   syncWorldPositions();
-  setObjective('');
   setGameState(GameState.INTRO);
   GameBus.screen('intro', 'intro');
   G.drive = {t:0, nextLevel:null, tankStart:G.tankWorldX, tankEnd:restTank,
@@ -2380,7 +2497,6 @@ function beginBriefing(opts){
   const fast = !!(opts && opts.fast);
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   clearReveal(); stowDock(true);
-  setObjective('');
   setGameState(GameState.BRIEFING);
   /* Later rounds run a little quicker — the player already knows the shape
      of the score by then — but only a little: this is the round's one
@@ -2409,7 +2525,6 @@ function enterAiming({instant=false}={}){
   revealAll(); stowDock(false);
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   if(instant){ G.guideAlpha = 1; G.angleShown = BARREL_REST_ANGLE; }
-  setObjective(t('Solve for θ'));
   setGameState(GameState.AIMING);
   angleInput.value = G.angleTarget;
 }
@@ -2554,6 +2669,7 @@ function openTrigSheet(){
    .forEach(n=>n.classList.remove('row-on','col-on','is-answer'));
   const row = t.querySelector(`tr[data-fn="${L.type}"]`);
   if(row) row.classList.add('row-on');
+  $('trigHint').textContent = hintFor(L, 0);   // rung one: which pair of sides
   $('trigReveal').hidden = false;
   trigRevealed = false;
   $('trigSheet').classList.remove('hidden');
@@ -2615,10 +2731,6 @@ function setGameState(newState){
   document.body.dataset.state = newState;
   $('stage').classList.toggle('is-pregame', newState===GameState.PREGAME);
   updateControlsForState();
-}
-function setObjective(txt){
-  $('objText').textContent = txt || '';
-  $('objBanner').classList.toggle('is-off', !txt);
 }
 /* + and - walk the table one entry at a time and stop at its ends. They do
    NOT wrap: 90 rolling round to 0 would read as the dial breaking, and the
@@ -2845,7 +2957,6 @@ function pressFire(){
     : .001;
   G.lay = {from, to:v, t:0, dur, hold:LAY_HOLD, laid:false};
   G.barrelTarget = v;                      // stays laid until the shot resolves
-  setObjective('');
   AU.servo(dur);
 }
 function updateLay(dt){
@@ -2889,7 +3000,6 @@ function resolveHit(){
   spawnStars(G.zombie.x, G.zombie.y, 16);
   G.floaters.push({x:G.zombie.x, y:G.zombie.y-50, txt:'+'+pts, t:0});
   showMsg(G.tries===1 ? t('PERFECT!') : t('BOOM!'), 2200);
-  setObjective('');                        // the round is answered; nothing left to ask
   setTimeout(()=>AU.success(), 480);
   setGameState(GameState.HIT_REACTION);
 }
@@ -2899,20 +3009,23 @@ function resolveMiss(){
   AU.explode(false);
   G.shake=5; G.hearts--;
   G.zombie.mode='idle';
-  const L=currentLevelData(), v=G.angleTarget;
-  /* the correction points at the DIAL, not at pixels: too steep or too
-     shallow is the only thing a stepped answer can be wrong by. */
-  let hint = t(v > L.ans ? 'Too steep ⬇' : 'Too shallow ⬆');
-  if(G.hearts===1) hint += `  💡 ${hintFor(L, 1)}`;   // the last life buys the ratio
+  const L=currentLevelData();
+  /* A MISS NO LONGER SPEAKS. It used to post "Too steep ⬇", which is a
+     binary search dressed as teaching: told which side of the answer you
+     landed on, a five-value dial is solved by stepping, and the ratio never
+     has to be worked out at all. The shot already says everything true — the
+     shell visibly flies over the roof or falls short of it, a heart is spent,
+     and the gun drops back to rest — so what the plate added was the one
+     thing the player was supposed to derive.
+     Help did not go away, it moved: the bulb is lit here, and pressing it
+     opens the table with the pair of sides named. Asked for, not pushed. */
   AU.wrong();
   closeTrigSheet(); callHint(true);
   if(G.hearts<=0){
     showMsg(t('Answer: {angle}°', {angle:L.ans}), 3200);
     setTimeout(gameOver, 1900);
   } else {
-    showMsg(hint, 4200);
     G.barrelTarget = BARREL_REST_ANGLE;     // gun settles back down for another lay
-    setObjective(t('Solve for θ'));
     setGameState(GameState.AIMING);
   }
 }
@@ -3185,7 +3298,6 @@ function update(dt){
 }
 
 function prepareDrive(){
-  setObjective('');
   G.guideAlpha = 0;
   G.barrelTarget = BARREL_REST_ANGLE;    // gun back to travel position
   stowDock(true);
@@ -3567,157 +3679,114 @@ function drawSkyClouds(){
 
 /* ============================================================
    TITLE SCENE
-   The attract screen is the painted key-art plate: preLBD.webp is a
-   finished 16:9 illustration — wordmark, valley, ruins, hedgerow —
-   so this draws exactly two things over it. A burst of light thrown
-   from behind the wordmark, and then the plate's own wordmark
-   rectangle re-blitted on top of that burst.
+   The attract screen is two painted assets and two live layers, drawn
+   strictly back to front:
 
-   That second draw is the whole trick. Without it the rays wash
-   across the letters; with it they read as light spilling from
-   BEHIND the logo, which is how the reference key art reads. It
-   costs one drawImage and never needs re-registering, because
-   drawCoverSlice puts the rect back exactly where the plate had it.
+     nbTitle.webp  · the landscape — swamp, ruin, moon, wall
+     sky clouds    · the same drifting wisp the rounds use
+     the burst     · moonlight thrown from behind the title
+     nbWord.webp   · the wordmark, carrying its own halo
 
-   The pill itself is HTML, parked on TITLE_BURST's centre.
+   The wordmark used to be baked into the plate, and this function put it
+   back over the burst by re-blitting its rectangle out of the plate. That
+   is why it is a separate sprite now: a re-blit is a hole in the draw
+   order, and everything laid down between the plate and it was erased
+   inside that rectangle. Clouds cross that rectangle. With the letters on
+   their own transparent layer the order simply reads as what it is, and the
+   burst and the clouds both pass behind them for free.
+
+   The pill is HTML, parked below the burst — see .titleCtas.
    ============================================================ */
-/* ---------- feathered plate patches ----------
-   Two live layers get painted over the plate and then partly covered by
-   the plate again: the burst goes behind the wordmark, and the zombie
-   line-up stands inside the hedgerow. Both are the same move — re-blit a
-   rectangle of preLBD.webp on top — and both need the same care.
+/* THE BURST SITS ABOVE THE PILL, NOT BEHIND IT, and that is the whole
+   reason it can be a full fan.
 
-   A HARD-edged re-blit is the trap. It cuts every ray, and every zombie
-   leg, along one straight line, which reads as a seam the moment the
-   light gets bright. So each patch is baked once with the edges that
-   actually get crossed faded out; the light dies under the logo and the
-   legs sink into the leaves instead of stopping dead.
+   It used to be centred on the pill, 52px above the wall's lip — which left
+   its lower rays nowhere to go but across the masonry. Weighting them away
+   by direction stopped that, but it also cut the fan in half: what should
+   read as a light source read as a semicircle with its bottom missing.
 
-   `feather` values are stage px per edge. Edges the live layers never
-   reach are left hard — no point paying for a fade nobody sees. */
-function bakePlatePatch(rect, feather){
-  const img = IMGS.pre, [sx,sy,sw,sh] = rect;
-  const sc = Math.max(W/img.naturalWidth, H/img.naturalHeight);
-  const coverSx = (img.naturalWidth - W/sc)/2, coverSy = (img.naturalHeight - H/sc)/2;
-  const dw = Math.ceil(sw*sc), dh = Math.ceil(sh*sc);
-  const c = makeCv(dw, dh), g = c.getContext('2d');
-  g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
-  g.drawImage(img, sx,sy,sw,sh, 0,0, dw,dh);
-  // Each pass multiplies the patch's alpha by one edge ramp. destination-in
-  // clears whatever the source misses, so every ramp must be filled across
-  // the WHOLE patch — two part-canvas fills would erase each other.
-  g.globalCompositeOperation = 'destination-in';
-  const ramp = (x0,y0,x1,y1, len, span)=>{
-    const grd = g.createLinearGradient(x0,y0,x1,y1);
-    grd.addColorStop(0, 'rgba(0,0,0,0)');
-    grd.addColorStop(Math.min(1, len/span), 'rgba(0,0,0,1)');
-    grd.addColorStop(1, 'rgba(0,0,0,1)');
-    g.fillStyle = grd; g.fillRect(0,0,dw,dh);
-  };
-  if(feather.top)    ramp(0,0, 0,dh, feather.top,    dh);
-  if(feather.bottom) ramp(0,dh, 0,0, feather.bottom, dh);
-  if(feather.left)   ramp(0,0, dw,0, feather.left,   dw);
-  if(feather.right)  ramp(dw,0, 0,0, feather.right,  dw);
-  g.globalCompositeOperation = 'source-over';
-  return {cv:c, at:[(sx-coverSx)*sc, (sy-coverSy)*sc, dw, dh]};
-}
-/* Rects are in preLBD.webp's own 1672x941 pixels. The hedge rect runs to the
-   plate's exact right and bottom edges, so only its top and left are cut —
-   and its top sits DEEP inside the plate's own leaf mass (stage y ~686,
-   where the plate is bushes above and below alike). That is what lets the
-   feather be tight: the seam falls bush-on-bush, so no straight line shows.
-   It only ever veils the mob's toes — enough to plant them in the hedge,
-   never enough to cut a leg. */
-const TITLE_LOGO_RECT  = [439, 39, 807, 531];
-const TITLE_HEDGE_RECT = [1071, 896, 601, 45];
-function bakeTitlePatches(){
-  BGL.titleLogo  = bakePlatePatch(TITLE_LOGO_RECT,  {bottom:46});
-  BGL.titleHedge = bakePlatePatch(TITLE_HEDGE_RECT, {top:14, left:74});
-}
-
-/* The plate leaves one open band — under the logo, across the dirt lip —
-   and this is its centre. .titleCtas in the stylesheet is anchored to the
-   same number: move one and move both. */
-const TITLE_BURST = {x:640, y:548, rx:276, ry:238, rays:20};
+   Lifting the centre into the sky fixes the cause rather than the symptom.
+   The fan is even again, all twenty rays at one alpha, and it has room to
+   splay downward as far as FADE_TO before the ground arrives — where it
+   dissolves into the mist instead of stopping on the bricks. What the pill
+   loses is being dead centre of the glow, which it never needed: light
+   comes from behind the TITLE, and the button stands in the pool below it. */
+const TITLE_BURST = {x:640, y:436, rx:276, ry:250, rays:20,
+                     fadeFrom:520, fadeTo:600};   // stage y: full → gone by the lip
 
 function drawTitleBurst(){
   const b = TITLE_BURST;
-  ctx.save();
-  ctx.translate(b.x, b.y);
-  ctx.rotate(G.time*0.055);
-  ctx.scale(1, b.ry/b.rx);
-  const fade = ctx.createRadialGradient(0,0,18, 0,0,b.rx);
-  // the pill covers the bright core, so the alpha is held out to ~80% of the
-  // radius — otherwise the only ray the player ever sees is its faintest tail
-  fade.addColorStop(0,   'rgba(255,253,206,.96)');
-  fade.addColorStop(.5,  'rgba(252,230,74,.84)');
-  fade.addColorStop(.82, 'rgba(244,212,44,.52)');
-  fade.addColorStop(1,   'rgba(238,202,34,0)');
-  ctx.fillStyle = fade;
+  /* Drawn into a scratch canvas rather than straight onto the stage, because
+     the fade has to run down the SCREEN while the fan turns. Bake the rays,
+     then multiply the whole thing by one vertical ramp: rotation and ramp stay
+     independent, which they cannot be if the ramp is baked per ray. The
+     canvas is the fan's own bounding box, not the stage, so this costs one
+     small composite on the attract screen and nothing anywhere else. */
+  const pad = 8, w = Math.ceil(b.rx*2)+pad*2, h = Math.ceil(b.ry*2)+pad*2;
+  if(!BGL.burst || BGL.burst.width!==w) BGL.burst = makeCv(w,h);
+  const g = BGL.burst.getContext('2d');
+  g.clearRect(0,0,w,h);
+  g.save();
+  g.translate(w/2, h/2);
+  g.rotate(G.time*0.055);
+  g.scale(1, b.ry/b.rx);
+  const fade = g.createRadialGradient(0,0,18, 0,0,b.rx);
+  /* Moonlight, not sunlight — and far quieter than either.
+     Two things changed together here. The colour: these rays were the yellow
+     of the daytime plate's own sky, and on the swamp they read as a sun coming
+     up behind a graveyard, so they now carry the moon's #eef5d6 falling off
+     through the fog's teal. And the STRENGTH: the old alphas were painted
+     against golden dirt, which is a dark warm ground that swallows a pale
+     wedge. Mist is neither — it is pale, cool and flat, so the same wedge on
+     top of it reads as a printed stripe. Cut to roughly a third, and blurred
+     below, they stop being shapes and become what they are meant to be: light
+     picked out by fog. */
+  fade.addColorStop(0,   'rgba(238,245,214,.58)');
+  fade.addColorStop(.5,  'rgba(186,232,206,.38)');
+  fade.addColorStop(.82, 'rgba(126,207,192,.19)');
+  fade.addColorStop(1,   'rgba(94,182,172,0)');
+  g.fillStyle = fade;
+  /* Light through mist has no edges. Blurring the fan is what turns twenty
+     hard wedges into one soft shaft, and it is done here, on the scratch
+     canvas, so the blur never touches the plate or the wordmark. Unsupported
+     filters are ignored, which costs sharpness and nothing else. */
+  g.filter = 'blur(4px)';
   const step = Math.PI*2/b.rays;
   for(let i=0;i<b.rays;i++){
     const a = i*step;
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.arc(0,0,b.rx, a-step*.27, a+step*.27);
-    ctx.closePath();
-    ctx.fill();
+    g.beginPath();
+    g.moveTo(0,0);
+    g.arc(0,0,b.rx, a-step*.27, a+step*.27);
+    g.closePath();
+    g.fill();
   }
-  ctx.restore();
+  g.filter = 'none';
+  g.restore();
+  // the core the title is bedded into
+  const core = g.createRadialGradient(w/2,h/2,0, w/2,h/2,b.rx*.7);
+  core.addColorStop(0,'rgba(238,245,214,.34)');
+  core.addColorStop(1,'rgba(160,222,206,0)');
+  g.fillStyle = core;
+  g.beginPath(); g.ellipse(w/2,h/2,b.rx*.7,b.ry*.7,0,0,7); g.fill();
 
-  // the warm core the pill is bedded into
-  const core = ctx.createRadialGradient(b.x,b.y,0, b.x,b.y,b.rx*.7);
-  core.addColorStop(0,'rgba(255,250,206,.6)');
-  core.addColorStop(1,'rgba(255,244,166,0)');
-  ctx.fillStyle = core;
-  ctx.beginPath(); ctx.ellipse(b.x,b.y,b.rx*.7,b.ry*.7,0,0,7); ctx.fill();
-}
+  // …and now the one ramp, in stage space, that keeps light off the stone
+  const top = b.y - h/2;
+  const ramp = g.createLinearGradient(0, b.fadeFrom-top, 0, b.fadeTo-top);
+  ramp.addColorStop(0,'rgba(0,0,0,1)');
+  ramp.addColorStop(1,'rgba(0,0,0,0)');
+  g.globalCompositeOperation = 'destination-in';
+  g.fillStyle = ramp; g.fillRect(0,0,w,h);
+  g.globalCompositeOperation = 'source-over';
 
-/* ---------- the corner lurker ----------
-   One zombie, enlarged, leaning in over the bottom-right corner with
-   roughly half of him out of frame.
-
-   The bruiser gets the job on resolution alone. Its sheet carries a 383px
-   body, so 600px on screen is a 1.6x push; the runner's 250px sheet would
-   be 2.4x and the shambler's 167px sheet 3.6x — visibly soft at this size.
-   Nothing else about him is special here, and swapping `type` is the only
-   edit needed if better art turns up.
-
-   The rotation is taken about the pivot, and the pivot is the point his
-   soles stand on — the whole figure hangs off it. That means `tilt` swings
-   him without ever unplanting the anchor, and `x`/`feetY` stay readable as
-   "where his boots are", even though they are off-canvas.
-   Drawn straight off the type registry, so he shuffles at the same cadence
-   the player will meet on level 3. */
-/* x/feetY are deliberately off-canvas — that is the point. Only the top
-   half of him lands inside the 1280x720 frame; the rest leans out past the
-   corner. Shrinking him means pulling the pivot in as well as dropping
-   `height` — the figure scales toward its soles, so height alone would
-   just slide him off the edge. Tuned by eye against the plate: further
-   left and his hair fouls the wordmark's 'E', bigger and it crowds it. */
-const TITLE_LURKER = {type:'bruiser', x:1245, feetY:845, height:540, tilt:-19};
-function drawTitleLurker(){
-  const L = TITLE_LURKER, set = ZOMBIE_TYPES[L.type].look;
-  const f  = set.fps>0 ? set.idle[Math.floor(G.time*set.fps) % set.idle.length]
-                       : set.idle[0];
-  const sc = L.height/set.bodyPx;
-  const ax = (f[4]!==undefined ? f[4] : f[2]/2)*sc;
-  // a slow rock on top of the fixed tilt, so the corner is never a still frame
-  const a  = (L.tilt + Math.sin(G.time*.9)*1.4) * Math.PI/180;
-  ctx.save();
-  ctx.translate(L.x, L.feetY);
-  ctx.rotate(a);
-  ctx.drawImage(IMGS[set.sheet], f[0],f[1],f[2],f[3], -ax, -f[3]*sc, f[2]*sc, f[3]*sc);
-  ctx.restore();
+  ctx.drawImage(BGL.burst, Math.round(b.x-w/2), Math.round(top));
 }
 
 function drawTitleScene(){
   ctx.clearRect(0, 0, W, H);
   drawCover(ctx, IMGS.pre, 0, 0, W, H);
+  drawSkyClouds();                                  // the plate is painted clean of them
   drawTitleBurst();
-  ctx.drawImage(BGL.titleLogo.cv,  ...BGL.titleLogo.at);   // rays fall in behind the wordmark
-  drawTitleLurker();
-  ctx.drawImage(BGL.titleHedge.cv, ...BGL.titleHedge.at);  // leaves close over their boots
+  drawCover(ctx, IMGS.word, 0, 0, W, H);            // the wordmark, over both
 }
 
 function visibleLevelNodes(){
@@ -3790,9 +3859,8 @@ function drawZombie(z=G.zombie){
    ============================================================ */
 const GUIDE_INK='#fff4c8',            // the given sides — lit filament, not hairline
       GUIDE_BLOOM='#ffb02e',          // the amber light they throw
-      GUIDE_HALO='rgba(30,11,3,.42)', // keeps them readable over a bright wall
+      GUIDE_HALO='rgba(3,18,24,.5)',  // keeps them readable over a moonlit wall
       GUIDE_VALUE='#ffcb57',          // the plates' tan, for numbers and θ
-      GUIDE_CAPTION='#fef8dc',        // the FIRE cream, for labels
       GUIDE_SHOT='#ff9a2e';           // your committed angle
 function trigTriangle(){
   const z = G.zombie; if(!z) return null;
@@ -3897,37 +3965,58 @@ function roundRectPath(x,y,w,h,r){
    in. So it belongs to the same set without having to be the same picture.
    THETA keeps the glow: it is not a given, it is the unknown standing on the
    triangle itself, and it should look like part of the drawing. */
-function guideCard(x,y,caption,value,u,align='center',minLeft=null){
+/* ---- A MEASUREMENT, NOT A LABELLED MEASUREMENT -----------------------
+   This card used to carry two lines: the side's NAME above, its length
+   below. The name is gone, and with it the taller plate that existed to hold
+   it — a card is now the number and nothing else.
+
+   What that costs is worth being clear about, because it changes the
+   exercise. Naming the pair of sides you were handed is the decision this
+   round is really asking for, and the words used to make it for you: read
+   "OPPOSITE" and "HYPOTENUSE" off two plates and the only step left is
+   arithmetic. Without them the pairing has to be read off the PICTURE — the
+   vertical leg, the slope, the leg along the ground — which is the same
+   recognition the textbook asks for, now done on the drawing instead of on a
+   caption. The geometry is what tells you which side you are looking at, and
+   the geometry is drawn to scale.
+
+   Two things keep that honest. Each number sits ON the side it measures, so
+   position carries the meaning the caption used to; and the hint still names
+   the pair in words when a player asks for it, so help exists without the
+   answer standing on screen for the whole round.
+
+   The plate keeps its warm body — the world went cool, and every piece of
+   interface in this game is warm against it, which is what separates the two
+   layers at a glance. What changed is its RIM: it was lit warm from above,
+   as it would be under the old daylight, and it now catches the moon's own
+   pale green instead. Warm stone, cold moonlight on the edge. */
+function guideCard(x,y,value,u,align='center',minLeft=null){
   if(u<=.01) return;
   ctx.save();
   ctx.globalAlpha *= clamp01(u);
   const rise = (1-u)*10, cy = y + rise;
-  ctx.font = `700 12px ${FONT}`;  const cw = ctx.measureText(caption).width;
-  ctx.font = `800 23px ${FONT}`;  const vw = ctx.measureText(value).width;
-  const w = Math.max(cw, vw) + 34, h = 58, r = 13;
+  ctx.font = `800 25px ${FONT}`;  const vw = ctx.measureText(value).width;
+  // a surd carries an overbar, so it needs headroom the plain digits do not
+  const surd = value.indexOf('√') >= 0;
+  const w = vw + 32, h = surd ? 50 : 46, r = 13;
   let left = align==='center' ? x - w/2 : align==='left' ? x : x - w;
   if(minLeft!=null && left < minLeft) left = minLeft;
   const top  = cy - h/2;
   // it sits ON the scene, so it carries its own ground shadow
   ctx.save();
-  ctx.shadowColor = 'rgba(20,8,4,.5)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 4;
+  ctx.shadowColor = 'rgba(2,16,20,.55)'; ctx.shadowBlur = 11; ctx.shadowOffsetY = 4;
   roundRectPath(left, top, w, h, r);
-  ctx.fillStyle = '#59173e'; ctx.fill();                    // the saw-cut edge
+  ctx.fillStyle = '#42122c'; ctx.fill();                    // the saw-cut edge
   ctx.restore();
   roundRectPath(left+3.5, top+3.5, w-7, h-7, r-3);
   const g = ctx.createLinearGradient(0, top, 0, top+h);
-  g.addColorStop(0,'#b8502e'); g.addColorStop(.55,'#a54331'); g.addColorStop(1,'#933934');
+  g.addColorStop(0,'#a8482a'); g.addColorStop(.55,'#963c2d'); g.addColorStop(1,'#84322d');
   ctx.fillStyle = g; ctx.fill();
-  ctx.strokeStyle = 'rgba(247,171,104,.75)'; ctx.lineWidth = 1.6;   // the lit rim
+  ctx.strokeStyle = 'rgba(214,240,222,.6)'; ctx.lineWidth = 1.6;   // moonlight on the edge
   roundRectPath(left+4.8, top+4.8, w-9.6, h-9.6, r-4); ctx.stroke();
-  const cx = left + w/2;
-  // a surd's rule needs room above the digits, and the caption is what gives it
-  const lift = value.indexOf('√') >= 0 ? 3 : 0;
-  const ink = 'rgba(58,18,10,.85)';
-  guideText(caption, cx, top+17-lift, {size:12, weight:700, fill:'#f4d7a4',
-                                       align:'center', outline:ink});
-  guideText(value,   cx, top+39,      {size:23, weight:800, fill:'#fff3d6',
-                                       align:'center', outline:ink});
+  guideText(value, left + w/2, top + h/2 + (surd ? 10 : 9),
+            {size:25, weight:800, fill:'#ffeec2', align:'center',
+             outline:'rgba(46,14,8,.85)'});
   ctx.restore();
 }
 function elbowPath(x,y,dx,dy){
@@ -4030,16 +4119,15 @@ function drawGuides(){
      two are never near it. */
   const clearOfTank = TANK.x - G.recoil*.6 + TANK.w + 12;
   const SIDE = {
-    adj: {x:tri.ax+(tri.bx-tri.ax)/2, y:tri.by+50,                 cap:t('ADJACENT'),   align:'center',
-          minLeft:clearOfTank},
-    opp: {x:tri.bx+22,                y:(tri.by+tri.cy)/2,         cap:t('OPPOSITE'),   align:'left'},
-    hyp: {x:(tri.ax+tri.cx)/2 - 26,   y:(tri.ay+tri.cy)/2 - 40,    cap:t('HYPOTENUSE'), align:'right'}
+    adj: {x:tri.ax+(tri.bx-tri.ax)/2, y:tri.by+46, align:'center', minLeft:clearOfTank},
+    opp: {x:tri.bx+22,                y:(tri.by+tri.cy)/2, align:'left'},
+    hyp: {x:(tri.ax+tri.cx)/2 - 26,   y:(tri.ay+tri.cy)/2 - 38, align:'right'}
   };
   [G.reveal.chipA, G.reveal.chipO].forEach((u0,i)=>{
     const u = u0 * G.chipAlpha;
     const p = SIDE[given[i]]; if(!p) return;
     const shown = (L.show && L.show[i]) ? `${L.show[i]} ${t('m')}` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
-    guideCard(p.x, p.y, p.cap, shown, u, p.align, p.minLeft);
+    guideCard(p.x, p.y, shown, u, p.align, p.minLeft);
   });
   ctx.restore();
 

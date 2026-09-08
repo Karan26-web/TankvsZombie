@@ -11,10 +11,14 @@ Nothing is force-fitted: the art keeps its own proportions and the measured
 numbers go into the code, which is the only way a set of structures with
 different silhouettes can all stand a zombie on a level surface.
 
+The renders themselves live in art-src/, not assets/ — assets/ holds only
+what index.html loads, and a 1536x1024 master is not that. They are lossless
+webp, so re-cutting a plate starts from the same pixels the first cut did.
+
 Usage:
-  fit_assets.py plates SBgm1.png:nbTrees  SBgm5.png:nbMoon  ...
-  fit_assets.py mist   SBgm6.png:nbMist
-  fit_assets.py ruin   SBgm7.png:ruinPlinth [--check]
+  fit_assets.py plates art-src/SBgm1.webp:nbTrees  art-src/SBgm5.webp:nbMoon  ...
+  fit_assets.py mist   art-src/SBgm6.webp:nbMist
+  fit_assets.py ruin   art-src/SBgm7.webp:ruinPlinth [--check]
 """
 import subprocess, sys
 from pathlib import Path
@@ -43,9 +47,9 @@ def to_webp(img, name, quality=88):
 
 
 def split(arg):
-    """'render.png:outname' -> (Path, outname)"""
+    """'art-src/render.webp:outname' -> (Path, outname)"""
     if ":" not in arg:
-        sys.exit(f"expected <render.png>:<outname>, got {arg!r}")
+        sys.exit(f"expected <render>:<outname>, got {arg!r}")
     src, name = arg.rsplit(":", 1)
     return Path(src), name
 

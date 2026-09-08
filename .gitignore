@@ -26,6 +26,10 @@ dist/
 build/
 coverage/
 
+# Python bytecode from tools/
+__pycache__/
+*.pyc
+
 # Temporary generated files
 tmp/
 temp/
