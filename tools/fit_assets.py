@@ -6,6 +6,8 @@
   mist      — measure the wisp's content box and print CLOUD_SRC.
   ruin      — measure a structure's alpha box, its flat deck row and that
               deck's centre column, and print its BUILDINGS[] entry.
+  commander — trim the tank commander's bust, size it off her helmet, and
+              print the CMDR numbers (helmet width, rim cut row, centre column).
 
 Nothing is force-fitted: the art keeps its own proportions and the measured
 numbers go into the code, which is the only way a set of structures with
@@ -19,8 +21,9 @@ Usage:
   fit_assets.py plates art-src/SBgm1.webp:nbTrees  art-src/SBgm5.webp:nbMoon  ...
   fit_assets.py mist   art-src/SBgm6.webp:nbMist
   fit_assets.py ruin   art-src/SBgm7.webp:ruinPlinth [--check]
+  fit_assets.py commander art-src/commander.webp:commander
 """
-import subprocess, sys
+import shutil, subprocess, sys
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
@@ -36,11 +39,14 @@ DECK_TOL = 5                # px of unevenness still counted as one flat deck
 
 def to_webp(img, name, quality=88):
     dest = OUT / f"{name}.webp"
-    tmp = dest.with_suffix(".fit.png")
-    img.save(tmp)
-    subprocess.run(["cwebp", "-quiet", "-q", str(quality), "-alpha_q", "100",
-                    str(tmp), "-o", str(dest)], check=True)
-    tmp.unlink()
+    if shutil.which("cwebp"):
+        tmp = dest.with_suffix(".fit.png")
+        img.save(tmp)
+        subprocess.run(["cwebp", "-quiet", "-q", str(quality), "-alpha_q", "100",
+                        str(tmp), "-o", str(dest)], check=True)
+        tmp.unlink()
+    else:                   # same settings through Pillow's own libwebp
+        img.save(dest, "WEBP", quality=quality, alpha_quality=100, method=6)
     print(f"  -> assets/{dest.name}  {img.size[0]}x{img.size[1]}  "
           f"{dest.stat().st_size // 1024} KB")
     return dest
@@ -175,6 +181,56 @@ def do_ruin(arg, check=False):
         print(f"  check image: {p}")
 
 
+# ------------------------------------------------------------- commander
+COMMANDER_HEAD_PX = 300     # helmet width in the shipped file — about 2.5x the
+                            # most the zoomed cut-scene ever draws it at
+
+
+def row_spans(al, thresh=128):
+    """(left, right) of the opaque run on every row, None where empty."""
+    spans = []
+    for row in al:
+        xs = np.where(row > thresh)[0]
+        spans.append((int(xs.min()), int(xs.max())) if len(xs) else None)
+    return spans
+
+
+def do_commander(arg):
+    """A head-and-shoulders bust that climbs out of the turret hatch. The game
+    only needs three numbers off it: how wide the helmet is (that sets her
+    scale against the hatch), and where the shoulders begin and on which
+    column — that row is the one the hatch rim cuts her off at."""
+    src, name = split(arg)
+    im = Image.open(src).convert("RGBA")
+    x0, y0, w, h = content_box(im, thresh=40)
+    pad = 6
+    im = im.crop((x0 - pad, y0 - pad, x0 + w + pad, y0 + h + pad))
+    spans = row_spans(np.asarray(im)[:, :, 3])
+    widths = [s[1] - s[0] if s else 0 for s in spans]
+    rows = len(spans)
+    # the helmet is the widest row in the top two-thirds (the ear-cups)
+    head_row = max(range(rows * 2 // 3), key=lambda y: widths[y])
+    sc = COMMANDER_HEAD_PX / widths[head_row]
+    im = im.resize((round(im.width * sc), round(im.height * sc)), Image.LANCZOS)
+    spans = row_spans(np.asarray(im)[:, :, 3])
+    widths = [s[1] - s[0] if s else 0 for s in spans]
+    rows = len(spans)
+    head_row = max(range(rows * 2 // 3), key=lambda y: widths[y])
+    # the neck: the narrowest row between the helmet and the chest
+    band = range(head_row + 1, rows * 9 // 10)
+    neck = min((y for y in band if widths[y]), key=lambda y: widths[y])
+    # the cut: where the shoulders have opened 30% past the neck
+    cut = next(y for y in range(neck, rows) if widths[y] >= widths[neck] * 1.3)
+    cx = round((spans[cut][0] + spans[cut][1]) / 2)
+    top = next(y for y in range(rows) if spans[y])
+    to_webp(im, name, quality=90)
+    print(f"\n  paste into index.html:\n"
+          f"  const CMDR = {{w:{im.width}, h:{im.height}, headW:{widths[head_row]}, "
+          f"top:{top}, cut:{cut}, cx:{cx}}};")
+    print(f"  neck {widths[neck]}px at y={neck}, shoulders {widths[cut]}px at the cut; "
+          f"{cut - top}px of her shows above the rim")
+
+
 def main():
     if len(sys.argv) < 3:
         sys.exit(__doc__)
@@ -187,6 +243,8 @@ def main():
     elif mode == "ruin":
         for a in args:
             do_ruin(a, check)
+    elif mode == "commander":
+        do_commander(args[0])
     else:
         sys.exit(f"unknown mode {mode!r}")
 

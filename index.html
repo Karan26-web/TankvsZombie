@@ -132,20 +132,21 @@ canvas{position:absolute;inset:0;display:block}
   font-size:19px;letter-spacing:.7px;
   transition:opacity .34s;white-space:nowrap}
 
-/* --- utility keys: hint and restart -----------------------------------
+/* --- utility key: the hint --------------------------------------------
    Parked top-right, opposite the objective plate, on the one strip of frame
    the composition never reaches: frameRound() centres the scene, so the
    content's right edge lands around x=1030 at its widest and this corner
    stays clear in every round. Same gem as everything else you can press. */
 #utilBtns{position:absolute;right:18px;top:14px;display:flex;gap:11px;
   align-items:flex-start;pointer-events:auto}
-/* Both keys were painted plates, in a rust-and-red palette that belonged to
-   nothing else left on screen — and each was framed differently inside its
-   file, so half the rule below used to be arithmetic undoing a transparent
-   halo. They are gel icon keys now: the corner matches the dock and the
-   cards, a reskin reaches them, and the glyphs are inline SVG, which is what
-   lets them take the shell's own ink colour. */
-#hintBtn,#resetBtn{--gel-h:58px}
+/* The corner's keys were painted plates, in a rust-and-red palette that
+   belonged to nothing else left on screen — and each was framed differently
+   inside its file, so half the rule below used to be arithmetic undoing a
+   transparent halo. The bulb is a gel icon key now: the corner matches the
+   dock and the cards, a reskin reaches it, and the glyph is inline SVG, which
+   is what lets it take the shell's own ink colour. (The restart key that
+   stood beside it is gone; the round's briefing plays once.) */
+#hintBtn{--gel-h:58px}
 #hintBtn{--gel-top:#fff2b0;--gel-mid:#ffd033;--gel-bot:#f0a000}  /* the bulb runs hotter */
 
 /* A wrong answer is the moment help is worth offering, so the bulb asks to be
@@ -380,14 +381,15 @@ canvas{position:absolute;inset:0;display:block}
    reprint the table. --dockW is the one real length here: change it and the
    whole console scales as a rigid unit, the way #stage does.
 
-   TWO OF ITS WORDS ARE LIVE — the plaque's and the FIRE key's — and that is
-   the whole reason the sheet is repainted on its way through the cutter. The
-   artist lettered both in English and this game speaks six languages. */
+   ONE OF ITS WORDS IS LIVE — the FIRE key's — and that is why the sheet is
+   repainted on its way through the cutter: the artist lettered it in English
+   and this game speaks six languages. The sheet's "CONTROL PANEL" plaque is
+   not cut at all; see WHERE IT SITS. */
 #controlDock{
   --dockW:450px;                          /* the console's width on the stage */
   --u:calc(var(--dockW)/1223);            /* …and one pixel of the sheet */
   position:absolute;left:50%;bottom:-18px;
-  width:var(--dockW);height:calc(467*var(--u));
+  width:var(--dockW);height:calc(365*var(--u));
   transform:translateX(-50%) translateY(var(--dockY,0));
   transform-origin:center bottom;
   transition:transform .60s cubic-bezier(.18,.86,.24,1),opacity .38s ease,filter .2s ease;
@@ -399,28 +401,29 @@ canvas{position:absolute;inset:0;display:block}
 
 /* WHERE IT SITS, and why it is not the plank's rule any more. The old dock
    fitted entirely inside the dirt band below PLAY_SURFACE_Y=600, and this
-   console cannot: the art is 2.62:1 where the plank was 5.2:1, so at any
-   width that leaves the read-out legible it stands 170-190px tall against a
-   120px band. Two things in the art make that affordable rather than a
-   regression, and the numbers above are set by them:
+   console very nearly does: the art is 3.35:1 where the plank was 5.2:1, so
+   at a width that leaves the read-out legible it stands ~134px tall against a
+   120px band. Two things in the art make that fit, and the numbers above are
+   set by them:
      · the bottom sixth of the sheet is moss fringe and pipe ends hanging off
        the console, so the box is dropped past the stage floor and #stage's
        own overflow:hidden crops decoration rather than instrument;
-     · the top sixth is the name plaque — narrow, centred, and standing clear
-       of the frame — so the only thing that rises past the grass line is a
-       sign, which is what a sign is for.
+     · the sheet stacks a "CONTROL PANEL" plaque, a pipe rail either side of
+       it and a mat of moss over the frame's top bevel, and all of that stood
+       up past the grass line into the field — over the tank's front fender,
+       and over the adjacent side's measurement. The cutter trims it off, so
+       the bevel IS the console's top edge.
    450/-18 is the pair those two pull to, and it is measured, not chosen: the
-   console's body lands at y=598 with its plaque standing 17 stage-px proud
-   of it, and its last 50 SHEET-px of moss and pipe hang past the stage floor
-   and are cropped.
+   console's top edge lands at y≈604, just under the grass line, and its last
+   50 SHEET-px of moss and pipe hang past the stage floor and are cropped.
    That is the part of the old invariant which was actually load-bearing —
    the tank stands ON the grass line and keeps its tracks, its hull and its
    gun, and the triangle never comes near, since its horizontal leg runs at
    the gun's own height, y~523, and its right angle stands off at the target's
-   column. What the plaque does cross is the tank's front fender, and it reads
-   as what it is: a console bolted to the parapet in FRONT of the tank.
+   column. Nothing of the console reaches the field: it reads as what it is,
+   a console bolted to the parapet in FRONT of the tank.
    The two numbers move together. Widening the console at a fixed drop walks
-   its body up into the field — 2.62:1 turns 100px of width into 38px of
+   its top up into the field — 3.35:1 turns 100px of width into 30px of
    height — and dropping it further at a fixed width buys that back by
    cropping more moss, of which there is only that ~50 sheet-px to spend. */
 
@@ -439,29 +442,11 @@ canvas{position:absolute;inset:0;display:block}
   left:calc(var(--x)*var(--u));top:calc(var(--y)*var(--u));
   width:calc(var(--w)*var(--u));height:calc(var(--h)*var(--u))}
 /*                          x    y    w    h   —  window it covers          */
-.cpTitle {--x:402;--y: 41;--w:366;--h: 45}   /* the plaque's flat interior  */
-.thetaTag{--x:155;--y:186;--w:129;--h:115}   /* the left cheek              */
-.valBox  {--x:289;--y:154;--w:273;--h:172}   /* readout  315,166,221x148    */
-#upBtn   {--x:601;--y:122;--w:111;--h:110}   /* up       608,132, 97x 90    */
-#downBtn {--x:600;--y:250;--w:112;--h:110}   /* down     608,260, 97x 90    */
-#fireBtn {--x:773;--y:119;--w:300;--h:238}   /* fire     801,135,244x207    */
-
-/* --- the name plaque ---------------------------------------------------
-   Cut and healed back to bare metal, then lettered here. The type is sized
-   to the plaque rather than to the words: a translation that runs long is
-   held on one line and clipped by the plate's own edge, which reads as a
-   sign too small for its name — where wrapping would read as broken. */
-.cpTitle{display:flex;align-items:center;justify-content:center;overflow:hidden;
-  font-size:calc(38*var(--u));font-weight:700;letter-spacing:calc(2.5*var(--u));
-  line-height:1;white-space:nowrap;color:#c3b69f;
-  text-shadow:0 calc(1.5*var(--u)) 0 rgba(12,16,10,.85)}
-/* Devanagari, Telugu and Odia carry marks above and below the line, and the
-   plaque's interior is only 45 sheet-px tall — so they trade the size English
-   spends on a 91%-full plate for the vertical room those marks need. 33
-   leaves the widest of them (Telugu) at 58% of the plate and its matras
-   inside it; the Fire key's label is capped by the same script for the same
-   reason, and 52 is what keeps it off the neon ring. */
-html:not([lang="en"]) .cpTitle{font-size:calc(33*var(--u));letter-spacing:0}
+.thetaTag{--x:155;--y: 84;--w:129;--h:115}   /* the left cheek              */
+.valBox  {--x:289;--y: 52;--w:273;--h:172}   /* readout  315, 64,221x148    */
+#upBtn   {--x:601;--y: 20;--w:111;--h:110}   /* up       608, 30, 97x 90    */
+#downBtn {--x:600;--y:148;--w:112;--h:110}   /* down     608,158, 97x 90    */
+#fireBtn {--x:773;--y: 17;--w:300;--h:238}   /* fire     801, 33,244x207    */
 
 /* --- theta: a LABEL, not part of the read-out, so it stands outside the
    slot — the slot holds the answer and nothing else. It is the sheet's own
@@ -771,6 +756,40 @@ html:not([lang="en"]) #fireBtn span{font-size:calc(52*var(--u))}
 /* PLAY AGAIN next to CONTINUE: the cream wafer from the kit, one size down,
    so the two keys are obviously the same part at two volumes */
 .bigBtn.is-quiet{--gel-h:56px;--gel-pad:30px;--gel-r:18px;font-size:21px}
+
+/* --- THE COMMANDER'S LINE — the card's page as a speech bubble: same
+   brown casing, cream bezel and parchment, with a tail that points back at
+   the hatch. showCommanderLine() puts the tail's tip beside her head and
+   everything else hangs off that one point. --- */
+#cmdLine{position:absolute;left:0;top:0;width:540px;transform:translateY(-50%);
+  display:flex;pointer-events:none}
+#cmdLine.hidden{display:none}
+.cmdBubble{position:relative;margin-left:22px;padding:20px 30px 22px;
+  border:5px solid var(--plate-ring);border-radius:26px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.6) 0%,rgba(255,255,255,0) 30%),
+    linear-gradient(180deg,var(--parch-a) 0%,var(--parch-b) 58%,var(--parch-c) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,.85),
+    inset 0 -8px 0 rgba(170,124,60,.28),
+    0 0 0 5px var(--plate-case),
+    0 9px 0 var(--plate-case-deep),
+    0 20px 40px rgba(0,0,0,.5);
+  transform-origin:0 50%;animation:cmdPop .44s cubic-bezier(.2,.9,.3,1.3) backwards}
+/* the tail: a parchment diamond whose two outer edges wear the bezel, and a
+   shadow copy shifted outward that becomes the casing round them */
+.cmdBubble::before{content:"";position:absolute;left:-19px;top:calc(50% - 15px);
+  width:28px;height:28px;background:var(--parch-b);
+  border-left:5px solid var(--plate-ring);border-bottom:5px solid var(--plate-ring);
+  border-bottom-left-radius:5px;transform:rotate(45deg);
+  box-shadow:-5px 5px 0 0 var(--plate-case)}
+.cmdBubble p{position:relative;font-size:24px;line-height:1.42;font-weight:700;
+  color:var(--parch-ink);text-shadow:0 1px 0 rgba(255,255,255,.55)}
+#cmdNext{position:absolute;right:34px;bottom:30px;margin:0;visibility:hidden}
+#cmdNext.is-in{visibility:visible;animation:gelPop .32s cubic-bezier(.2,.8,.3,1) backwards}
+@keyframes cmdPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+/* the scene is hers: the round's keys and readouts stand down while she talks */
+body[data-state="COMMANDER"] #hud{opacity:0;pointer-events:none}
 /* Indic scripts are unicase and their conjuncts sit tight: UPPERCASE is a
    no-op and tracking only pulls the clusters apart, so both come off for
    every language but English. */
@@ -835,7 +854,7 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
 @media (prefers-reduced-motion: reduce){
   .titleScreenInner,.playTitleBtn,
   #fireBtn,.shakeX,#hintBtn.is-calling,
-  #trigSheet,.trigPanel,#trigTable td.is-answer{animation:none!important}
+  #trigSheet,.trigPanel,#trigTable td.is-answer,.cmdBubble,#cmdNext{animation:none!important}
   .playTitleBtn:hover{transform:none}
   .gelBtn,.bigBtn,.playTitleBtn,.sheetBtn{animation:none!important}
   .gelBtn:hover,.bigBtn:hover,.sheetBtn:hover{transform:none}
@@ -925,14 +944,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "or": "ସୂଚନା",
    "gu": "સંકેત"
   },
-  "Start this round again": {
-   "en": "Start this round again",
-   "hi": "यह चरण फिर से शुरू करें",
-   "mr": "ही फेरी पुन्हा सुरू करा",
-   "te": "ఈ రౌండ్‌ను మళ్ళీ ప్రారంభించండి",
-   "or": "ଏହି ରାଉଣ୍ଡ ପୁନର୍ବାର ଆରମ୍ଭ କରନ୍ତୁ",
-   "gu": "આ રાઉન્ડ ફરીથી શરૂ કરો"
-  },
   "Decrease angle": {
    "en": "Decrease angle",
    "hi": "कोण घटाएँ",
@@ -964,14 +975,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "te": "డిగ్రీలలో కోణం, 0, 30, 45, 60 మరియు 90 నుండి ఎంచుకున్నది",
    "or": "ଡିଗ୍ରୀରେ କୋଣ, 0, 30, 45, 60 ଏବଂ 90 ମଧ୍ୟରୁ ବଛା",
    "gu": "ડિગ્રીમાં ખૂણો, 0, 30, 45, 60 અને 90 માંથી પસંદ કરેલો"
-  },
-  "CONTROL PANEL": {
-   "en": "CONTROL PANEL",
-   "hi": "नियंत्रण पैनल",
-   "mr": "नियंत्रण पॅनेल",
-   "te": "కంట్రోల్ ప్యానెల్",
-   "or": "ନିୟନ୍ତ୍ରଣ ପ୍ୟାନେଲ",
-   "gu": "કંટ્રોલ પેનલ"
   },
   "Fire": {
    "en": "Fire",
@@ -1148,6 +1151,14 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "te": "ముందుకు సాగండి",
    "or": "ଆଗକୁ ବଢ଼ନ୍ତୁ",
    "gu": "આગળ વધો"
+  },
+  "Wait! Before we take on the zombies, let's learn some trigonometry.": {
+   "en": "Wait! Before we take on the zombies, let's learn some trigonometry.",
+   "hi": "रुकिए! ज़ॉम्बी से भिड़ने से पहले, आइए थोड़ी त्रिकोणमिति सीखें।",
+   "mr": "थांबा! झोंबींशी लढण्याआधी, चला थोडी त्रिकोणमिती शिकूया.",
+   "te": "ఆగండి! జాంబీలతో పోరాడే ముందు, కొంచెం త్రికోణమితి నేర్చుకుందాం.",
+   "or": "ଅଟକନ୍ତୁ! ଜୋମ୍ବିମାନଙ୍କ ସହ ଲଢ଼ିବା ପୂର୍ବରୁ, ଆସନ୍ତୁ ଟିକେ ତ୍ରିକୋଣମିତି ଶିଖିବା।",
+   "gu": "થોભો! ઝોમ્બી સામે લડતા પહેલાં, ચાલો થોડી ત્રિકોણમિતિ શીખીએ."
   }
  }
 }
@@ -1163,10 +1174,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
               data-i18n-title="Hint — which ratio is this?" data-i18n-aria="Hint">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-4 12.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3A7 7 0 0 0 12 2Zm-2 18h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2Z"/></svg>
       </button>
-      <button type="button" class="gelBtn gelBtn--icon" id="resetBtn" title="Start this round again" aria-label="Start this round again"
-              data-i18n-title="Start this round again" data-i18n-aria="Start this round again">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2.2a.6.6 0 0 0-1-.44L6.6 5.3a.6.6 0 0 0 0 .92L11 9.76a.6.6 0 0 0 1-.44V6.9a5.1 5.1 0 1 1-5.1 5.1 1 1 0 1 0-2 0A7.1 7.1 0 1 0 12 5Z"/></svg>
-      </button>
     </div>
 
     <!-- The console is ONE picture with four windows in it; every child here
@@ -1174,7 +1181,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
          the box table in the CSS, and tools/cut_panel.py for where it is
          measured. Nothing is stacked or flowed — the artwork is the layout. -->
     <div id="controlDock">
-      <div class="cpTitle" data-i18n="CONTROL PANEL">CONTROL PANEL</div>
       <!-- the sheet's own theta, repainted legible by the cutter -->
       <span class="thetaTag" aria-hidden="true"></span>
       <div class="valBox">
@@ -1197,6 +1203,17 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
       </button>
     </div>
   </div>
+
+  <!-- the commander's line, over the zoomed-in hatch. Placed beside her head
+       by showCommanderLine(); the words are markup so every script shapes
+       properly. Her key stands apart in the corner, where a "go on" key
+       lives, and is the same card key CONTINUE wears everywhere else. -->
+  <div id="cmdLine" class="hidden" aria-live="polite">
+    <div class="cmdBubble">
+      <p id="cmdText" data-i18n="Wait! Before we take on the zombies, let's learn some trigonometry.">Wait! Before we take on the zombies, let's learn some trigonometry.</p>
+    </div>
+  </div>
+  <button type="button" class="bigBtn" id="cmdNext" data-i18n="CONTINUE">CONTINUE</button>
 
   <!-- the trig table: built in code so it can point at things (see TRIG_TABLE) -->
   <div id="trigSheet" class="hidden" role="dialog" aria-modal="true" aria-label="Trigonometric table"
@@ -1622,6 +1639,7 @@ const IMGS = {}, MANIFEST = {
   zkill3:'assets/ZombieSprite3.webp', // …and its 8-frame knockdown (name is the artist's)
   tank:'assets/tankSheet.webp',
   shot:'assets/TankShot.webp',
+  commander:'assets/commander.webp', // her head and shoulders, for the hatch scene
   pre:'assets/nbTitle.webp',         // the painted title plate — landscape only
   word:'assets/nbWord.webp',         // …and the wordmark over it, halo and all
   /* Five complete 16:9 plates of ONE moonlit swamp, cropped so all five put
@@ -1989,6 +2007,44 @@ const AU = {
   /* gun laid, target set */
   lockOn(){ if(!this.ctx)return; const t=this.now();
     this.tone(880,t,.07,'square',.09); this.tone(1320,t+.07,.1,'square',.09); },
+  /* ---- the commander's hatch: every beat of it has its own sound ---- */
+  /* two catches letting go, high then lower */
+  latch(){ if(!this.ctx)return; const t=this.now();
+    [0,.09].forEach((d,i)=>{ this.noise(t+d,.035,.32,2600,6400);
+      this.tone(i?1500:1900,t+d,.045,'square',.06); }); },
+  /* the lid rapping against them from underneath */
+  knock(){ if(!this.ctx)return; const t=this.now();
+    this.noise(t,.05,.26,700,2400);
+    this.tone(210+Math.random()*50,t,.07,'square',.09,null,150); },
+  /* the pressure going: a sharp burst, then the long tail of it */
+  hiss(dur){ if(!this.ctx)return; const t=this.now();
+    this.noise(t,.18,.34,2800,9000); this.noise(t+.05,dur,.2,3200,8000); },
+  /* a dry hinge: a sawtooth climbing, shaken by a fast wobble */
+  creak(dur){ if(!this.ctx)return; const t=this.now();
+    const o=this.ctx.createOscillator(), l=this.ctx.createOscillator();
+    const lg=this.ctx.createGain(), g=this.ctx.createGain();
+    o.type='sawtooth';
+    o.frequency.setValueAtTime(330,t); o.frequency.linearRampToValueAtTime(520,t+dur);
+    l.frequency.value=34; lg.gain.value=60; l.connect(lg); lg.connect(o.frequency);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.05,t+.03);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(this.sfxGain);
+    o.start(t); l.start(t); o.stop(t+dur+.05); l.stop(t+dur+.05); },
+  /* steel on its stop: a struck plate's inharmonic partials over a thud —
+     pitched down for the slam shut, so the two ends of the scene rhyme */
+  clang(shut){ if(!this.ctx)return; const t=this.now(), f=shut ? .78 : 1;
+    [[523,.14,.55],[1431,.09,.42],[2207,.06,.3],[3130,.04,.22]]
+      .forEach(([hz,v,d])=>this.tone(hz*f,t,d,'sine',v));
+    this.tone(shut?80:105,t,.22,'sine',.4,null,55);
+    this.noise(t,.06,.34,500,5000); },
+  /* her, out of it like a cork */
+  popOut(){ if(!this.ctx)return; const t=this.now();
+    this.tone(240,t,.13,'sine',.32,null,1250);
+    this.tone(480,t+.01,.09,'triangle',.1,null,2100);
+    this.noise(t,.05,.14,1200,4800); },
+  /* …and back down she goes */
+  duckIn(){ if(!this.ctx)return; const t=this.now();
+    this.tone(950,t,.15,'sine',.22,null,240); },
   fire(){
     if(!this.ctx)return; const t=this.now();
     this.noise(t,.28,.5,80,1500);
@@ -2092,6 +2148,7 @@ const AU = {
 const GameState = {
   PREGAME:'PREGAME',
   INTRO:'INTRO',        // tank rolls into firing position, camera in tow
+  COMMANDER:'COMMANDER',// the hatch opens and she asks for the lesson — once
   BRIEFING:'BRIEF',     // the triangle draws itself in, one side at a time
   AIMING:'AIM',
   LAYING:'LAYING',      // barrel swings to the angle the player committed to
@@ -2110,7 +2167,7 @@ const G = {
   angleShown:BARREL_REST_ANGLE,         // where the barrel actually points
   barrelTarget:BARREL_REST_ANGLE,
   chipAlpha:1,                          // the measured lengths, gone once FIRE lands
-  lay:null, brief:null, trans:null,     // active choreography, if any
+  lay:null, brief:null, trans:null, cmd:null,  // active choreography, if any
   reveal:{adj:0,opp:0,hyp:0,theta:0,chipA:0,chipO:0},
   aimPath:null, shell:null, particles:[], floaters:[],
   shake:0, recoil:0, flash:0, guideAlpha:1,
@@ -2204,6 +2261,32 @@ const BARREL_LEN = TANK.w*.6, BARREL_SC = BARREL_LEN/(SP.cannonTip[0]-SP.cannonP
 // hull art's baked road-wheel discs so the overlays land exactly on them
 TANK.wheelFr = [[.195,.83],[.346,.83],[.499,.83],[.653,.83]];
 TANK.wheelR  = TANK.h*.195;
+
+/* ---------- the commander's hatch ----------
+   The turret ring painted on the hull already has an open hole in it. The
+   hatch is a lid laid over that hole — drawn here rather than painted,
+   because it has to swing — and the commander climbs out through the same
+   hole. HATCH is in hull-sheet px (inside SP.hull), measured off the art:
+   the hole's dark interior, outline included, at its widest row. */
+const HATCH = {cx:410, cy:33, rx:84, ry:7,
+               lidR:90, lidRy:8};               // the lid overlaps the rim a little
+const LID_OPEN = 100*Math.PI/180;               // just past upright: a shield at her back
+/* tools/fit_assets.py commander: her helmet width, the row the rim cuts her
+   off at, and the column that centres her in the hole */
+const CMDR = {w:381, h:427, headW:300, top:3, cut:306, cx:194};
+const CMDR_HEAD = 40;                           // helmet width on screen; the hole is 48
+const CMDR_SC = CMDR_HEAD/CMDR.headW;
+function hatchAt(){
+  const k = TANK.w/SP.hull[2], hx = TANK.x - G.recoil*.6;
+  return {x:hx+HATCH.cx*k, y:TANK.y+HATCH.cy*k, rx:HATCH.rx*k, ry:HATCH.ry*k, k, hx};
+}
+/* where she is for a given climb: 0 is out of sight under the rim, 1 is
+   shoulders-out. `head` is the middle of what shows — the camera aims there. */
+function commanderAt(rise=1){
+  const h = hatchAt(), tall = (CMDR.cut-CMDR.top)*CMDR_SC;
+  const cutY = h.y + h.ry*.5 + (1-rise)*(tall + h.ry + 2);
+  return {h, cutY, head:{x:h.x, y:cutY - tall*.5}};
+}
 
 /* The gun's rotation centre for a tank parked at this screen x. This is the
    apex of the level's triangle AND the one point every shot's line passes
@@ -2429,13 +2512,9 @@ function syncWorldPositions(){
 /* ============================================================
    LEVEL SETUP
    ============================================================ */
-function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='brief', fast=false, keepTries=false}={}){
+function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='brief', fast=false}={}){
   G.level = Math.max(0, Math.min(levelIndex, TOTAL_LEVELS-1));
-  /* `keepTries` is what stops the restart key being a scoring exploit: a
-     round is worth 300 / 200 / 100 by attempt, so a restart that zeroed the
-     count would sell a first-try score after any number of misses. Restarting
-     replays the briefing; it does not un-fire the shells. */
-  if(!keepTries) G.tries = 0;
+  G.tries = 0;
   G.shell=null; G.aimPath=null; G.hitDelay=0;
   G.particles.length=0; G.floaters.length=0;
   G.drive=null; G.tankVel=0; G.dustT=0; G.lay=null; G.brief=null;
@@ -2451,9 +2530,7 @@ function initializeLevel(levelIndex, {resetHearts=false, revive=true, enter='bri
   }
 
   setAngle(DEFAULT_START_ANGLE);
-  /* keepTries means the same question is being re-read, not a new one — the
-     restart key replays the briefing without re-mounting the question. */
-  if(!keepTries){ resetHint(); GameBus.pendingQuestion = true; }
+  resetHint(); GameBus.pendingQuestion = true;
   if(enter==='brief') beginBriefing({fast});
   else if(enter==='aim') enterAiming({instant:true});
   else { clearReveal(); G.guideAlpha=0; stowDock(true); updateControlsForState(); }
@@ -2489,7 +2566,8 @@ function beginIntro(){
   setGameState(GameState.INTRO);
   GameBus.screen('intro', 'intro');
   G.drive = {t:0, nextLevel:null, tankStart:G.tankWorldX, tankEnd:restTank,
-             cameraStart:G.cameraX, cameraEnd:restCam, onArrive:beginBriefing};
+             cameraStart:G.cameraX, cameraEnd:restCam,
+             onArrive:commanderDone ? beginBriefing : beginCommander};
   if(!ambientMotionAllowed()){ poseDriveAt(1); finishDrive(); }
 }
 
@@ -2531,11 +2609,196 @@ function enterAiming({instant=false}={}){
 
 /* the cinematics are skippable — a replay shouldn't cost the player 5 seconds */
 function inChoreo(){ return G.state===GameState.INTRO || G.state===GameState.BRIEFING
-  || G.state===GameState.TRANSITION; }
+  || G.state===GameState.TRANSITION || G.state===GameState.COMMANDER; }
 function skipChoreo(){
   if(G.trans){ finishVictoryBoom(); return true; }
   if(G.state===GameState.INTRO){ if(G.drive){ poseDriveAt(1); finishDrive(); } return true; }
   if(G.state===GameState.BRIEFING){ finishBriefing(); return true; }
+  if(G.state===GameState.COMMANDER) return skipCommander();
+  return false;
+}
+
+/* ============================================================
+   THE COMMANDER — the hand-off to the lesson
+   The first time the tank pulls up to a tower, its commander opens the
+   hatch and climbs out, and the camera closes in while she asks for the
+   lesson. CONTINUE hands over to it (openLesson); when the student comes
+   back she ducks inside, the hatch shuts, and round one's briefing begins.
+   Same rules as the rest of the choreography: one clock on the game loop,
+   skippable, and settled at once under reduced motion. It plays once per
+   page — a retry or a second run goes straight to the fight.
+   ============================================================ */
+/* The score, in seconds. Three movements — the hatch, the pop, the ask —
+   and every beat lands on its own sound, so the ear follows it as well as
+   the eye does:
+     push   the camera leans in on the turret before anything moves
+     latch  two catches let go, and the lid raps against them three times
+     crack  it lifts a finger's width and the pressure goes: hiss, steam
+     throw  it is flung open, creaking, and CLANGS against its stop
+     pop    a beat of empty hatch, then she springs out — and the camera
+            punches in with her
+     line   her question; key, the way to answer it */
+const CMD_IN = {
+  push:[0,.6], latch:.3, knocks:[.4,.52,.64], crack:[.78,1.02], throw:[1.02,1.18],
+  pop:1.6, punch:[1.6,1.95], line:2.05, key:2.6
+};
+const CMD_OUT = {duck:[0,.16], slam:[.2,.34], zoom:[.32,.95], end:1.0};
+const CMD_ZOOM = 3.4;
+const CMD_PUSH = .42;                // the share of the close-up the opening lean-in takes (2x)
+const CMD_FRAME = {x:.3, y:.44};     // where her face settles, as a share of the screen
+const LID_CRACK = .2;                // radians the pressure lifts it before it is thrown
+let commanderDone = false;
+const span = (t,[a,b]) => clamp01((t-a)/(b-a));
+
+function beginCommander(){
+  commanderDone = true;
+  G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
+  clearReveal(); stowDock(true);
+  G.cmd = {t:0, out:null, said:false, ready:false, steamT:0};
+  setGameState(GameState.COMMANDER);
+  if(!ambientMotionAllowed()) G.cmd.t = CMD_IN.key;
+}
+function updateCommander(dt){
+  const c = G.cmd; if(!c) return;
+  const h = hatchAt();
+  if(c.out!==null){
+    const was = c.out; c.out += dt;
+    if(was<CMD_OUT.slam[1] && c.out>=CMD_OUT.slam[1]){
+      AU.clang(true); G.shake = 4; hatchSteam(h, 5, true);
+    }
+    if(c.out>=CMD_OUT.end) finishCommander();
+    return;
+  }
+  const was = c.t;
+  c.t += dt;
+  /* A beat fires when the clock steps over it. A skip jumps the clock by
+     seconds, and every beat it jumps is dropped, so a tap does not set the
+     whole score off in one chord. */
+  const t = c.t, I = CMD_IN, at = x => t-was < .2 && was < x && t >= x;
+  if(at(I.latch)) AU.latch();
+  I.knocks.forEach(k=>{ if(at(k)) AU.knock(); });
+  if(at(I.crack[0])) AU.hiss(.9);
+  if(at(I.throw[0])) AU.creak(I.throw[1]-I.throw[0]+.06);
+  if(at(I.throw[1])){ AU.clang(false); G.shake = 6; hatchSteam(h, 12, true); }
+  if(at(I.pop)){ AU.popOut(); AU.whoosh(.32); }
+  // while the lid is only cracked, steam leaks round its rim
+  if(t>I.crack[0] && t<I.throw[1] && (c.steamT -= dt) <= 0){ hatchSteam(h, 2, false); c.steamT = .03; }
+  if(!c.said && t>=I.line) showCommanderLine();
+  if(!c.ready && t>=I.key) showCommanderKey();
+}
+/* The lid on the clock: still, then knocking at the latch, then cracked by
+   the pressure, then thrown — accelerating — onto its stop, where it
+   rebounds twice and rests. */
+function lidSwingIn(t){
+  const I = CMD_IN;
+  if(t<I.crack[0]){
+    for(const k of I.knocks) if(t>=k && t<k+.07) return .12*Math.sin(Math.PI*(t-k)/.07);
+    return 0;
+  }
+  if(t<I.throw[0]) return LID_CRACK*easeOutCubic(span(t, I.crack));
+  if(t<I.throw[1]){ const u = span(t, I.throw); return LID_CRACK + (LID_OPEN-LID_CRACK)*u*u; }
+  const s = t - I.throw[1];
+  return LID_OPEN - .26*Math.exp(-8*s)*Math.abs(Math.sin(16*s));
+}
+/* Her climb after the pop is a spring: past the rim, back, and settled in a
+   third of a second — then STILL, nothing breathing or drifting. Its speed
+   is what squashes and stretches her (drawCommander). */
+function popSpring(s){
+  if(s<=0) return {y:0, v:0};
+  const e = Math.exp(-12*s), c = Math.cos(22*s), n = Math.sin(22*s);
+  return {y:1 - e*c, v:e*(12*c + 22*n)};
+}
+/* lid swing (radians), climb (0–1, overshooting), her speed, and zoom (0–1) */
+function commanderPose(){
+  const c = G.cmd;
+  if(!c) return {lid:0, rise:0, v:0, zoom:0};
+  if(c.out!==null){
+    const o = c.out, D = CMD_OUT.duck, d = span(o, D), sl = span(o, CMD_OUT.slam);
+    return {lid:LID_OPEN*(1-sl*sl), rise:1-d*d, v:d>0 && d<1 ? -2*d/(D[1]-D[0]) : 0,
+            zoom:1-easeInOutCubic(span(o, CMD_OUT.zoom))};
+  }
+  const t = c.t, sp = popSpring(t - CMD_IN.pop);
+  return {lid:lidSwingIn(t), rise:sp.y, v:sp.v,
+          zoom:CMD_PUSH*easeInOutCubic(span(t, CMD_IN.push))
+               + (1-CMD_PUSH)*easeOutCubic(span(t, CMD_IN.punch))};
+}
+/* steam out of the hatch: a thin leak at the rim's two ends while the lid is
+   cracked, one big breath of it when the lid is flung open */
+function hatchSteam(h, n, burst){
+  for(let i=0;i<n;i++){
+    const side = Math.random()<.5 ? -1 : 1;
+    G.particles.push(burst ? {
+      x:h.x + (Math.random()-.5)*h.rx*1.4, y:h.y - 2,
+      vx:(Math.random()-.5)*240, vy:-50-Math.random()*60,
+      r:3+Math.random()*4, t:0, life:.45+Math.random()*.3, kind:'steam'
+    } : {
+      x:h.x + side*h.rx*(.6+Math.random()*.4), y:h.y - 1,
+      vx:side*(30+Math.random()*40), vy:-22-Math.random()*30,
+      r:3+Math.random()*3, t:0, life:.5+Math.random()*.35, kind:'steam'
+    });
+  }
+}
+/* The close-up: the camera scales about her face while sliding it to
+   CMD_FRAME, and the view is held inside the painted screen so a zoom can
+   never show past the edge of the world. At e=0 this is the identity. */
+function commanderView(e){
+  const z = 1 + (CMD_ZOOM-1)*e, f = commanderAt(1).head;
+  let x = f.x - (lerp(f.x, W*CMD_FRAME.x, e) - W/2)/z;
+  let y = f.y - (lerp(f.y, H*CMD_FRAME.y, e) - H/2)/z;
+  const hw = W/(2*z), hh = H/(2*z);
+  x = Math.max(hw, Math.min(W-hw, x));
+  y = Math.max(hh, Math.min(H-hh, y));
+  return {x, y, z};
+}
+/* the bubble's tail goes beside her head, wherever the view has put it */
+function showCommanderLine(){
+  const c = G.cmd; c.said = true;
+  const v = commanderView(1), f = commanderAt(1).head;
+  const sx = W/2 + (f.x-v.x)*v.z, sy = H/2 + (f.y-v.y)*v.z;
+  const el = $('cmdLine');
+  el.style.left = Math.round(sx + CMDR_HEAD*.5*v.z + 14)+'px';
+  el.style.top  = Math.round(sy)+'px';
+  el.classList.remove('hidden');
+  AU.blip(988);
+}
+function showCommanderKey(){
+  G.cmd.ready = true;
+  const key = $('cmdNext');
+  key.disabled = false; key.classList.add('is-in');
+  key.focus({preventScroll:true});
+}
+function hideCommanderLine(){
+  $('cmdLine').classList.add('hidden');
+  $('cmdNext').classList.remove('is-in');
+}
+function pressCommanderNext(){
+  const c = G.cmd;
+  if(G.state!==GameState.COMMANDER || !c || !c.ready) return;
+  AU.click();
+  c.ready = false; $('cmdNext').disabled = true;
+  hideCommanderLine();
+  openLesson(leaveCommander);
+}
+/* THE LESSON plugs in here: open it, and call `back` once the student has
+   finished it — the hatch scene picks up from there. Until the learning
+   section is wired in, CONTINUE comes straight back to the round. */
+function openLesson(back){ back(); }
+function leaveCommander(){
+  const c = G.cmd; if(!c) return;
+  c.out = 0;
+  if(!ambientMotionAllowed()){ finishCommander(); return; }
+  AU.duckIn();
+}
+function finishCommander(){
+  G.cmd = null; hideCommanderLine();
+  beginBriefing();
+}
+/* a tap fast-forwards to her asking; the key itself is never skipped past,
+   because it is the door to the lesson */
+function skipCommander(){
+  const c = G.cmd; if(!c) return false;
+  if(c.out!==null){ finishCommander(); return true; }
+  if(c.t<CMD_IN.key){ c.t = CMD_IN.key; return true; }
   return false;
 }
 
@@ -2553,6 +2816,7 @@ function resetWorld(){
   G.levelNodes = buildLevelNodes();
   G.cameraX=levelRestCamera(0); G.tankWorldX=levelRestTankX(0); G.tankVel=0;
   G.drive=null; G.dustT=0; G.guideAlpha=1;
+  G.cmd=null; hideCommanderLine();
   activateLevel(0, true);
 }
 
@@ -2581,7 +2845,7 @@ function setControlsEnabled(enabled){
   $('downBtn').disabled=!enabled; $('upBtn').disabled=!enabled;
   angleInput.disabled=!enabled;
   $('fireBtn').disabled=!enabled;
-  $('hintBtn').disabled=!enabled; $('resetBtn').disabled=!enabled;
+  $('hintBtn').disabled=!enabled;
   $('controlDock').classList.toggle('is-busy', !enabled);
 }
 
@@ -2711,17 +2975,6 @@ function pressHint(){
   else if(!trigRevealed) revealTrigAnswer();
   else closeTrigSheet();
 }
-/* ---------- RESTART THE ROUND ----------
-   Replays the briefing so the triangle draws itself again — the round's one
-   explanation, and the thing a stuck player actually wants a second look at.
-   Hearts, score and attempt count all carry over: this is a re-read, not a
-   do-over, and it cannot be used to walk back a miss. */
-function pressReset(){
-  if(G.state!==GameState.AIMING || trigOpen) return;
-  AU.click(); hideMsg(); callHint(false);
-  GameBus.audio('briefing');    // the round's explanation, cue blips and all, played again
-  initializeLevel(G.level, {resetHearts:false, keepTries:true, revive:true, enter:'brief', fast:true});
-}
 function updateControlsForState(){
   setControlsEnabled(G.state===GameState.AIMING);
 }
@@ -2770,13 +3023,16 @@ addEventListener('keydown', e=>{
     else if(e.key==='h' || e.key==='H'){ e.preventDefault(); pressHint(); }
     return;
   }
+  // once she has asked, Enter and Space answer her rather than skip
+  if(G.state===GameState.COMMANDER && G.cmd && G.cmd.ready && (e.key==='Enter' || e.key===' ')){
+    e.preventDefault(); flashPress($('cmdNext')); pressCommanderNext(); return;
+  }
   if(inChoreo() && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); skipChoreo(); return; }
   if(G.state===GameState.AIMING){
     if(e.key==='ArrowUp'){ nudge(1); flashPress($('upBtn')); e.preventDefault(); }
     if(e.key==='ArrowDown'){ nudge(-1); flashPress($('downBtn')); e.preventDefault(); }
     if(e.key==='Enter'){ flashPress($('fireBtn')); pressFire(); }
     if(e.key==='h' || e.key==='H'){ flashPress($('hintBtn')); pressHint(); }
-    if(e.key==='r' || e.key==='R'){ flashPress($('resetBtn')); pressReset(); }
   } else if(G.state===GameState.PREGAME && e.key==='Enter'){
     const play = $('playBtn');
     if(!play || !play.disabled){ e.preventDefault(); startGame(); }
@@ -2832,9 +3088,10 @@ $('trigClose').addEventListener('click', ()=>{ AU.click(); closeTrigSheet(); });
 $('trigSheet').addEventListener('pointerdown', e=>{
   if(e.target === $('trigSheet')){ AU.click(); closeTrigSheet(); }
 });
-$('resetBtn').addEventListener('click', pressReset);
-/* tapping the world fast-forwards the roll-in / briefing */
-cv.addEventListener('pointerdown', ()=>{ if(inChoreo()){ AU.click(); skipChoreo(); } });
+$('cmdNext').addEventListener('click', pressCommanderNext);
+/* tapping the world fast-forwards the roll-in / briefing / hatch scene —
+   and only clicks when there was something left to skip */
+cv.addEventListener('pointerdown', ()=>{ if(inChoreo() && skipChoreo()) AU.click(); });
 const BEST_SCORE_KEY = 'tankVsZombieAngleAcademyBest';
 let startingMission = false;
 function getBestScore(){
@@ -3261,6 +3518,7 @@ function update(dt){
   if(G.shake>0) G.shake=Math.max(0,G.shake-dt*21);
 
   if(G.state===GameState.BRIEFING) updateBriefing(dt);
+  if(G.state===GameState.COMMANDER) updateCommander(dt);
 
   updateZombies(dt);
 
@@ -3289,6 +3547,7 @@ function update(dt){
     if(p.kind==='fire') p.vy+=115*dt;
     if(p.kind==='smoke') p.r+=11*dt;
     if(p.kind==='dust'){ p.r+=8*dt; p.vy-=4*dt; }
+    if(p.kind==='steam'){ p.r+=14*dt; p.vx-=p.vx*2.2*dt; p.vy+=(-14-p.vy)*1.6*dt; }
     if(p.t>p.life) G.particles.splice(i,1);
   }
   for(let i=G.floaters.length-1;i>=0;i--){
@@ -3927,11 +4186,7 @@ function vinculum(txt,x,y,size,align,fill,outline='rgba(38,14,4,.72)'){
   const from = left + ctx.measureText(txt.slice(0,i+1)).width - 1;
   const stop = txt.indexOf(' ', i);          // the radicand ends at the unit
   const to   = left + ctx.measureText(txt.slice(0, stop<0 ? txt.length : stop)).width + 1;
-  /* measured off the radicand's own ink, not guessed from the point size —
-     with textBaseline 'middle' the ascent is relative to y, and a fixed
-     fraction put the rule straight through the digits */
-  const digits = ctx.measureText(txt.slice(i+1, stop<0 ? txt.length : stop));
-  const yBar = y - (digits.actualBoundingBoxAscent || size*.36) - Math.max(3, size*.13);
+  const yBar = y - vinculumRise(txt, size);
   ctx.save(); ctx.lineCap='butt';
   if(outline){
     ctx.strokeStyle=outline; ctx.lineWidth=Math.max(3.4,size*.26);
@@ -3940,6 +4195,15 @@ function vinculum(txt,x,y,size,align,fill,outline='rgba(38,14,4,.72)'){
   ctx.strokeStyle=fill; ctx.lineWidth=Math.max(outline?1.8:2.2,size*(outline?.10:.11));
   ctx.beginPath(); ctx.moveTo(from,yBar); ctx.lineTo(to,yBar); ctx.stroke();
   ctx.restore();
+}
+/* How far above a 'middle' line the radical's bar rides — measured off the
+   radicand's own ink, not guessed from the point size: with textBaseline
+   'middle' the ascent is relative to y, and a fixed fraction put the rule
+   straight through the digits. */
+function vinculumRise(txt,size){
+  const i = txt.indexOf('√'), stop = txt.indexOf(' ', i);
+  const digits = ctx.measureText(txt.slice(i+1, stop<0 ? txt.length : stop));
+  return (digits.actualBoundingBoxAscent || size*.36) + Math.max(3, size*.13);
 }
 function roundRectPath(x,y,w,h,r){
   ctx.beginPath();
@@ -3990,18 +4254,20 @@ function roundRectPath(x,y,w,h,r){
    layers at a glance. What changed is its RIM: it was lit warm from above,
    as it would be under the old daylight, and it now catches the moon's own
    pale green instead. Warm stone, cold moonlight on the edge. */
-function guideCard(x,y,value,u,align='center',minLeft=null){
+/* `hang` puts y at the card's TOP edge instead of its middle, so a card can
+   hang from the line it measures at a fixed gap, whatever its height. */
+function guideCard(x,y,value,u,align='center',minLeft=null,hang=false){
   if(u<=.01) return;
   ctx.save();
   ctx.globalAlpha *= clamp01(u);
-  const rise = (1-u)*10, cy = y + rise;
+  const rise = (1-u)*10;
   ctx.font = `800 25px ${FONT}`;  const vw = ctx.measureText(value).width;
   // a surd carries an overbar, so it needs headroom the plain digits do not
   const surd = value.indexOf('√') >= 0;
-  const w = vw + 32, h = surd ? 50 : 46, r = 13;
+  const w = vw + 32, h = surd ? 40 : 38, r = 13;
   let left = align==='center' ? x - w/2 : align==='left' ? x : x - w;
   if(minLeft!=null && left < minLeft) left = minLeft;
-  const top  = cy - h/2;
+  const top  = (hang ? y : y - h/2) + rise;
   // it sits ON the scene, so it carries its own ground shadow
   ctx.save();
   ctx.shadowColor = 'rgba(2,16,20,.55)'; ctx.shadowBlur = 11; ctx.shadowOffsetY = 4;
@@ -4014,7 +4280,17 @@ function guideCard(x,y,value,u,align='center',minLeft=null){
   ctx.fillStyle = g; ctx.fill();
   ctx.strokeStyle = 'rgba(214,240,222,.6)'; ctx.lineWidth = 1.6;   // moonlight on the edge
   roundRectPath(left+4.8, top+4.8, w-9.6, h-9.6, r-4); ctx.stroke();
-  guideText(value, left + w/2, top + h/2 + (surd ? 10 : 9),
+  /* The number is centred on its INK, measured — not on a nudge. guideText
+     sets 'middle', whose line sits wherever the face's em box puts it, and a
+     fixed offset tuned for one font left the digits riding low in the card.
+     A radical's bar is ink too, so a surd centres together with its rule. */
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const m = ctx.measureText(value);
+  const up = Math.max(m.actualBoundingBoxAscent || 0,
+                      surd ? vinculumRise(value, 25) + Math.max(3.4, 25*.26)/2 : 0);
+  const down = m.actualBoundingBoxDescent || 0;
+  const dx = ((m.actualBoundingBoxLeft || 0) - (m.actualBoundingBoxRight || 0))/2;
+  guideText(value, left + w/2 + dx, top + h/2 + (up - down)/2,
             {size:25, weight:800, fill:'#ffeec2', align:'center',
              outline:'rgba(46,14,8,.85)'});
   ctx.restore();
@@ -4118,8 +4394,13 @@ function drawGuides(){
      tank, so that card is held clear of the hull's nose instead. The other
      two are never near it. */
   const clearOfTank = TANK.x - G.recoil*.6 + TANK.w + 12;
+  /* The adjacent card HANGS from its leg, 7px clear of the line's glow, so it
+     reads as that leg's measurement wherever the round puts it — and stays
+     well clear of the console under it. The dock is markup over the canvas,
+     so anything it crosses is simply gone; its top edge is at y≈604 and a
+     40px card hung here ends by 570. */
   const SIDE = {
-    adj: {x:tri.ax+(tri.bx-tri.ax)/2, y:tri.by+46, align:'center', minLeft:clearOfTank},
+    adj: {x:tri.ax+(tri.bx-tri.ax)/2, y:tri.by+7, align:'center', minLeft:clearOfTank, hang:true},
     opp: {x:tri.bx+22,                y:(tri.by+tri.cy)/2, align:'left'},
     hyp: {x:(tri.ax+tri.cx)/2 - 26,   y:(tri.ay+tri.cy)/2 - 38, align:'right'}
   };
@@ -4127,7 +4408,7 @@ function drawGuides(){
     const u = u0 * G.chipAlpha;
     const p = SIDE[given[i]]; if(!p) return;
     const shown = (L.show && L.show[i]) ? `${L.show[i]} ${t('m')}` : meters(L[given[i]==='adj'?'adjacent':given[i]==='opp'?'opposite':'hyp']);
-    guideCard(p.x, p.y, shown, u, p.align, p.minLeft);
+    guideCard(p.x, p.y, shown, u, p.align, p.minLeft, p.hang);
   });
   ctx.restore();
 
@@ -4143,7 +4424,7 @@ function drawGuides(){
   }
 }
 
-function drawTank(){
+function drawTank(pose=commanderPose()){
   const p = TANK.pivot();
   const a = G.angleShown*Math.PI/180;
   const hx = TANK.x - G.recoil*.6;
@@ -4196,6 +4477,104 @@ function drawTank(){
       -pivot[0]*sc, -pivot[1]*sc, cell[2]*sc, cell[3]*sc);
     ctx.restore();
   });
+
+  // the hatch on the turret ring: the lid hinges at the back, so it stands
+  // behind her once it is open, and the pop bursts out from behind her too
+  drawHatchLid(pose.lid);
+  drawPopFx();
+  drawCommander(pose.rise, pose.v);
+}
+
+/* She is cut off by the hole, not by a line: what shows is everything above
+   the hole's centre plus the inside of the hole itself, so the ring's front
+   lip — already painted on the hull — is what hides the rest of her.
+   Her speed squashes and stretches her about the rim: tall on the way out,
+   a touch squat as the spring settles and as she ducks back in. */
+function drawCommander(rise, v=0){
+  const img = IMGS.commander;
+  if(rise<=0 || !img || !img.naturalWidth) return;
+  const {h, cutY} = commanderAt(rise), s = CMDR_SC;
+  const sy = 1 + Math.max(-.07, Math.min(.14, v*.012)), sx = 1 - (sy-1)*.55;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(h.x-W, h.y-H, W*2, H);
+  ctx.ellipse(h.x, h.y, h.rx, h.ry, 0, 0, Math.PI*2);
+  ctx.clip();
+  ctx.translate(h.x, cutY); ctx.scale(sx, sy);
+  ctx.drawImage(img, -CMDR.cx*s, -CMDR.cut*s, CMDR.w*s, CMDR.h*s);
+  ctx.restore();
+}
+
+/* The pop: a ring of air thrown off her and a fan of action lines over the
+   top of her helmet, both gone in under half a second. Drawn behind her, so
+   they only ever show round her silhouette, never across her face. */
+const POP_FX = .42;
+function drawPopFx(){
+  const c = G.cmd; if(!c || c.out!==null) return;
+  const s = c.t - CMD_IN.pop; if(s<0 || s>POP_FX) return;
+  const u = s/POP_FX, e = easeOutCubic(u), f = commanderAt(1).head;
+  const r = 14 + 40*e;
+  ctx.save();
+  ctx.globalAlpha = 1-u;
+  ctx.strokeStyle = '#fff4c8'; ctx.lineCap = 'round';
+  ctx.lineWidth = .8 + 2.6*(1-u);
+  ctx.beginPath(); ctx.ellipse(f.x, f.y, r, r*.86, 0, 0, Math.PI*2); ctx.stroke();
+  ctx.lineWidth = 1 + 1.8*(1-u);
+  for(let i=0;i<7;i++){
+    const a = Math.PI*(1.12 + i*.127), r0 = r + 3, r1 = r0 + 4 + 9*(1-u);
+    ctx.beginPath();
+    ctx.moveTo(f.x + Math.cos(a)*r0, f.y + Math.sin(a)*r0*.86);
+    ctx.lineTo(f.x + Math.cos(a)*r1, f.y + Math.sin(a)*r1*.86);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/* The lid: a round plate lying in the ring, which the camera — just above
+   the deck — sees as a flat ellipse. It hinges along the BACK edge of the
+   hole, so opening it swings the front edge up and over: the ellipse grows
+   tall as it rises, until the plate stands behind her as a near-circle with
+   its inner face to the camera. Drawn in the sheet's own ink and olives,
+   with the hull-sheet px of HATCH scaled to screen. */
+function drawHatchLid(swing){
+  const h = hatchAt(), k = h.k;
+  const R = HATCH.lidR*k, d = HATCH.lidRy*k;    // its radius, and its depth when shut
+  const c = Math.cos(swing), s = Math.sin(swing);
+  const hingeY = h.y - d;                         // the back edge of the hole
+  const cy = hingeY + d*c - R*s;                  // the plate's centre, swung up about it
+  const ry = Math.max(d*.35, Math.hypot(R*s, d*c));
+  const outer = swing < .08;                      // past a few degrees, the inside shows
+  const th = 5*k*c;                               // the plate's edge, seen while it is low
+  ctx.save();
+  ctx.lineWidth = 5*k; ctx.strokeStyle = '#19212a'; ctx.lineJoin = 'round';
+  ctx.fillStyle = '#434c47';
+  ctx.beginPath(); ctx.ellipse(h.x, cy+th, R, ry, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  const g = ctx.createLinearGradient(0, cy-ry, 0, cy+ry);
+  if(outer){ g.addColorStop(0,'#a5b36f'); g.addColorStop(1,'#6f7d52'); }
+  else     { g.addColorStop(0,'#6f7d52'); g.addColorStop(1,'#4a5638'); }
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.ellipse(h.x, cy, R, ry, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  if(outer){
+    // shut: the grab handle on top and three rivets along the front
+    ctx.lineWidth = 9*k; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(h.x-R*.18, cy-ry*.4); ctx.lineTo(h.x-R*.12, cy-ry-9*k);
+    ctx.lineTo(h.x+R*.12, cy-ry-9*k); ctx.lineTo(h.x+R*.18, cy-ry*.4);
+    ctx.stroke();
+    ctx.lineWidth = 3.5*k; ctx.strokeStyle = '#6f7d52'; ctx.stroke();
+    ctx.fillStyle = '#2e373c';
+    [-.6,0,.6].forEach(f=>{ ctx.beginPath();
+      ctx.arc(h.x+R*f, cy+ry*(f ? .35 : .55), 3.5*k, 0, Math.PI*2); ctx.fill(); });
+  } else {
+    // open: the rubber seal round the inside, the latch lever, the hinge
+    ctx.lineWidth = 4*k; ctx.strokeStyle = 'rgba(25,33,42,.85)';
+    ctx.beginPath(); ctx.ellipse(h.x, cy, R*.8, ry*.8, 0, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = '#2e373c'; ctx.strokeStyle = '#19212a'; ctx.lineWidth = 4*k;
+    roundRectPath(h.x-R*.32, cy+ry*.18, R*.64, Math.max(2, ry*.14), 3*k); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#434c47'; ctx.lineWidth = 5*k;
+    roundRectPath(h.x-R*.42, hingeY-6*k, R*.84, 12*k, 5*k); ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
 }
 
 function drawShell(){
@@ -4220,6 +4599,9 @@ function drawParticles(){
     } else if(p.kind==='dust'){
       ctx.globalAlpha=k*.22; ctx.fillStyle='#7a532a';
       ctx.beginPath(); ctx.ellipse(px,p.y,p.r*1.8,p.r*.72,0,0,7); ctx.fill();
+    } else if(p.kind==='steam'){
+      ctx.globalAlpha=k*.5; ctx.fillStyle='#e4efe9';
+      ctx.beginPath(); ctx.arc(px,p.y,p.r,0,7); ctx.fill();
     } else { // star
       ctx.globalAlpha=Math.min(1,k*1.5); ctx.fillStyle=['#ffd23f','#ff8b3d','#8bd45e','#5ec8ff'][(p.r|0)%4];
       ctx.save(); ctx.translate(px,p.y); ctx.rotate(p.rot);
@@ -4269,13 +4651,21 @@ function render(){
     return;
   }
   const nodes = visibleLevelNodes();
+  const pose = commanderPose();
   ctx.save();
   if(G.shake>0) ctx.translate((Math.random()-.5)*G.shake,(Math.random()-.5)*G.shake);
+  // the hatch scene's close-up — the only time the camera ever leaves 1:1
+  if(pose.zoom>0){
+    const v = commanderView(pose.zoom);
+    ctx.translate(W/2, H/2); ctx.scale(v.z, v.z); ctx.translate(-v.x, -v.y);
+  }
   drawBG();
   drawSkyClouds();
   nodes.forEach(node=>drawTower(node.tower));
   nodes.forEach(node=>drawZombie(node.zombie));
-  drawTank();
+  // the world drops back behind her as the camera closes in
+  if(pose.zoom>0){ ctx.fillStyle = `rgba(3,10,14,${.34*pose.zoom})`; ctx.fillRect(0,0,W,H); }
+  drawTank(pose);
   drawTriangleLegs();      // over the tank, faded where it crosses the hull
   drawGuides();            // right angle, θ sweep, the given lengths
   drawShell();
@@ -4298,7 +4688,18 @@ function onAssetsReady(){
   const sp = location.hash.match(/^#previewshot(\d{1,3})$/);
   const auto = location.hash==='#autoplay';
   const pv = location.hash.match(/^#preview(\d)?(f)?$/);   // headless screenshot helper
-  if(auto){
+  // the hatch scene: #previewcommander plays it; #previewcommander150 plays it
+  // to 1.50s — steam, burst and all — and freezes it there
+  const cp = location.hash.match(/^#previewcommander(\d{1,4})?$/);
+  if(cp){
+    resetWorld(); initializeLevel(0, {resetHearts:true, revive:true, enter:'none'});
+    $('overlay').classList.add('hidden');
+    beginCommander();
+    if(cp[1]){
+      while(G.cmd && G.cmd.t < +cp[1]/100) update(1/60);
+      G.prevPaused = G.state; setGameState(GameState.PAUSED);
+    }
+  } else if(auto){
     resetWorld(); G.score=0; G.hearts=3; initializeLevel(0, {resetHearts:true, revive:true, enter:'aim'});
     $('overlay').classList.add('hidden');
     const autoTimer = setInterval(()=>{

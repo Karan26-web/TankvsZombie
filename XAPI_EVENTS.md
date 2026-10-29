@@ -82,7 +82,7 @@ whenever the bridge is present; the `swiftpal:xapi` postMessage is the standalon
 | `question_started` | a round's briefing begins — the triangle starts drawing itself | `{type:"question", id:"L1"…"L5"}` |
 | `question_answered` | every shell resolves, hit or miss | the angle the dial was holding (below) |
 | `hint_used` | the bulb opens the trig sheet (`bulb`), **SHOW ME THE ANGLE** lights the cell (`bulb_reveal`) | `{type:"hint", id:…}` |
-| `audio_replayed` | the restart key replays the round's briefing and its cue track | `{type:"audio", id:"briefing"}` |
+| `audio_replayed` | not emitted — the restart key that replayed the round's briefing has been removed, and nothing else replays audio | — |
 | `activity_completed` | **CONTINUE** on the win card — nothing else | `{type:"activity", id:"MA10T01_L01_S01"}` |
 
 **`question_answered` object.** The dial is a five-option MCQ over `[0, 30, 45, 60, 90]` and is never

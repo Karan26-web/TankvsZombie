@@ -7,19 +7,25 @@ theta label, and a pile of moss, pipe and bolt decals the frame already wears.
 This slices out the six pieces the dock is built from and writes them to
 assets/ as webp, the way fit_assets.py does for the scenery.
 
-TWO of them are repainted on the way out, and for the same reason: the artist
-lettered them in English. "CONTROL PANEL" and "Fire" are baked pixels on the
-sheet, and this game says both of those words in six languages — the CSS that
-rebuilt the old FIRE key exists precisely because "FIRE" had been the last
-string in the game that stayed English everywhere. Shipping the atlas as drawn
-would put it straight back. So the lettering is taken off and index.html sets
-real, translated text over the empty plate.
+ONE of them is repainted on the way out: the artist lettered the key in
+English. "Fire" is baked pixels on the sheet, and this game says that word in
+six languages — the CSS that rebuilt the old FIRE key exists precisely because
+"FIRE" had been the last string in the game that stayed English everywhere.
+Shipping the atlas as drawn would put it straight back. So the lettering is
+taken off, and index.html sets real, translated text over the empty key.
+
+The panel is the other piece that does not ship as drawn: it is TRIMMED. Over
+the frame's top bevel the sheet stacks a "CONTROL PANEL" name plaque, a pipe
+rail either side of it and a mat of moss on both, and all of that stood up
+past the grass line into the field. The cut starts just above the bevel and
+inks the new edge, so the console is the frame and nothing taller.
 
   python3 tools/cut_panel.py            # cut everything
+  python3 tools/cut_panel.py cpPanel    # …or only the parts named
   python3 tools/cut_panel.py --debug    # …and dump before/after previews
   python3 tools/cut_panel.py --measure  # re-derive PARTS/WINDOWS from the sheet
 """
-import subprocess, sys
+import shutil, subprocess, sys
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageFilter
@@ -35,8 +41,14 @@ DEBUG = ROOT / "art-src" / "_cut_debug"
 # ---- WHERE EACH PART SITS ON THE SHEET --------------------------------
 # Measured, not eyeballed: every box is the alpha bounding box of one connected
 # component of the atlas. --measure prints them again if the sheet is redrawn.
+# The panel is the exception: its box starts PANEL_TRIM rows down, at the top of
+# the frame's own top bevel. Everything over that — the name plaque, the pipe
+# rail either side of it, the moss on both — is left on the sheet. Across the
+# middle the bevel is lit at panel row 105 with a dark band over it, and 102
+# keeps the bottom of that band as the new edge's outline.
+PANEL_TRIM = 102
 PARTS = {
-    "cpPanel": (  10,  13, 1223, 467),   # the frame, windows already cut through it
+    "cpPanel": (  10,  13 + PANEL_TRIM, 1223, 467 - PANEL_TRIM),   # the frame, windows already cut through it
     "cpFire":  (1306, 144,  322, 255),   # the red key
     "cpUp":    (1769, 139,  168, 166),
     "cpDown":  (1978, 139,  170, 166),
@@ -50,30 +62,31 @@ PARTS = {
 # with its moss and its pipes already on it.
 
 # ---- THE FOUR WINDOWS CUT THROUGH THE FRAME ---------------------------
-# The holes in cpPanel that are not connected to the outside — panel-local px.
-# index.html sets the read-out and the three keys over these, so cut() prints
-# them as percentages of the panel, which is the form the CSS wants.
+# The holes in cpPanel that are not connected to the outside — panel-local px,
+# in the TRIMMED panel. index.html sets the read-out and the three keys over
+# these, so cut() prints them as percentages of the panel, which is the form
+# the CSS wants.
 WINDOWS = {
-    "readout": (315, 166, 221, 148),
-    "up":      (608, 132,  97,  90),
-    "down":    (608, 260,  97,  90),
-    "fire":    (801, 135, 244, 207),
+    "readout": (315,  64, 221, 148),
+    "up":      (608,  30,  97,  90),
+    "down":    (608, 158,  97,  90),
+    "fire":    (801,  33, 244, 207),
 }
+# The trim is a straight cut, so it is inked like every other edge of the
+# drawing — whose outline is black — wherever it crossed paint. Three rows:
+# where it crossed the dark band over the bevel that band was nearly black
+# already, and three still leaves the lit bevel under it whole.
+CUT_INK, CUT_ROWS = (10, 12, 9), 3
 
 # ---- WHAT GETS UNLETTERED ---------------------------------------------
 # FIELD is where the glyphs are, measured off the sheet's own row profile,
-# which is the only way to place it: on the plaque, CONTROL PANEL runs y 62-91,
-# then seven clean rows, then the lit bottom bevel at y 99-101 — and that bevel
-# is BRIGHTER than the letters, so a brightness cut that reaches it erases the
-# plaque's edge instead of its lettering. The field stops in the gap. Same
-# story on the key, where the neon ring outshines the word.
+# which is the only way to place it: the key's neon ring is BRIGHTER than the
+# word, so a brightness cut that reaches it erases the ring instead of the
+# lettering. The field stops short of it.
 #
 # FACE is the surface the lettering sits on, and it is a separate thing: the
 # repair is computed over the whole face (see unletter), not just around the
 # glyphs, which is what keeps it seamless.
-TITLE_FIELD = ( 460,  55, 268, 42)
-TITLE_CUT   = 105                       # cream letters over mottled green-grey
-TITLE_FACE  = ( 412,  54, 366, 45)      # the plaque's flat interior, inside its bevel
 FIRE_FIELD  = (1400, 222, 165, 96)
 FIRE_CUT    = 150                       # yellow letters over red
 
@@ -118,7 +131,7 @@ def unletter(rgb, face, field, cut):
     """Take the word off a plate without leaving its shape behind.
 
     Cutting out the glyphs and filling the hole from its rim does NOT work
-    here, and both plates say why: the word is drawn LIT, so it throws a broad
+    here, and the key says why: the word is drawn LIT, so it throws a broad
     bloom across the metal around it. Fill only the glyphs and the bloom stays,
     a bright cloud with a flat patch in the middle of it, and the word is still
     legible as a ghost. Widen the hole until it swallows the bloom and the fill
@@ -140,8 +153,9 @@ def unletter(rgb, face, field, cut):
     untouched; and there is no seam anywhere, because outside the halo
     base + detail is arithmetically the original pixel.
 
-    What is lost is the texture inside the halo, which goes smooth. On a plaque
-    that renders ~30 px tall on the stage, that is not a visible trade."""
+    What is lost is the texture inside the halo, which goes smooth. On a key
+    face that renders ~75 px tall on the stage, under its own word, that is not
+    a visible trade."""
     core = _mask(rgb, field, cut, GROW)
     halo = Image.fromarray((core * 255).astype(np.uint8)) \
                 .filter(ImageFilter.MaxFilter(DILATE)) \
@@ -176,11 +190,14 @@ def fire_face(rgb, alpha):
 
 def to_webp(img, name, quality=92):
     dest = OUT / f"{name}.webp"
-    tmp = dest.with_suffix(".cut.png")
-    img.save(tmp)
-    subprocess.run(["cwebp", "-quiet", "-q", str(quality), "-alpha_q", "100",
-                    str(tmp), "-o", str(dest)], check=True)
-    tmp.unlink()
+    if shutil.which("cwebp"):
+        tmp = dest.with_suffix(".cut.png")
+        img.save(tmp)
+        subprocess.run(["cwebp", "-quiet", "-q", str(quality), "-alpha_q", "100",
+                        str(tmp), "-o", str(dest)], check=True)
+        tmp.unlink()
+    else:                   # same settings through Pillow's own libwebp
+        img.save(dest, "WEBP", quality=quality, alpha_quality=100, method=6)
     print(f"  -> assets/{dest.name}  {img.size[0]}x{img.size[1]}  "
           f"{dest.stat().st_size // 1024} KB")
 
@@ -212,15 +229,22 @@ def measure():
         print(f"  ({xs.start-px:4d},{ys.start-py:4d},{xs.stop-xs.start:4d},{ys.stop-ys.start:4d})")
 
 
-def cut(debug=False):
+def ink_cut(part):
+    """Outline the trimmed panel's top edge, in every column the cut went
+    through paint — columns whose silhouette already starts lower, down the
+    two bevelled corners, keep their own outline."""
+    a = np.asarray(part).copy()
+    crossed = a[0, :, 3] > 0
+    for row in range(CUT_ROWS):
+        paint = crossed & (a[row, :, 3] > 0)
+        a[row, paint, :3] = CUT_INK
+    return Image.fromarray(a)
+
+
+def cut(debug=False, only=None):
     atlas = np.asarray(Image.open(SRC).convert("RGBA")).astype(float)
     rgb, alpha = atlas[:, :, :3], atlas[:, :, 3]
 
-    tx, ty, tw, th = TITLE_FACE
-    plaque = np.zeros(rgb.shape[:2], bool)
-    plaque[ty:ty + th, tx:tx + tw] = True
-
-    rgb, title_core = unletter(rgb, plaque, TITLE_FIELD, TITLE_CUT)
     rgb, fire_core = unletter(rgb, fire_face(rgb, alpha), FIRE_FIELD, FIRE_CUT)
 
     sheet = Image.fromarray(np.clip(np.dstack([rgb, alpha]), 0, 255).astype(np.uint8))
@@ -228,20 +252,24 @@ def cut(debug=False):
     if debug:
         DEBUG.mkdir(exist_ok=True)
         was = Image.open(SRC).convert("RGB")
-        for who, (x, y, w, h) in (("title", TITLE_FIELD), ("fire", FIRE_FIELD)):
-            box = (x - 55, y - 45, x + w + 55, y + h + 45)
-            strip = Image.new("RGB", (box[2] - box[0], (box[3] - box[1]) * 2 + 8), (30, 30, 30))
-            strip.paste(was.crop(box), (0, 0))
-            strip.paste(sheet.convert("RGB").crop(box), (0, box[3] - box[1] + 8))
-            strip.save(DEBUG / f"{who}.png")
+        x, y, w, h = FIRE_FIELD
+        box = (x - 55, y - 45, x + w + 55, y + h + 45)
+        strip = Image.new("RGB", (box[2] - box[0], (box[3] - box[1]) * 2 + 8), (30, 30, 30))
+        strip.paste(was.crop(box), (0, 0))
+        strip.paste(sheet.convert("RGB").crop(box), (0, box[3] - box[1] + 8))
+        strip.save(DEBUG / "fire.png")
         print(f"  before/after previews in {DEBUG}/")
 
     for name, (x, y, w, h) in PARTS.items():
+        if only and name not in only:
+            continue
         part = sheet.crop((x, y, x + w, y + h))
         if name == "cpTheta":
             flat = np.asarray(part).astype(float)
             flat[:, :, :3] = THETA_INK          # alpha, and only alpha, is the glyph
             part = Image.fromarray(np.clip(flat, 0, 255).astype(np.uint8))
+        if name == "cpPanel":
+            part = ink_cut(part)
         to_webp(part, name)
 
     pw, ph = PARTS["cpPanel"][2], PARTS["cpPanel"][3]
@@ -255,4 +283,8 @@ if __name__ == "__main__":
     if "--measure" in sys.argv:
         measure()
     else:
-        cut("--debug" in sys.argv)
+        names = [a for a in sys.argv[1:] if not a.startswith("--")]
+        unknown = [n for n in names if n not in PARTS]
+        if unknown:
+            sys.exit(f"unknown part(s) {unknown}; the parts are {list(PARTS)}")
+        cut("--debug" in sys.argv, names or None)
