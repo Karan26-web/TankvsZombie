@@ -77,13 +77,13 @@ whenever the bridge is present; the `swiftpal:xapi` postMessage is the standalon
 
 | verb | this book's trigger | object |
 |---|---|---|
-| `activity_launched` | **PLAY GAME** on the title plate (and **PLAY AGAIN**, which is a second run) | `{type:"activity", id:"MA10T01_L01_S01"}` |
-| `screen_viewed` | title plate (`start`), the tank's roll-in (`intro`), the win card (`celebration`), the out-of-shells card (`game_over`) | `{type:"screen", id:…}` |
+| `activity_launched` | **START ▶** on the title plate | `{type:"activity", id:"MA10T01_L01_S01"}` |
+| `screen_viewed` | title plate (`start`), the opening story after START (`story`), the tank's roll-in during it (`intro`), the drive into the safe zone after the last round (`safe_zone`), the Mission Complete card (`celebration`), the out-of-shells card (`game_over`) | `{type:"screen", id:…}` |
 | `question_started` | a round's briefing begins — the triangle starts drawing itself | `{type:"question", id:"L1"…"L5"}` |
 | `question_answered` | every shell resolves, hit or miss | the angle the dial was holding (below) |
 | `hint_used` | the bulb opens the trig sheet (`bulb`), **SHOW ME THE ANGLE** lights the cell (`bulb_reveal`) | `{type:"hint", id:…}` |
 | `audio_replayed` | not emitted — the restart key that replayed the round's briefing has been removed, and nothing else replays audio | — |
-| `activity_completed` | **CONTINUE** on the win card — nothing else | `{type:"activity", id:"MA10T01_L01_S01"}` |
+| `activity_completed` | **FINISH** on the Mission Complete card — nothing else | `{type:"activity", id:"MA10T01_L01_S01"}` |
 
 **`question_answered` object.** The dial is a five-option MCQ over `[0, 30, 45, 60, 90]` and is never
 shuffled, so `ui_index` and `original_index` are always the same index:
@@ -96,7 +96,7 @@ shuffled, so `ui_index` and `original_index` are always the same index:
 
 **context.** `template` is `SOLVE_ANGLE_SIN` / `_COS` / `_TAN` — the ratio the round asks for, which is
 what separates the five rounds; `question_format` is always `mcq` and `phase` is `practice` on every
-question-bearing statement (`intro` on the launch and the roll-in, `outro` on the two end cards).
+question-bearing statement (`intro` on the launch and the roll-in, `outro` on the safe-zone ending and the two end cards).
 `question_id` is `L1`…`L5` and `question_index` is the round's 0-based position.
 
 **`skill_code`** defaults to `MA10T01_L01_S01` (`lo_code` `MA10T01_L01`) and is overridable with
@@ -104,7 +104,7 @@ question-bearing statement (`intro` on the launch and the roll-in, `outro` on th
 
 **Completion.** `result.score` is first-try accuracy across the rounds actually answered — a round
 replayed after an out-of-shells card is counted once, on its latest run. A child who never taps
-CONTINUE never reports completion, by design. `swiftpal:lesson_complete` (a per-question report) and
+FINISH never reports completion, by design. `swiftpal:lesson_complete` (a per-question report) and
 `swiftpal:proceed` follow the verb, in that order, on the same tap.
 
 **Noise control.** `GameBus.signal()` posts `swiftpal:signal` only under `?dev=1`. A production host
