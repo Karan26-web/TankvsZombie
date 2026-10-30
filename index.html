@@ -89,8 +89,7 @@ button:focus-visible,#angleInput:focus-visible{
    the canvas itself is one full-bleed layer under the HUD)
    ============================================================ */
 canvas{position:absolute;inset:0;display:block}
-/* the world takes every touch itself (see worldTap): no browser pan, zoom
-   or long-press callout fighting it for the finger */
+/* the world is not a page: no browser pan, zoom or long-press callout on it */
 #game{touch-action:none;-webkit-touch-callout:none}
 
 /* ============================================================
@@ -770,12 +769,6 @@ body[data-state="OUTRO"] #hud,body[data-state="WIN"] #hud{opacity:0;pointer-even
    down for all of it */
 body.in-story #hud,body[data-state="COMMANDER"] #hud{opacity:0;pointer-events:none}
 
-/* --- THE STORY'S CONTROL — a quiet SKIP in the corner the hint bulb uses
-   during a round. --- */
-#storyUi{position:absolute;inset:0;pointer-events:none}
-#storyUi.hidden{display:none}
-#storySkip{position:absolute;right:18px;top:14px;pointer-events:auto;
-  --gel-h:46px;--gel-pad:22px;font-size:18px;font-weight:800;letter-spacing:1px}
 /* beat 1's line is the story's TITLE, set the way the game sets its own name:
    the wordmark's slime green, a heavy dark outline, a block shadow under it —
    not a caption box. It springs in over the world and stays for the beat. */
@@ -1327,14 +1320,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "or": "ଚାଲନ୍ତୁ, ଲକ୍ଷ୍ୟ କରିବା ପାଇଁ ସବୁ ଛଅଟି ଅନୁପାତ ଜାଣିବା!",
    "gu": "ચાલો, નિશાન તાકવા માટે છએ છ ગુણોત્તરો શીખીએ!"
   },
-  "SKIP": {
-   "en": "SKIP",
-   "hi": "छोड़ें",
-   "mr": "वगळा",
-   "te": "దాటవేయండి",
-   "or": "ଛାଡ଼ନ୍ତୁ",
-   "gu": "છોડો"
-  },
   "The path is clear. Let's head in!": {
    "en": "The path is clear. Let's head in!",
    "hi": "रास्ता साफ़ है। चलिए, अंदर चलते हैं!",
@@ -1408,10 +1393,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
     </div>
   </div>
 
-  <!-- the story's own control: SKIP -->
-  <div id="storyUi" class="hidden">
-    <button type="button" class="gelBtn gelBtn--pill is-quiet" id="storySkip" data-i18n="SKIP">SKIP</button>
-  </div>
   <!-- the hand-off to the lesson: NEXT ▶, as the storyboard has it -->
   <button type="button" class="bigBtn" id="cmdNext">
     <span data-i18n="NEXT">NEXT</span>
@@ -1595,8 +1576,7 @@ const PROJECTILE_SPEED = 620, HIT_PADDING = 18;
    holds, THEN fires; the shell crosses the hypotenuse slowly enough to see
    it ride the line the guides just drew; the knockdown tumbles instead of
    snapping. The teaching beat — the briefing below — gets the most room of
-   all, and it is skippable (click, Enter or Space) so a replay never pays
-   for it twice. */
+   all, and it always plays in full. */
 const BARREL_REST_ANGLE = 0;
 const LAY_BASE = .46, LAY_PER_DEG = .019, LAY_MAX = 1.40;  // time to lay the gun over
 const LAY_HOLD = .32;                                      // beat of stillness before the shot
@@ -2857,16 +2837,6 @@ function enterAiming({instant=false}={}){
   if(!instant) announceShells();     // the rack is in play from here
 }
 
-/* the cinematics are skippable — a replay shouldn't cost the player 5 seconds */
-function inChoreo(){ return G.state===GameState.INTRO || G.state===GameState.BRIEFING
-  || G.state===GameState.OUTRO || G.state===GameState.COMMANDER; }
-function skipChoreo(){
-  if(G.state===GameState.OUTRO) return skipOutro();
-  if(G.state===GameState.INTRO){ if(G.drive){ poseDriveAt(1); finishDrive(); } return true; }
-  if(G.state===GameState.BRIEFING){ finishBriefing(); return true; }
-  if(G.state===GameState.COMMANDER) return skipCommander();
-  return false;
-}
 
 /* ============================================================
    THE COMMANDER — her hatch scene
@@ -2918,9 +2888,9 @@ function updateCommander(dt){
   }
   const was = c.t;
   c.t += dt;
-  /* A beat fires when the clock steps over it. A skip jumps the clock by
-     seconds, and every beat it jumps is dropped, so a tap does not set the
-     whole score off in one chord. */
+  /* A beat fires when the clock steps over it. A jump of the clock — her
+     already-up start under reduced motion, a preview — drops every beat it
+     jumps, so the whole score never goes off in one chord. */
   const t = c.t, I = CMD_IN, at = x => t-was < .2 && was < x && t >= x;
   if(at(I.latch)) AU.latch();
   I.knocks.forEach(k=>{ if(at(k)) AU.knock(); });
@@ -3009,7 +2979,6 @@ function pressCommanderNext(){
   AU.click();
   c.ready = false; $('cmdNext').disabled = true;
   $('cmdNext').classList.remove('is-in');
-  shieldTaps();                     // the world is under NEXT, and a tap there skips
   endStory();
   openLesson(leaveCommander);
 }
@@ -3029,12 +2998,6 @@ function finishCommander(){
   if(G.zombie && G.zombie.mode==='alert') G.zombie.mode = 'idle';
   beginBriefing();
 }
-/* inside the story a tap is the story's (storyTap); what is left to skip here
-   is her ducking back in on the way to the briefing */
-function skipCommander(){
-  const c = G.cmd; if(!c || c.out===null) return false;
-  finishCommander(); return true;
-}
 
 /* ============================================================
    THE STORY — the opening, between START and the first round
@@ -3050,9 +3013,9 @@ function skipCommander(){
      6-9  on the real triangle: the barrel searches, the triangle draws
           itself, its sides take their names — then NEXT
    One director: a beat holds for its voice-over (or long enough to read
-   it) and for whatever it is doing on screen, whichever is longer. A tap
-   moves on, SKIP jumps to the hand-off, and the hand-off itself is only
-   ever taken with NEXT.
+   it) and for whatever it is doing on screen, whichever is longer. Nothing
+   skips a beat or cuts one short — every learner walks through all nine —
+   and the hand-off is only ever taken with NEXT.
    ============================================================ */
 const STORY_BEATS = [
   {key:'Welcome to Zombie Land!',                                  fly:'open',  min:3.8},
@@ -3065,7 +3028,6 @@ const STORY_BEATS = [
   {key:'Trigonometric ratios connect the sides and angles.',       act:'sides',    min:3.0},
   {key:"Let's explore all six ratios to help us aim!",             act:'handoff'}
 ];
-const STORY_TAP_GUARD = .8;     // a beat ignores taps this long, so one eager tap can't skip two
 /* The voice-over in assets/vo/<lang>/ (STORY_VO.md) is a SYNTHETIC DRAFT —
    robotic, and Marathi and Odia are read by other languages' voices — so it
    plays only when asked for with ?vo=draft. When the reviewed recordings
@@ -3108,7 +3070,6 @@ function beginStory(){
   });
   syncWorldPositions();
   document.body.classList.add('in-story');
-  $('storyUi').classList.remove('hidden');
   setGameState(GameState.STORY);
   GameBus.screen('story', 'intro');
   enterBeat(0);
@@ -3117,7 +3078,6 @@ function endStory(){
   stopVO();
   G.story = null;
   document.body.classList.remove('in-story');
-  $('storyUi').classList.add('hidden');
   $('caption').classList.remove('is-title');
   hideCaption();
 }
@@ -3146,7 +3106,8 @@ function sayLine(){
 }
 /* the fly-over's two legs end on these */
 const flyHordeEnd =()=>{ const n = G.levelNodes[2]; return n.worldX + n.tower.w/2 - W*.56; };
-/* a beat's end state, at once — what a tap or SKIP leaves behind it */
+/* a beat's end state, at once — what it leaves behind for the next one (and
+   what a #previewstory starts from) */
 function settleBeat(i){
   const s = G.story, b = STORY_BEATS[i];
   if(b.fly==='open') s.view = null;
@@ -3208,19 +3169,6 @@ function storyArrived(){
   if(G.zombie){ G.zombie.mode = 'alert'; G.zombie.animT = 0; }
   AU.zombieUhOh();
 }
-function storyTap(){
-  const s = G.story;
-  if(!s || s.beat >= STORY_BEATS.length-1 || s.t < STORY_TAP_GUARD) return false;
-  nextBeat(); return true;
-}
-/* straight to the hand-off: everything up to it settled, NEXT on its way */
-function skipStory(){
-  const s = G.story, last = STORY_BEATS.length-1;
-  if(!s || s.beat >= last) return;
-  AU.click();
-  for(let i = s.beat; i < last; i++) settleBeat(i);
-  enterBeat(last);
-}
 
 /* ---- the voice: one line at a time, the story's and the ending's ---- */
 let voEl = null;
@@ -3237,8 +3185,9 @@ function stopVO(){ if(voEl){ voEl.pause(); voEl = null; } }
 function updateStory(dt){
   const s = G.story; if(!s) return;
   const was = s.t; s.t += dt; s.clock += dt;
-  /* a cue fires when the clock steps over it; a tap that jumps the clock
-     drops every cue it jumps, as in the hatch scene */
+  /* a cue fires when the clock steps over it; a jump of the clock (a
+     preview starting mid-beat) drops every cue it jumps, as in the hatch
+     scene */
   const t = s.t, b = STORY_BEATS[s.beat], at = x => t-was < .2 && was < x && t >= x;
   const moving = ambientMotionAllowed();
 
@@ -3643,11 +3592,9 @@ function pressHint(){
 function updateControlsForState(){
   setControlsEnabled(G.state===GameState.AIMING);
 }
-let stateAt = 0;                  // when the current state began (performance.now), for the tap guard
 function setGameState(newState){
   GameBus.signal('state', {from:G.state, to:newState, level:G.level, tries:G.tries});
   G.state = newState;
-  stateAt = performance.now();
   document.body.dataset.state = newState;
   $('stage').classList.toggle('is-pregame', newState===GameState.PREGAME);
   updateControlsForState();
@@ -3696,7 +3643,7 @@ angleInput.addEventListener('blur', ()=>{ angleInput.value = G.angleTarget; });
 
 addEventListener('keydown', e=>{
   /* a held key repeats, and only the dial's arrows mean to — a held Enter
-     used to skip every scene in its path and then fire the next round */
+     would otherwise fire round after round */
   if(e.repeat && e.key!=='ArrowUp' && e.key!=='ArrowDown') return;
   /* while the table is up it owns the keyboard — otherwise Enter would fire
      the gun through it, at whatever angle the dial happened to be holding */
@@ -3707,15 +3654,11 @@ addEventListener('keydown', e=>{
     else if(e.key==='h' || e.key==='H'){ e.preventDefault(); pressHint(); }
     return;
   }
-  // once she has asked, Enter and Space answer her rather than skip
+  // once she has asked, Enter and Space press NEXT for her. Nothing else
+  // moves the story or a scene on: every one of them plays out in full
   if(G.state===GameState.COMMANDER && G.cmd && G.cmd.ready && (e.key==='Enter' || e.key===' ')){
     e.preventDefault(); flashPress($('cmdNext')); pressCommanderNext(); return;
   }
-  if(G.story){
-    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); if(storyTap()) AU.click(); return; }
-    if(e.key==='Escape'){ e.preventDefault(); skipStory(); return; }
-  }
-  if(inChoreo() && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); skipChoreo(); return; }
   if(G.state===GameState.AIMING){
     if(e.key==='ArrowUp'){ nudge(1); flashPress($('upBtn')); e.preventDefault(); }
     if(e.key==='ArrowDown'){ nudge(-1); flashPress($('downBtn')); e.preventDefault(); }
@@ -3764,11 +3707,11 @@ function flashPress(btn){
   setTimeout(()=>{ if(btn._pressId===id) btn.classList.remove('is-pressed'); }, PRESS_MIN);
 }
 /* ---------- the tap shield ----------
-   A tap that changes what is under the finger — NEXT hiding itself, a card
-   or the table rising, the table closing, a scene skipped — holds off the
-   next TAP_SHIELD ms of touches and clicks, so the second half of a
-   double-tap can't land on whatever took its place (NEXT's second tap was
-   skipping her duck, and a third the round's briefing). Registered ahead of
+   A tap that changes what is under the finger — the table rising or
+   closing over FIRE and the dial, a card rising under fingers still on the
+   world — holds off the next TAP_SHIELD ms of touches and clicks, so the
+   second half of a double-tap can't land on whatever took its place (it
+   was firing the gun through a just-closed table). Registered ahead of
    everything else, so a shielded touch never reaches anything at all. Keys
    aren't touched: their clicks carry detail 0. */
 const TAP_SHIELD = 350;
@@ -3795,33 +3738,9 @@ $('trigSheet').addEventListener('pointerdown', e=>{
   if(e.target === $('trigSheet')){ AU.click(); closeTrigSheet(); }
 });
 $('cmdNext').addEventListener('click', pressCommanderNext);
-/* ---------- tapping the world ----------
-   A tap on the world moves things on: the story to its next beat, the
-   roll-in, briefing, hatch scene or ending to its end — and only clicks
-   when there was something left to skip. It used to act on any press, so
-   on a touch screen a resting palm, a second finger or a swipe skipped
-   scenes. Now it has to be a real TAP: the primary finger (or the main
-   mouse button), lifted within TAP_MAX ms and TAP_SLOP px of where it went
-   down; a second finger cancels it. And each scene ignores taps for its
-   first SCENE_TAP_GUARD ms, as each story beat does, so a tap meant for the
-   scene before can't skip the one after it. */
-const TAP_SLOP = 20, TAP_MAX = 600, SCENE_TAP_GUARD = 800;   // px, ms, ms
-let worldPress = null;
-cv.addEventListener('pointerdown', e=>{
-  worldPress = e.isPrimary && (e.pointerType!=='mouse' || e.button===0)
-    ? {id:e.pointerId, x:e.clientX, y:e.clientY, t:performance.now()} : null;
-});
-cv.addEventListener('pointercancel', ()=>{ worldPress = null; });
-cv.addEventListener('pointerup', e=>{
-  const p = worldPress; worldPress = null;
-  if(!p || e.pointerId!==p.id || performance.now() - p.t > TAP_MAX
-     || Math.hypot(e.clientX - p.x, e.clientY - p.y) > TAP_SLOP) return;
-  if(G.story){ if(storyTap()){ AU.click(); shieldTaps(); } return; }   // the story: on to the next beat
-  if(inChoreo() && performance.now() - stateAt >= SCENE_TAP_GUARD && skipChoreo()){
-    AU.click(); shieldTaps();
-  }
-});
-$('storySkip').addEventListener('click', skipStory);
+/* The world itself takes no taps: the story, the roll-in, the briefing,
+   the hatch scene and the ending all play out in full, so every learner
+   walks through all of it, and NEXT is the only way on from the story. */
 let startingMission = false;
 /* The title screen is the painted plate and one button, so the mute,
    music, fullscreen and how-to plates are gone. AU.setMuted /
@@ -3903,7 +3822,7 @@ function showCard(html, variant){
   card.className = 'card';
   card.innerHTML = html;
   overlay.classList.remove('hidden');
-  shieldTaps();                     // its keys rise under fingers still tapping the world
+  shieldTaps();                     // its keys rise under fingers that may still be tapping
   requestAnimationFrame(()=>{
     const action = card.querySelector('button');
     if(action) action.focus({preventScroll:true});
@@ -4081,7 +4000,6 @@ function gameOver(){
 }
 window.retryLevel = ()=>{
   AU.click(); $('overlay').classList.add('hidden');
-  shieldTaps();                     // the world is under the card
   setupLevel({fast:true});
 };
 
@@ -4383,9 +4301,8 @@ function startDrive(){
      shut   the gates roll shut behind it, and clang home
      cheer  fireworks over the compound — "We made it to the safe zone!"
      card   Mission Complete, and its one key: FINISH
-   One clock per beat on the game loop, like the rest of the choreography:
-   a tap goes straight to the card, and under reduced motion the card comes
-   up at once.
+   One clock per beat on the game loop, like the rest of the choreography;
+   it plays in full, and under reduced motion the card comes up at once.
    ============================================================ */
 const OUT = {open:.95, shut:.6, cheer:2.9, burst:.42, burstLater:1.1};
 const SAFE_ZONE_RUN = 1150;          // world px from the last zombie's column to the compound
@@ -4459,11 +4376,8 @@ function updateOutro(dt){
     if(o.phase==='cheer' && o.t>=OUT.cheer) outroPhase('card');
   }
 }
-/* a tap goes straight to the card: the tank already inside, the gates shut */
-function skipOutro(){
-  if(!G.outro || G.outro.phase==='card') return false;
-  finishOutro(); return true;
-}
+/* straight to the card, the tank already inside and the gates shut — for
+   reduced motion, where the drive in is not played */
 function finishOutro(){
   AU.engineStop();
   G.drive = null; G.tankVel = 0;

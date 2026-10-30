@@ -25,7 +25,7 @@ Companion files:
 ## 1. Where it sits
 
 ```
-START ▶ ─► STORY (beats 1–9, ~36 s, skippable) ─► NEXT ▶ ─► learning section
+START ▶ ─► STORY (beats 1–9, ~36 s, plays in full) ─► NEXT ▶ ─► learning section
         ─► round 1 briefing ─► 5 rounds ─► safe-zone ending ─► Mission Complete ─► FINISH
 ```
 
@@ -123,21 +123,18 @@ at once).
   also waits for its action: beats 1–3 for their camera moves (at least 3.8,
   4.8 and 5.6 s), beat 4 until 1.1 s after the tank arrives, beat 5 for her
   line and then the dive, and beats 6–8 for at least 2.8–3 s.
-- **Tap, Enter or Space** moves to the next beat, ending the current one at
-  its final frame. Taps are ignored for the first 0.8 s of each beat, so one
-  eager tap can't skip two. A tap is one finger pressed and lifted in about
-  one place: a swipe, a long press or a second finger doesn't count, and a
-  held Enter or Space doesn't repeat. The game's other skippable scenes (the
-  roll-in, the briefing, the hatch scene, the ending) follow the same rules.
-  After a tap that changes what's under the finger (NEXT, a card, the hint
-  table), touches are ignored for 0.35 s, so a double-tap can't hit what
-  appears in its place.
-- **SKIP** (top-right, small, quiet) or **Esc** jumps straight to beat 9 with
-  everything before it settled: the tank at the first outpost, the triangle
-  and named sides shown, and NEXT on its way. It skips the
-  story but never the hand-off to the lesson.
-- **NEXT ▶ appears only on beat 9**, bottom-right, where the storyboard and
-  the commander scene put it.
+- **No skipping.** Every learner walks through all of it. There's no SKIP
+  button, and tapping the screen or pressing Enter, Space or Esc doesn't
+  advance a beat or cut one short. The same is true of the game's other
+  scenes: the roll-in, the briefing, the hatch scene and the ending all play
+  in full.
+- **NEXT ▶ is the only way on.** It appears only on beat 9, bottom-right,
+  where the storyboard and the commander scene put it. Enter or Space
+  presses it.
+- **Touch.** A held key doesn't repeat. After a tap that changes what's
+  under the finger (a card rising, the hint table opening or closing),
+  touches are ignored for 0.35 s, so a double-tap can't hit what appears in
+  its place.
 - **No text in any art.** Every word on screen is live text in the learner's
   language, including the SAFE ZONE sign.
 - **Reduced motion:** no crane, glide, pan, push-in or dive zoom. Each beat
@@ -176,9 +173,9 @@ tank drives past them between rounds.
    actually fight, not the storyboard's realistic ones.
 5. **One narrator.** We recommend that the commander voices all nine lines and
    both ending lines.
-6. **Every launch, or first launch only?** As built, it plays on every launch
-   and SKIP is always there. If the platform remembers learners, later
-   launches could start on beat 9.
+6. **Every launch, or first launch only?** As built, it plays in full on
+   every launch, about 36 s, with no way to skip it. If the platform
+   remembers learners, later launches could start on beat 9.
 7. **The barrel in beat 6 searches but never settles on the answer**, so the
    story can't give the angle away.
 
@@ -214,10 +211,10 @@ doesn't keep.
   move or action, and a minimum length, so retuning the story means editing
   that table.
 - **One clock per beat.** Every cue fires when the clock steps over its time,
-  so a tap that jumps ahead drops the cues it skips instead of playing them
-  all at once. `settleBeat` puts any beat at its final frame, and that's what
-  tap and SKIP use. Wherever the story is when it's skipped, the tank ends up
-  at the first outpost with the camera on it.
+  so a jump of the clock (a preview starting mid-beat) drops the cues it
+  passes instead of playing them all at once. `settleBeat` puts a beat at its
+  final frame as the next one begins, and it's also what
+  `#previewstory3`-style previews start from.
 - **Reused, not rebuilt:** beat 4 is the game's intro drive, beat 5 is the
   hatch scene with a dive added, and beats 7–8 are the briefing's triangle
   with a colour-and-name pass. The zombies standing between the outposts
@@ -228,9 +225,9 @@ doesn't keep.
   by `tools/fit_assets.py face` from the blink edit. `commanderBlinking()`
   decides when it shows.
 - **Checked:** a scripted run from START to the first AIM (NEXT at 35.65 s, 0
-  errors), SKIP from beats 1, 3, 5 (before her line) and 7 (each lands on
-  beat 9 with the tank at the first outpost, then reaches AIM), and the
-  reduced-motion run (NEXT at 32.45 s, 0 errors). Before the progress dots and
-  the ratio chips came out, also: SKIP from beats 2, 4 and 5 (after her line),
+  errors), and the reduced-motion run (NEXT at 32.45 s, 0 errors). A run that
+  taps the screen and presses Enter, Space and Esc every quarter-second
+  through the story, the briefing, the drive to round 2 and the ending gives
+  exactly the same timings as a run with no input. Earlier builds also had
   screenshots of every beat in English and of her blinking in the close-up,
   and the title and the longest captions in the other five languages.
