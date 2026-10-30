@@ -18,15 +18,16 @@ style across a set of full painted scenes, so the story isn't built from them.
 
 ## 1. The commander's three expressions
 
-Beat 5 is the one moment the camera is close on her: punched in at 3.4× for
-about three seconds while she says "Let's get into the tank!". Three small
-edits bring that shot to life:
+Beat 5 is the one moment the camera is close on her: punched in at 3.4× and
+held on her for a little over a second once she's out. It has no line any more
+("Let's get into the tank!" was cut), so her face carries the shot. Three
+small edits bring it to life:
 
 | Edit | What the game does with it | Status |
 |---|---|---|
 | **a. Talking** | Tried as a mouth opening and shutting on a syllable beat while her line played. Taken out: under a caption it read as mumbling. Her mouth stays as drawn. | Made, **not used** (kept in `art-src/`) |
 | **b. Blink** | A 0.12 s blink 0.7 s after she settles, then every 2.2–3.8 s while she's up. It can land mid-word. | **Live** |
-| **c. Thumbs-up** | Held for the last moment before she drops into the hatch: "Let's go!" | Optional, not made |
+| **c. Thumbs-up** | Held through beat 5's close-up once she's out: her hello, in a shot with no line | Optional, not made |
 
 **How they're used:** `python3 tools/fit_assets.py face
 art-src/commander_blink.webp:blink` lines the edit up with
@@ -41,8 +42,8 @@ fine: the tool finds the scale and position by itself.
 **Why a thumbs-up**, not the pointing pose planned before or a beckon:
 pointing was for beat 6, where she is now small on screen and it wouldn't
 read. A beckon only reads when it moves, and a still frame of it looks like a
-wave. A thumbs-up reads in one frame, at any size, and it's what you'd do
-right before ducking in.
+wave. A thumbs-up reads in one frame, at any size, and it says "ready"
+without a word, which is all beat 5 has now.
 
 ### How to make them: edits, not new drawings
 

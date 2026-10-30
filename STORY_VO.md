@@ -1,15 +1,17 @@
 # Story Intro — Voice-Over Script
 
-> **STATUS** (2026-10-30). A **synthetic draft** of all 66 files is installed
+> **STATUS** (2026-10-30). A **synthetic draft** of all 60 files is installed
 > in `assets/vo/<lang>/`. The original pack is kept at
-> `art-src/vo/Tank_vs_Zombie_66_Story_VO_DRAFT.zip`. It isn't good enough to
+> `art-src/vo/Tank_vs_Zombie_66_Story_VO_DRAFT.zip`; its six `story_05` files
+> are left out of `assets/`, since beat 5's line is cut. It isn't good enough to
 > ship (§5), so the game plays it only when the URL asks for it:
 > `index.html?vo=draft`. Without that, every line holds for its reading time.
 > When reviewed recordings replace the drafts at the same paths, switch them on
 > in `index.html` (§5).
 
-Eleven lines: the story's nine (design in [STORY_INTRO.md](STORY_INTRO.md)) and
-the two the safe-zone ending already shows as captions. Each line is spoken
+Ten lines: the story's eight (design in [STORY_INTRO.md](STORY_INTRO.md); beat 5
+has no line any more) and the two the safe-zone ending already shows as
+captions. Each line is spoken
 exactly as it appears on screen, in all six of the game's languages.
 
 The on-screen captions use these same texts, from `i18n/strings.json`, so the
@@ -36,7 +38,6 @@ hatch. She is the learner's teammate, and she says "we" because she means it.
 | 2 | There are zombies everywhere! | alarmed but fun, a half-laugh |
 | 3 | We need to cross these barriers and reach the safe zone. | determined, laying out the plan |
 | 4 | But first, we need to clear the way! | urgent, rising |
-| 5 | Let's get into the tank! | cheerful, ready to go (it starts as she pops out of the hatch, and she drops back in right after it) |
 | 6 | We need to aim carefully. | calm, focused, a little quieter |
 | 7 | What angle will help us hit the target? | a real question, curious, inviting an answer |
 | 8 | Trigonometric ratios connect the sides and angles. | explaining, clear on every word |
@@ -46,8 +47,9 @@ hatch. She is the learner's teammate, and she says "we" because she means it.
 
 ## 2. Audio specs
 
-- **Files:** `assets/vo/<lang>/story_01.mp3` … `story_09.mp3`, `end_01.mp3`,
-  `end_02.mp3`, with `<lang>` one of `en hi mr te or gu`. That's 66 files.
+- **Files:** `assets/vo/<lang>/story_01.mp3` … `story_09.mp3` (no `story_05`:
+  the files keep their beat's number), `end_01.mp3` and `end_02.mp3`, with
+  `<lang>` one of `en hi mr te or gu`. That's 60 files.
 - **Format:** mono, 44.1 kHz, MP3 at 128 kbps.
 - **Level:** −16 LUFS integrated, peaks no higher than −1 dBTP, matched across
   all lines and languages.
@@ -111,17 +113,6 @@ holds for its reading time instead.
 | te | కానీ ముందు, మనం దారిని సుగమం చేయాలి! |
 | or | କିନ୍ତୁ ପ୍ରଥମେ, ଆମକୁ ରାସ୍ତା ସଫା କରିବାକୁ ହେବ! |
 | gu | પણ પહેલાં, આપણે રસ્તો સાફ કરવો પડશે! |
-
-### story_05 — Let's get into the tank!
-
-| lang | text |
-|---|---|
-| en | Let's get into the tank! |
-| hi | चलिए, टैंक में बैठते हैं! |
-| mr | चला, टँकमध्ये बसूया! |
-| te | పదండి, ట్యాంక్‌లోకి ఎక్కుదాం! |
-| or | ଚାଲନ୍ତୁ, ଟ୍ୟାଙ୍କରେ ବସିବା! |
-| gu | ચાલો, ટેન્કમાં બેસીએ! |
 
 ### story_06 — We need to aim carefully.
 

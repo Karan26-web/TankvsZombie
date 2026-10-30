@@ -757,7 +757,7 @@ body[data-state="OUTRO"] #hud,body[data-state="WIN"] #hud{opacity:0;pointer-even
   margin-top:22px;padding-bottom:4px;white-space:nowrap;
   font-family:'Luckiest Guy','Chakra Petch','Noto Sans Devanagari','Noto Sans Gujarati','Noto Sans Telugu','Noto Sans Oriya','Noto Serif Oriya',cursive;
   font-size:28px;font-weight:400;letter-spacing:2.5px}
-/* a card's keys sit in a centred row — the last card has just the one, FINISH */
+/* a card's keys sit in a centred row */
 .cardActions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
 .cardActions .bigBtn{margin-top:22px}
 
@@ -796,7 +796,7 @@ html:not([lang="en"]) #caption.is-title{letter-spacing:0;font-size:72px}
              radial-gradient(circle at 50% 40%,#3f6b57,#1d3a30);
   box-shadow:0 0 0 3px var(--plate-ring),0 0 0 6px var(--plate-case),inset 0 -6px 10px rgba(0,0,0,.25)}
 
-/* --- THE SHELL RACK — tries left on this zombie, in the corner opposite
+/* --- THE SHELL RACK — the mission's shells, in the corner opposite
    the bulb, on the same green plate every line of game copy sits on. A spent
    shell stays in the rack, greyed, so the count reads at a glance as "used
    of three", not just "left". --- */
@@ -824,7 +824,8 @@ html:not([lang="en"]) #shellBar{letter-spacing:0}
   35%{transform:scale(1.45) rotate(-16deg);opacity:1;filter:none}
   100%{transform:none}}
 @keyframes shellLoad{from{transform:translateY(-16px);opacity:0}to{transform:none;opacity:1}}
-/* the first time the rule is said, the rack it is about lights up with it */
+/* whenever a line is about the rack — the rule, a reload, a round started
+   short — the rack lights up with it */
 #shellBar.is-calling{animation:shellCall 1.1s ease-in-out 3}
 @keyframes shellCall{50%{transform:scale(1.08);filter:drop-shadow(0 0 12px rgba(255,232,120,.95))}}
 /* …and the out-of-shells card shows the empty rack it is talking about */
@@ -851,8 +852,13 @@ html:not([lang="en"]) #shellBar{letter-spacing:0}
 #caption.hidden{display:none}
 @keyframes captionIn{from{opacity:0;transform:translate(-50%,-14px) scale(.96)}
   to{opacity:1;transform:translate(-50%,0)}}
-/* the last card lets the safe zone's fireworks show round it */
-#overlay.is-win{background:rgba(3,10,14,.3);-webkit-backdrop-filter:none;backdrop-filter:none}
+/* The end screen is no card at all — just its one key, REPLAY, on the stone
+   wall where the console stands in play: clear of the compound and its
+   sign, with the fireworks going on above it, undimmed. */
+#overlay.is-win{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;align-items:flex-end}
+#overlay.is-win .card{padding:0 0 22px;border:0;background:none;box-shadow:none}
+#overlay.is-win .card::before{display:none}
+#overlay.is-win .bigBtn{margin-top:0;animation:gelPop .32s cubic-bezier(.2,.8,.3,1) backwards}
 /* Indic scripts are unicase and their conjuncts sit tight: UPPERCASE is a
    no-op and tracking only pulls the clusters apart, so both come off for
    every language but English. */
@@ -1168,13 +1174,13 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "or": "ବାକି ଗୋଲା: {total}ରୁ {n}",
    "gu": "બાકી ગોળા: {total} માંથી {n}"
   },
-  "You have {n} shells for each zombie.": {
-   "en": "You have {n} shells for each zombie.",
-   "hi": "हर ज़ॉम्बी के लिए आपके पास {n} गोले हैं।",
-   "mr": "प्रत्येक झोंबीसाठी तुमच्याकडे {n} गोळे आहेत.",
-   "te": "ప్రతి జాంబీకి మీ దగ్గర {n} గుండ్లు ఉన్నాయి.",
-   "or": "ପ୍ରତ୍ୟେକ ଜୋମ୍ବି ପାଇଁ ଆପଣଙ୍କ ପାଖରେ {n}ଟି ଗୋଲା ଅଛି।",
-   "gu": "દરેક ઝોમ્બી માટે તમારી પાસે {n} ગોળા છે."
+  "You have {n} shells for the whole mission.": {
+   "en": "You have {n} shells for the whole mission.",
+   "hi": "पूरे मिशन के लिए आपके पास {n} गोले हैं।",
+   "mr": "संपूर्ण मोहिमेसाठी तुमच्याकडे {n} गोळे आहेत.",
+   "te": "మిషన్ మొత్తానికి మీ దగ్గర {n} గుండ్లు ఉన్నాయి.",
+   "or": "ସମଗ୍ର ମିଶନ ପାଇଁ ଆପଣଙ୍କ ପାଖରେ {n}ଟି ଗୋଲା ଅଛି।",
+   "gu": "આખા મિશન માટે તમારી પાસે {n} ગોળા છે."
   },
   "Reloaded: {n} shells": {
    "en": "Reloaded: {n} shells",
@@ -1200,13 +1206,13 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "or": "ଲକ୍ଷ୍ୟ ଚୁକିଗଲା! ଶେଷ ଗୋଲା!",
    "gu": "નિશાન ચૂકી ગયા! છેલ્લો ગોળો!"
   },
-  "You used all {n} shells on this zombie. Reload and try again!": {
-   "en": "You used all {n} shells on this zombie. Reload and try again!",
-   "hi": "आपने इस ज़ॉम्बी पर सारे {n} गोले चला दिए। फिर से भरें और दोबारा कोशिश करें!",
-   "mr": "तुम्ही या झोंबीवर सर्व {n} गोळे वापरले. पुन्हा भरा आणि परत प्रयत्न करा!",
-   "te": "ఈ జాంబీపై మీరు మొత్తం {n} గుండ్లు వాడేశారు. మళ్ళీ నింపి, మళ్ళీ ప్రయత్నించండి!",
-   "or": "ଆପଣ ଏହି ଜୋମ୍ବି ଉପରେ ସବୁ {n}ଟି ଗୋଲା ବ୍ୟବହାର କରିଦେଲେ। ପୁଣି ଭରି ଆଉଥରେ ଚେଷ୍ଟା କରନ୍ତୁ!",
-   "gu": "તમે આ ઝોમ્બી પર બધા {n} ગોળા વાપરી નાખ્યા. ફરી ભરો અને ફરી પ્રયાસ કરો!"
+  "You used all {n} shells. Reload and try this zombie again!": {
+   "en": "You used all {n} shells. Reload and try this zombie again!",
+   "hi": "आपने सारे {n} गोले चला दिए। फिर से भरें और इस ज़ॉम्बी पर दोबारा कोशिश करें!",
+   "mr": "तुम्ही सर्व {n} गोळे वापरले. पुन्हा भरा आणि या झोंबीवर परत प्रयत्न करा!",
+   "te": "మీరు మొత్తం {n} గుండ్లు వాడేశారు. మళ్ళీ నింపి, ఈ జాంబీపై మళ్ళీ ప్రయత్నించండి!",
+   "or": "ଆପଣ ସବୁ {n}ଟି ଗୋଲା ବ୍ୟବହାର କରିଦେଲେ। ପୁଣି ଭରି ଏହି ଜୋମ୍ବି ଉପରେ ଆଉଥରେ ଚେଷ୍ଟା କରନ୍ତୁ!",
+   "gu": "તમે બધા {n} ગોળા વાપરી નાખ્યા. ફરી ભરો અને આ ઝોમ્બી પર ફરી પ્રયાસ કરો!"
   },
   "OUT OF SHELLS": {
    "en": "OUT OF SHELLS",
@@ -1224,21 +1230,13 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "or": "ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ",
    "gu": "ફરી પ્રયાસ કરો"
   },
-  "MISSION COMPLETE!": {
-   "en": "MISSION COMPLETE!",
-   "hi": "मिशन पूरा!",
-   "mr": "मोहीम पूर्ण!",
-   "te": "మిషన్ పూర్తయింది!",
-   "or": "ମିଶନ ସମ୍ପୂର୍ଣ୍ଣ!",
-   "gu": "મિશન પૂર્ણ!"
-  },
-  "FINISH": {
-   "en": "FINISH",
-   "hi": "समाप्त करें",
-   "mr": "पूर्ण करा",
-   "te": "ముగించండి",
-   "or": "ସମାପ୍ତ କରନ୍ତୁ",
-   "gu": "પૂર્ણ કરો"
+  "REPLAY": {
+   "en": "REPLAY",
+   "hi": "फिर से खेलें",
+   "mr": "पुन्हा खेळा",
+   "te": "మళ్ళీ ఆడండి",
+   "or": "ପୁଣି ଖେଳନ୍ତୁ",
+   "gu": "ફરી રમો"
   },
   "NEXT": {
    "en": "NEXT",
@@ -1279,14 +1277,6 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
    "te": "కానీ ముందు, మనం దారిని సుగమం చేయాలి!",
    "or": "କିନ୍ତୁ ପ୍ରଥମେ, ଆମକୁ ରାସ୍ତା ସଫା କରିବାକୁ ହେବ!",
    "gu": "પણ પહેલાં, આપણે રસ્તો સાફ કરવો પડશે!"
-  },
-  "Let's get into the tank!": {
-   "en": "Let's get into the tank!",
-   "hi": "चलिए, टैंक में बैठते हैं!",
-   "mr": "चला, टँकमध्ये बसूया!",
-   "te": "పదండి, ట్యాంక్‌లోకి ఎక్కుదాం!",
-   "or": "ଚାଲନ୍ତୁ, ଟ୍ୟାଙ୍କରେ ବସିବା!",
-   "gu": "ચાલો, ટેન્કમાં બેસીએ!"
   },
   "We need to aim carefully.": {
    "en": "We need to aim carefully.",
@@ -1351,7 +1341,7 @@ html:not([lang="en"]) .sheetBtn{text-transform:none;letter-spacing:0}
   <canvas id="game" width="1280" height="720" aria-hidden="true"></canvas>
 
   <div id="hud">
-    <!-- the shells left on THIS zombie: icons built by renderShells() -->
+    <!-- the shells left for the whole mission: icons built by renderShells() -->
     <div id="shellBar" class="gemPlate" role="img" aria-label="Shells left: 3 of 3">
       <span class="shellLabel" data-i18n="SHELLS">SHELLS</span>
       <span class="shellIcons" id="shellIcons"></span>
@@ -1460,10 +1450,13 @@ const GROUND_Y = PLAY_SURFACE_Y;           // compatibility alias for shell/buil
 const TARGET_SET_BACK = 46;
 const TARGET_BASE_Y = PLAY_SURFACE_Y - TARGET_SET_BACK;
 const TOTAL_LEVELS = 5;
-/* Shells are per ZOMBIE: every target gets the full rack, shown in the
-   corner, and running dry means trying THAT zombie again. A rack shared by
-   the whole mission meant one early miss quietly cost a shot three rounds
-   later, and "out of shells" arrived after two misses with no warning. */
+/* The shells belong to the MISSION, not to a zombie: one rack of three has
+   to last the whole way, a new zombie keeps whatever is left in it, and only
+   a miss spends one. Running dry means trying THAT zombie again, reloaded.
+   What made the rule feel unfair was never the number but the silence —
+   nothing counted it, so one early miss quietly cost a shot three rounds
+   later and "out of shells" arrived with no warning. The rack in the corner
+   and announceShells() are the answer to that, not a refill per zombie. */
 const SHELLS = 3;
 /* Where the camera holds the tank WHILE TRAVELLING. Each round's resting
    position is its own — see frameRound() — and the drive lands on that. */
@@ -1694,9 +1687,9 @@ const DEV_SIGNALS = QS.get('dev') === '1';
 
 const GameBus = {
   bootT: performance.now(),
-  runT: null,            // the tap on PLAY — what activity_completed's duration_ms measures from
+  runT: null,            // the tap on START or REPLAY — what activity_completed's duration_ms measures from
   running: false,        // false during the title screen and the #preview harnesses
-  completed: false,      // activity_completed fires once per run and only on the button
+  completed: false,      // activity_completed fires once per run, as the end screen comes up
   pendingQuestion: false,
   answers: [],           // one row per question actually answered, first try recorded
   current: null,
@@ -1783,9 +1776,10 @@ const GameBus = {
     if(!this.answers.length) return 0;
     return Math.round(this.answers.filter(r => r.first).length / this.answers.length * 100) / 100;
   },
-  /* Fires on the FINISH tap and nowhere else. The celebration screen
-     appearing is not completion: a host that redirects on this event will
-     always let the child watch the fireworks and choose to move on. */
+  /* Fires once per run, as the end screen comes up — the celebration has
+     played in full by then. That screen's only key is REPLAY, so there is
+     no tap to hang this on and no "go on" to send: swiftpal:proceed is gone,
+     and moving on to the next module is the host's own navigation. */
   complete(){
     if(this.completed) return;
     this.completed = true;
@@ -1798,7 +1792,6 @@ const GameBus = {
       questions:this.answers.map(r => ({question_id:r.id, question_index:r.index,
                                         first_try_correct:!!r.first}))
     }});
-    this.post({type:'swiftpal:proceed'});     // the existing next-module message
   }
 };
 window.GameBus = GameBus;
@@ -2299,12 +2292,6 @@ const AU = {
     this.tone(500,t,.12,'triangle',.25);
     this.tone(370,t+.15,.2,'triangle',.25);
   },
-  /* the story's zombies coming up out of the road: a low, wobbling moan,
-     pitched per zombie so six of them are six voices */
-  groan(p=1){
-    if(!this.ctx)return; const t=this.now();
-    this.tone(150*p,t,.55,'sawtooth',.06,null,92*p);
-    this.tone(228*p,t+.05,.45,'triangle',.08,null,140*p); },
   wrong(){
     if(!this.ctx)return; const t=this.now();
     this.tone(280,t,.22,'sawtooth',.22,null,240);
@@ -2388,7 +2375,7 @@ const GameState = {
 };
 const G = {
   state:GameState.PREGAME, 
-  level:0, shells:3, tries:0,
+  level:0, shells:3, reloaded:false, tries:0,
   angleTarget:DEFAULT_START_ANGLE,      // the number in the dock — the player's answer
   angleShown:BARREL_REST_ANGLE,         // where the barrel actually points
   barrelTarget:BARREL_REST_ANGLE,
@@ -2487,6 +2474,11 @@ const BARREL_LEN = TANK.w*.6, BARREL_SC = BARREL_LEN/(SP.cannonTip[0]-SP.cannonP
 // hull art's baked road-wheel discs so the overlays land exactly on them
 TANK.wheelFr = [[.195,.83],[.346,.83],[.499,.83],[.653,.83]];
 TANK.wheelR  = TANK.h*.195;
+// the nose the hull art actually paints, across TANK.w: its rightmost opaque
+// column, measured off the sheet. The sprite's box runs ~43px past it, all
+// of it transparent. (The ending parks the tank at its gates by it too.)
+const TANK_NOSE = .85;
+TANK.nose = ()=> TANK.x + TANK.w*TANK_NOSE - G.recoil*.6;
 
 /* ---------- the commander's hatch ----------
    The turret ring painted on the hull already has an open hole in it. The
@@ -2741,14 +2733,18 @@ function syncWorldPositions(){
 /* ============================================================
    LEVEL SETUP
    ============================================================ */
-function initializeLevel(levelIndex, {revive=true, enter='brief', fast=false}={}){
+function initializeLevel(levelIndex, {revive=true, enter='brief', fast=false, reload=true}={}){
   G.level = Math.max(0, Math.min(levelIndex, TOTAL_LEVELS-1));
   G.tries = 0;
   G.shell=null; G.aimPath=null; G.hitDelay=0;
   G.particles.length=0;
   G.drive=null; G.tankVel=0; G.dustT=0; G.lay=null; G.brief=null;
   G.angleShown = G.barrelTarget = BARREL_REST_ANGLE;
-  G.shells = SHELLS; renderShells('load');    // a new zombie, a full rack
+  /* the rack is the mission's: the drive on to the next zombie keeps what
+     is left in it, and every other way in — a new mission, a retry after
+     running dry — starts with a full one */
+  if(reload) G.shells = SHELLS;
+  G.reloaded = reload; renderShells(reload ? 'load' : null);
   if(!G.levelNodes.length) G.levelNodes = buildLevelNodes();
   activateLevel(G.level, revive);
 
@@ -2840,12 +2836,12 @@ function enterAiming({instant=false}={}){
 
 /* ============================================================
    THE COMMANDER — her hatch scene
-   Beat 5 of the story opens it ("Let's get into the tank!"): the hatch
-   opens, she climbs out, and the camera closes in on her. The story keeps
-   her up for beats 6-9 and eases the camera back off her (zoomBack); NEXT
-   on beat 9 hands over to the lesson (openLesson), and when the student
-   comes back she ducks inside, the hatch shuts, and round one's briefing
-   begins. One clock on the game loop, settled at once under reduced motion.
+   Beat 5 of the story opens it, without a word: the hatch opens, she
+   climbs out, and the camera closes in on her. The story keeps her up for
+   beats 6-9 and eases the camera back off her (zoomBack); NEXT on beat 9
+   hands over to the lesson (openLesson), and when the student comes back
+   she ducks inside, the hatch shuts, and round one's briefing begins. One
+   clock on the game loop, settled at once under reduced motion.
    ============================================================ */
 /* The score, in seconds. Two movements — the hatch, then the pop — and
    every beat lands on its own sound, so the ear follows it as well as the
@@ -2865,13 +2861,14 @@ const CMD_ZOOM = 3.4;
 const CMD_PUSH = .42;                // the share of the close-up the opening lean-in takes (2x)
 const CMD_FRAME = {x:.3, y:.44};     // where her face settles, as a share of the screen
 const CMD_SETTLE = .3;               // her spring has come to rest this long after the pop
+const CMD_HOLD = 1.1;                // …and the close-up holds on her this long after that
 const LID_CRACK = .2;                // radians the pressure lifts it before it is thrown
 const span = (t,[a,b]) => clamp01((t-a)/(b-a));
 
 function beginCommander(){
   G.lay = null; G.barrelTarget = BARREL_REST_ANGLE;
   clearReveal(); stowDock(true);
-  G.cmd = {t:0, out:null, ready:false, steamT:0, zoomBack:null, zoomFrom:0, dive:null};
+  G.cmd = {t:0, out:null, ready:false, steamT:0, zoomBack:null, zoomFrom:0};
   setGameState(GameState.COMMANDER);
   if(!ambientMotionAllowed()) G.cmd.t = CMD_IN.punch[1] + .4;   // already up
 }
@@ -2926,24 +2923,18 @@ function popSpring(s){
 /* lid swing (radians), climb (0–1, overshooting), her speed, and zoom (0–1) */
 function commanderPose(){
   const c = G.cmd;
-  if(!c) return {lid:0, rise:0, v:0, zoom:0, dive:0};
+  if(!c) return {lid:0, rise:0, v:0, zoom:0};
   if(c.out!==null){
     const o = c.out, D = CMD_OUT.duck, d = span(o, D), sl = span(o, CMD_OUT.slam);
     return {lid:LID_OPEN*(1-sl*sl), rise:1-d*d, v:d>0 && d<1 ? -2*d/(D[1]-D[0]) : 0,
-            zoom:c.zoomFrom*(1-easeInOutCubic(span(o, CMD_OUT.zoom))), dive:0};
+            zoom:c.zoomFrom*(1-easeInOutCubic(span(o, CMD_OUT.zoom)))};
   }
   const t = c.t, sp = popSpring(t - CMD_IN.pop);
   let zoom = CMD_PUSH*easeInOutCubic(span(t, CMD_IN.push))
            + (1-CMD_PUSH)*easeOutCubic(span(t, CMD_IN.punch));
   // the story eases the camera back off her to show the tank and its target
   if(c.zoomBack!=null) zoom *= 1 - easeInOutCubic(clamp01((t - c.zoomBack)/.9));
-  let rise = sp.y, v = sp.v, dive = 0;
-  if(c.dive!=null){                     // "Let's get into the tank!" — she drops in first…
-    const d = clamp01((t - c.dive)/.24);
-    rise = 1 - d*d; v = d>0 && d<1 ? -8 : 0;
-    dive = clamp01((t - c.dive - .12)/.6);   // …and the camera follows her down into it
-  }
-  return {lid:lidSwingIn(t), rise, v, zoom, dive};
+  return {lid:lidSwingIn(t), rise:sp.y, v:sp.v, zoom};
 }
 /* steam out of the hatch: a thin leak at the rim's two ends while the lid is
    cracked, one big breath of it when the lid is flung open */
@@ -3001,15 +2992,15 @@ function finishCommander(){
 
 /* ============================================================
    THE STORY — the opening, between START and the first round
-   (STORY_INTRO.md). The LXD's nine beats, every line verbatim, told IN the
-   game rather than in front of it — the same world, camera and characters
-   the player is about to play with:
+   (STORY_INTRO.md). The LXD's nine beats, told IN the game rather than in
+   front of it — the same world, camera and characters the player is about
+   to play with. Every line is verbatim, and beat 5 has none:
      1-3  a fly-over of the real level: the tank parked at the start, the
           five zombie outposts and the stragglers between them, the safe
           zone at the far end, and the mission's shape drawn as it goes
      4    a whip back to the tank, which rolls up to the first outpost
-     5    the hatch scene: she calls the player in, drops into the hatch,
-          and the camera dives in after her
+     5    the hatch scene, without a word: the lid is flung open, she
+          springs out, and the camera punches in on her and holds
      6-9  on the real triangle: the barrel searches, the triangle draws
           itself, its sides take their names — then NEXT
    One director: a beat holds for its voice-over (or long enough to read
@@ -3022,7 +3013,7 @@ const STORY_BEATS = [
   {key:'There are zombies everywhere!',                            fly:'horde', min:4.8},
   {key:'We need to cross these barriers and reach the safe zone.', fly:'goal',  min:5.6},
   {key:'But first, we need to clear the way!',                     act:'drive'},
-  {key:"Let's get into the tank!",                                 act:'hatch'},
+  {key:null,                                                       act:'hatch'},
   {key:'We need to aim carefully.',                                act:'aim',      min:2.8},
   {key:'What angle will help us hit the target?',                  act:'triangle', min:3.0},
   {key:'Trigonometric ratios connect the sides and angles.',       act:'sides',    min:3.0},
@@ -3059,9 +3050,9 @@ const STORY_HORDE = [
 ];
 
 function beginStory(){
-  G.story = {beat:-1, t:0, clock:0, fly:true, view:null, whip:null, fadeIn:0, fadeDur:.5,
-             strip:0, stripAt:0, arrived:false, arrivedT:0, diveDone:false,
-             guides:false, hl:{adj:0, opp:0, hyp:0}, vo:0, horde:[], heard:{}};
+  G.story = {beat:-1, t:0, clock:0, fly:true, view:null, whip:null,
+             strip:0, stripAt:0, arrived:false, arrivedT:0,
+             guides:false, hl:{adj:0, opp:0, hyp:0}, vo:0, horde:[]};
   // the tank waits at the start of the world
   G.tankWorldX = STORY_PARK; G.cameraX = 0; G.tankVel = 0; G.drive = null;
   G.story.horde = STORY_HORDE.map(([k, gap, type, scale, far])=>{
@@ -3084,15 +3075,14 @@ function endStory(){
 function enterBeat(i){
   const s = G.story, b = STORY_BEATS[i];
   s.beat = i; s.t = 0; s.vo = 0; s.lineAt = null;
-  if(b.act==='hatch') hideCaption();       // hers waits until she is out to say it
+  if(b.act==='hatch') hideCaption();       // she climbs out without a word
   else sayLine();
   if(b.fly==='horde') s.flyFrom = G.cameraX;
   else if(b.fly==='goal'){ s.flyFrom = G.cameraX; s.stripAt = s.clock; }
   else if(b.act==='drive'){ s.whip = {t:0, from:G.cameraX}; AU.whoosh(.6); }
   else if(b.act==='hatch') beginCommander();
-  else if(b.act==='aim'){
-    if(G.cmd){ G.cmd.dive = null; G.cmd.zoomBack = G.cmd.t - 5; }   // out of the dive, at 1:1
-    s.fadeIn = s.fadeDur = .5;
+  else if(b.act==='aim'){                         // off her close-up, back to 1:1
+    if(G.cmd) G.cmd.zoomBack = ambientMotionAllowed() ? G.cmd.t : G.cmd.t - 5;
   }
   else if(b.act==='triangle') s.guides = true;
 }
@@ -3114,10 +3104,6 @@ function settleBeat(i){
   if(b.fly==='horde' || b.fly==='goal'){
     G.cameraX = b.fly==='horde' ? flyHordeEnd() : safeZoneCamera();
     syncWorldPositions();
-    // whatever the camera has now passed has had its groan, so the jump
-    // doesn't set them all off at once
-    G.levelNodes.forEach((n,i)=>{ if(n.zombie.worldX < G.cameraX + W) s.heard['n'+i] = true; });
-    s.horde.forEach((h,k)=>{ if(h.wx < G.cameraX + W) s.heard['h'+k] = true; });
     if(b.fly==='goal') s.strip = 1;
   }
   if(b.act==='drive'){
@@ -3134,8 +3120,7 @@ function settleBeat(i){
     G.cmd.t = Math.max(G.cmd.t, CMD_IN.punch[1] + .4);
   }
   if(b.act==='aim'){
-    if(G.cmd){ G.cmd.dive = null; G.cmd.zoomBack = G.cmd.t - 5; }
-    s.fadeIn = 0;
+    if(G.cmd) G.cmd.zoomBack = G.cmd.t - 5;
     G.barrelTarget = G.angleShown = BARREL_REST_ANGLE;
   }
   if(b.act==='triangle'){ s.guides = true; ['adj','opp','hyp','theta'].forEach(k=>G.reveal[k] = 1); }
@@ -3148,7 +3133,8 @@ function readTime(b){
 }
 function beatDone(){
   const s = G.story, b = STORY_BEATS[s.beat];
-  if(b.act==='hatch') return s.diveDone;              // she has called us in and we are in
+  if(b.act==='hatch')                                 // she is out and still, and has been seen
+    return !!G.cmd && G.cmd.t >= CMD_IN.pop + CMD_SETTLE + CMD_HOLD && s.t >= CMD_HOLD;
   if(s.t < (b.min || 0) || s.t - s.lineAt < readTime(b)) return false;
   if(b.act==='drive') return s.arrived && s.arrivedT >= 1.1;
   return true;
@@ -3203,18 +3189,8 @@ function updateStory(dt){
     G.cameraX = lerp(s.flyFrom, to, e);
     syncWorldPositions();
   }
-  // the zombies are already out there; each one groans as the camera finds it
-  if(s.fly && s.beat >= 1){
-    G.levelNodes.forEach((n,i)=>{
-      if(!s.heard['n'+i] && n.zombie.x < W - 130){ s.heard['n'+i] = true; AU.groan(1.15 - n.level*.05); }
-    });
-    s.horde.forEach((h,k)=>{
-      const x = h.wx - G.cameraX;
-      if(!s.heard['h'+k] && x < W - 90 && x > -60){
-        s.heard['h'+k] = true; AU.groan(h.type==='bruiser' ? .82 : h.type==='runner' ? 1.3 : 1.05);
-      }
-    });
-  }
+  /* the zombies are already out there, so the camera finds them in silence:
+     the moan each one used to give belonged to its climb up out of the road */
   s.horde.forEach((h,k)=>{
     h.sway = moving ? Math.sin(G.time*2 + k*1.9)*.045 : 0;
     const look = ZOMBIE_TYPES[h.type].look;
@@ -3234,20 +3210,8 @@ function updateStory(dt){
     syncWorldPositions();
     if(u>=1){ s.whip = null; s.fly = false; storyDrive(); }
   }
-  if(s.fadeIn > 0) s.fadeIn = Math.max(0, s.fadeIn - dt);
   if(s.arrived) s.arrivedT += dt;
 
-  // 5: she says it once she's out and settled; once it's said, she drops
-  //    into the hatch and we follow her in
-  if(b.act==='hatch' && G.cmd){
-    const c = G.cmd;
-    if(s.lineAt==null && c.t >= CMD_IN.pop + CMD_SETTLE) sayLine();
-    if(c.dive==null && s.lineAt!=null && c.t >= CMD_IN.punch[1] + .5
-       && t - s.lineAt >= Math.max(1.8, readTime(b) - .5)){
-      c.dive = c.t; AU.duckIn(); AU.whoosh(.5);
-    }
-    if(c.dive!=null && c.t - c.dive >= .8) s.diveDone = true;
-  }
   // 6: the barrel searches — up past the zombie and back — and never stops on the answer
   if(b.act==='aim' && moving)
     [[.45,72],[1.35,14],[2.15,BARREL_REST_ANGLE]].forEach(([x,a])=>{ if(at(x)){ G.barrelTarget = a; AU.servo(.55); } });
@@ -3329,14 +3293,12 @@ function drawStoryStrip(){
   ctx.restore();
 }
 /* everything the story lays over the finished frame: the mission strip, and
-   the dips to black — the whip, the dive into the hatch, and up out of it */
-function drawStoryOverlay(pose){
+   the whip's dip to black */
+function drawStoryOverlay(){
   const s = G.story;
   if(s) drawStoryStrip();
   let black = 0;
   if(s && s.whip) black = Math.sin(Math.PI*clamp01(s.whip.t/STORY_FLY.whip))*.92;
-  if(pose.dive>0) black = Math.max(black, pose.dive);
-  if(s && s.fadeIn>0) black = Math.max(black, s.fadeIn/s.fadeDur);
   if(black>0){
     ctx.save(); ctx.globalAlpha = black; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.restore();
   }
@@ -3346,7 +3308,7 @@ function drawStoryOverlay(pose){
 function drawStorySides(){
   const s = G.story; if(!s || G.guideAlpha<=.01) return;
   const tri = trigTriangle(); if(!tri) return;
-  const clearOfTank = TANK.x - G.recoil*.6 + TANK.w + 12;
+  const clearOfTank = TANK.nose() + 10;
   const AT = {
     adj:{x:tri.ax+(tri.bx-tri.ax)/2, y:tri.by+7, align:'center', hang:true, minLeft:clearOfTank},
     opp:{x:tri.bx+22,                y:(tri.by+tri.cy)/2, align:'left'},
@@ -3859,11 +3821,13 @@ function showCaption(txt, speaker=true){
 function hideCaption(){ $('caption').classList.add('hidden'); }
 
 /* ---------- THE SHELL RACK ----------
-   How many tries are left on THIS zombie, in the corner the whole round. It
-   was the one number the game kept to itself — three misses anywhere in the
-   mission ended it, with nothing on screen counting down — so now the rack
-   is always visible, the rule is said out loud the first time it matters, a
-   miss says what it cost, and every new zombie reloads it in plain sight. */
+   How many shells are left for the whole mission, in the corner the whole
+   time. It was the one number the game kept to itself — three misses
+   anywhere in the mission ended it, with nothing on screen counting down —
+   so now the rack is always visible, the rule is said out loud the first
+   time it matters, a miss says what it cost, and a zombie met with shells
+   already spent says how many are left. The count only ever goes back UP
+   on the retry after running dry, and it says so then too. */
 const SHELL_SVG = '<svg viewBox="0 0 16 34" aria-hidden="true">'
   + '<path class="nose" d="M8 1.5C12.6 5.3 13.5 9.8 13.5 13H2.5C2.5 9.8 3.4 5.3 8 1.5Z"/>'
   + '<rect class="body" x="2.5" y="13" width="11" height="15"/>'
@@ -3884,15 +3848,22 @@ function renderShells(how){
   });
   $('shellBar').setAttribute('aria-label', t('Shells left: {n} of {total}', {n:G.shells, total:SHELLS}));
 }
-/* said once, when round one's rack is first in play; every round after
-   that, and every retry, just reloads */
+/* The rule is said once, when round one's rack is first in play. After that
+   the rack speaks only when the count is news: a retry says it was reloaded,
+   and a new zombie met with shells already spent says how many are left, so
+   nobody starts a round on their last shell without being told. A full rack
+   on a new zombie is not news. */
 function announceShells(){
+  let line, ms = 2800;
   if(!shellsExplained){
-    shellsExplained = true;
-    showMsg(t('You have {n} shells for each zombie.', {n:SHELLS}), 4600);
-    const bar = $('shellBar');
-    bar.classList.remove('is-calling'); void bar.offsetWidth; bar.classList.add('is-calling');
-  } else showMsg(t('Reloaded: {n} shells', {n:SHELLS}), 2400);
+    shellsExplained = true; ms = 4600;
+    line = t('You have {n} shells for the whole mission.', {n:SHELLS});
+  } else if(G.reloaded) line = t('Reloaded: {n} shells', {n:SHELLS});
+  else if(G.shells < SHELLS) line = t('Shells left: {n} of {total}', {n:G.shells, total:SHELLS});
+  else return;
+  showMsg(line, ms);
+  const bar = $('shellBar');                // and the rack it is about lights up with it
+  bar.classList.remove('is-calling'); void bar.offsetWidth; bar.classList.add('is-calling');
 }
 
 /* ============================================================
@@ -3995,7 +3966,7 @@ function gameOver(){
   // the same zombie again with a full one
   showCard(`<h2>${t('OUT OF SHELLS')}</h2>
     <div class="cardShells" aria-hidden="true">${shellIcon(true).repeat(SHELLS)}</div>
-    <p>${t('You used all {n} shells on this zombie. Reload and try again!', {n:SHELLS})}</p>
+    <p>${t('You used all {n} shells. Reload and try this zombie again!', {n:SHELLS})}</p>
     <button type="button" class="bigBtn" onclick="retryLevel()">${t('TRY AGAIN')}</button>`);
 }
 window.retryLevel = ()=>{
@@ -4003,27 +3974,36 @@ window.retryLevel = ()=>{
   setupLevel({fast:true});
 };
 
-/* The last screen, as the storyboard has it: Mission Complete and one key,
-   FINISH. No stars and no score — they ranked the run on points the round
-   never taught — and no PLAY AGAIN: the mission ends where the story does,
-   inside the safe zone, whose fireworks keep going behind the card. FINISH
-   is the only thing in the game that reports completion — see proceedNext. */
+/* The last screen is no card at all: the safe zone with its fireworks going
+   on, and one key, REPLAY. No title, no stars, no score — the caption and
+   the fireworks have already said it. The mission is complete the moment
+   this comes up, so that is when completion is reported: the celebration
+   has played in full by then, and there is no FINISH tap left to wait for. */
 function winGame(){
   setGameState(GameState.GAME_COMPLETE);
   hideCaption();
   GameBus.screen('celebration', 'outro');
-  showCard(`<h1>${t('MISSION COMPLETE!')}</h1>
-    <div class="cardActions">
-      <button type="button" class="bigBtn" id="proceedBtn" onclick="proceedNext()">${t('FINISH')}</button>
+  GameBus.complete();
+  showCard(`<div class="cardActions">
+      <button type="button" class="bigBtn" id="replayBtn" onclick="replayMission()">${replayLabel()}</button>
     </div>`, 'is-win');
 }
-/* The hand-off. activity_completed, the validator report and the existing
-   swiftpal:proceed message all hang off THIS tap and nothing earlier, so a
-   host that redirects on completion can never cut the celebration short. */
-window.proceedNext = ()=>{
-  AU.click();
-  const btn = $('proceedBtn'); if(btn) btn.disabled = true;
-  GameBus.complete();
+/* REPLAY ↺ — the same word-and-glyph key as START ▶ and NEXT ▶, with its
+   arrow turned back on itself */
+function replayLabel(){
+  return `<span>${t('REPLAY')}</span><svg viewBox="0 0 24 24" aria-hidden="true">`
+    + '<path d="M12 3.2A9.6 9.6 0 1 1 2.4 12.8H6.6A5.4 5.4 0 1 0 12 7.4V9.9L6 5.3 12 .7Z"/></svg>';
+}
+/* The whole mission again, as a new run: every zombie back on its ruin, a
+   full rack, and the tank rolling in to round one. Not the story — whoever
+   is replaying has already walked through it. */
+window.replayMission = ()=>{
+  AU.click(); $('overlay').classList.add('hidden');
+  GameBus.launched();          // a second run is a second activity, counted on its own
+  G.level = 0;
+  resetWorld();
+  initializeLevel(0, {revive:true, enter:'none'});
+  beginIntro();
 };
 
 /* ============================================================
@@ -4146,7 +4126,7 @@ function finishDrive(){
     winGame();
     return;
   }
-  initializeLevel(d.nextLevel, {revive:false});
+  initializeLevel(d.nextLevel, {revive:false, reload:false});   // same mission, same rack
 }
 
 function updateDrive(dt){
@@ -4300,13 +4280,12 @@ function startDrive(){
      enter  the tank drives in, out of the night
      shut   the gates roll shut behind it, and clang home
      cheer  fireworks over the compound — "We made it to the safe zone!"
-     card   Mission Complete, and its one key: FINISH
+     card   the end screen: no title, just one key — REPLAY
    One clock per beat on the game loop, like the rest of the choreography;
-   it plays in full, and under reduced motion the card comes up at once.
+   it plays in full, and under reduced motion the end screen comes up at once.
    ============================================================ */
 const OUT = {open:.95, shut:.6, cheer:2.9, burst:.42, burstLater:1.1};
 const SAFE_ZONE_RUN = 1150;          // world px from the last zombie's column to the compound
-const TANK_NOSE = .87;               // where the hull art's nose is, across TANK.w
 /* THE COMPOUND — assets/safeZone.webp and its gate, assets/safeGate.webp
    (painted from SAFE_ZONE_ART.md; `tools/fit_assets.py safezone` keys, scales
    and measures them). SZ is what that step printed, in stage px with y down
@@ -5072,9 +5051,11 @@ function drawGuides(){
   /* the cards stand OFF their side rather than on it, so neither the glow
      nor the card has to be read through the other */
   /* On a steep round the adjacent leg is short and its midpoint lands ON the
-     tank, so that card is held clear of the hull's nose instead. The other
-     two are never near it. */
-  const clearOfTank = TANK.x - G.recoil*.6 + TANK.w + 12;
+     tank, so that card is held just clear of the hull's nose instead — the
+     nose the art paints, not the sprite's box: held off the box, the card
+     cleared empty air and ran out past the right angle. The other two are
+     never near it. */
+  const clearOfTank = TANK.nose() + 10;
   /* The adjacent card HANGS from its leg, 7px clear of the line's glow, so it
      reads as that leg's measurement wherever the round puts it — and stays
      well clear of the console under it. The dock is markup over the canvas,
@@ -5195,7 +5176,7 @@ function drawCommander(rise, v=0){
    mouth stays as drawn — flapping it under the caption read as mumbling. */
 function commanderBlinking(){
   const c = G.cmd;
-  if(!c || c.out!==null || c.dive!=null) return false;
+  if(!c || c.out!==null) return false;
   const up = c.t - CMD_IN.pop - CMD_SETTLE;   // seconds she has been out and still
   for(let k=0, at=.7; at<=up; at += 2.2 + .8*(1 + Math.sin(k*1.7 + .4)), k++)
     if(up < at + .12) return true;
@@ -5355,10 +5336,6 @@ function render(){
   // times the camera ever leaves 1:1
   if(pose.zoom>0){
     const v = commanderView(pose.zoom);
-    if(pose.dive>0 && ambientMotionAllowed()){        // down into the hatch after her
-      const e = pose.dive*pose.dive, h = hatchAt();
-      v.x = lerp(v.x, h.x, e); v.y = lerp(v.y, h.y + 4, e); v.z *= 1 + 2.6*e;
-    }
     ctx.translate(W/2, H/2); ctx.scale(v.z, v.z); ctx.translate(-v.x, -v.y);
   } else if(G.story && G.story.view){
     const v = G.story.view, hh = H/(2*v.z);
@@ -5382,7 +5359,7 @@ function render(){
   drawShell();
   drawParticles();
   ctx.restore();
-  drawStoryOverlay(pose);  // the mission strip, and the story's dips to black
+  drawStoryOverlay();      // the mission strip, and the whip's dip to black
 }
 
 /* ============================================================
@@ -5466,7 +5443,7 @@ function onAssetsReady(){
       G.cameraX = G.drive.cameraEnd;
       G.tankWorldX = G.drive.tankEnd;
       G.drive=null;
-      initializeLevel(nextLevel, {revive:false, enter:'aim'});
+      initializeLevel(nextLevel, {revive:false, enter:'aim', reload:false});
       syncWorldPositions();
     } else {
       G.prevPaused=GameState.TRAVELLING; setGameState(GameState.PAUSED);

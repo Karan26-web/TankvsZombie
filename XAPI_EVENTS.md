@@ -77,13 +77,13 @@ whenever the bridge is present; the `swiftpal:xapi` postMessage is the standalon
 
 | verb | this book's trigger | object |
 |---|---|---|
-| `activity_launched` | **START ▶** on the title plate | `{type:"activity", id:"MA10T01_L01_S01"}` |
-| `screen_viewed` | title plate (`start`), the opening story after START (`story`), the tank's roll-in during it (`intro`), the drive into the safe zone after the last round (`safe_zone`), the Mission Complete card (`celebration`), the out-of-shells card (`game_over`) | `{type:"screen", id:…}` |
+| `activity_launched` | **START ▶** on the title plate, and **REPLAY** on the end screen (each run is its own activity) | `{type:"activity", id:"MA10T01_L01_S01"}` |
+| `screen_viewed` | title plate (`start`), the opening story after START (`story`), the tank's roll-in during it (`intro`), the drive into the safe zone after the last round (`safe_zone`), the end screen with its one **REPLAY** key (`celebration`), the out-of-shells card (`game_over`) | `{type:"screen", id:…}` |
 | `question_started` | a round's briefing begins — the triangle starts drawing itself | `{type:"question", id:"L1"…"L5"}` |
 | `question_answered` | every shell resolves, hit or miss | the angle the dial was holding (below) |
 | `hint_used` | the bulb opens the trig sheet (`bulb`), **SHOW ME THE ANGLE** lights the cell (`bulb_reveal`) | `{type:"hint", id:…}` |
 | `audio_replayed` | not emitted — the restart key that replayed the round's briefing has been removed, and nothing else replays audio | — |
-| `activity_completed` | **FINISH** on the Mission Complete card — nothing else | `{type:"activity", id:"MA10T01_L01_S01"}` |
+| `activity_completed` | the end screen coming up, after the safe-zone celebration has played — once per run | `{type:"activity", id:"MA10T01_L01_S01"}` |
 
 **`question_answered` object.** The dial is a five-option MCQ over `[0, 30, 45, 60, 90]` and is never
 shuffled, so `ui_index` and `original_index` are always the same index:
@@ -103,9 +103,13 @@ question-bearing statement (`intro` on the launch and the roll-in, `outro` on th
 `?skill_code=` / `?lo_code=`. `?context_id=` and `?journey_id=` are echoed into every statement.
 
 **Completion.** `result.score` is first-try accuracy across the rounds actually answered — a round
-replayed after an out-of-shells card is counted once, on its latest run. A child who never taps
-FINISH never reports completion, by design. `swiftpal:lesson_complete` (a per-question report) and
-`swiftpal:proceed` follow the verb, in that order, on the same tap.
+replayed after an out-of-shells card is counted once, on its latest run. **This book departs from the
+generic spec above here:** it has no FINISH key. The end screen's only key is **REPLAY**, so
+`activity_completed` fires as that screen comes up, once the celebration has played, and
+`swiftpal:lesson_complete` (a per-question report) follows it at the same moment. `swiftpal:proceed` is
+**not sent**: moving on to the next module is the host's own navigation, and a host that redirected on
+`activity_completed` would take the child away from REPLAY. A REPLAY starts a new run: a fresh
+`activity_launched`, and its own `activity_completed` when that run ends.
 
 **Noise control.** `GameBus.signal()` posts `swiftpal:signal` only under `?dev=1`. A production host
 sees the seven verbs and nothing else.

@@ -11,13 +11,13 @@
 
 Art for the game's new ending (LXD storyboard, end screens 2–3): after the last
 zombie the tank drives up to the **SAFE ZONE**, the gates open, it drives in,
-the gates close behind it, fireworks go up, and **Mission Complete!** comes up
-with a **FINISH** key.
+the gates close behind it, fireworks go up, and a single **REPLAY** key comes up
+over them (no title card).
 
 The ending already works in the game today with a **stand-in compound drawn in
 code** (`bakeSafeZone()` in `index.html`). These two images replace it. Nothing
 else in the ending needs art: the lit passage behind the gates, the light
-spilling out, the blue beacon glow, the fireworks, the caption and the card are
+spilling out, the blue beacon glow, the fireworks, the caption and the key are
 all drawn by the game.
 
 **How to use:** generate in ChatGPT (gpt-image-1 or newer). Attach the two
@@ -174,7 +174,7 @@ middle, straight edges (I trim to the rectangle and split it at the seam).
    (back / front / gates) from the art. The sign gets its "SAFE ZONE" in the
    player's language set over the blank plate, exactly as the stand-in does now.
 3. I check the whole ending in the browser: approach, gates, the drive in, the
-   gates shutting with the tank fully hidden, fireworks, Mission Complete.
+   gates shutting with the tank fully hidden, fireworks, the REPLAY key.
 
 ## 4. If a render comes back wrong
 
